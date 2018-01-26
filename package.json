@@ -1,0 +1,11 @@
+{
+  "name": "letsplaychess",
+  "version": "1.0.0",
+  "description": "real time casual chess",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
