@@ -10,3 +10,29 @@ Goals:
 * Use of static graphics and SVG.
 * CSS, high level of confidence.
 * HTML: valid, well-structured, 
+
+
+## Software Prerequisite 
+
+* Code editor, recommend: Visual Studio Code, Bracket.
+* Node.js (https://nodejs.org/en/)
+* NPM (comes with Node.JS)
+* Browser
+
+## Frameworks
+* React.JS
+* CSS/SCSS/LESS
+* Express.js (server-side)
+
+## Chess Game Features
+
+Client side:
+* Playing in realtime against humans.
+* Instant messaging with opponent when in game
+* Game should be timed: 5min, 10min, 15min.
+* CSS-Animations for good visual effects.
+
+Server side:
+* Match making
+* Account system
+* review past games, games replay.
