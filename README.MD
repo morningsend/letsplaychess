@@ -36,3 +36,9 @@ Server side:
 * Match making
 * Account system
 * review past games, games replay.
+* saving data to a local Sqlite database. 
+
+Roles:
+* Web page design: mockup, wireframe, colour scheme, user-experience
+* front-end: implementing the look and feel, 
+* back-end: handle realtime connections, manage database.
