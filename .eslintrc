@@ -15,13 +15,14 @@
     },
     "rules": {
       "indent": ["warn", 4],
+      "semi": [2, "never"],
+      "no-unexpected-multiline": 2,
       "react/jsx-indent": ["warn", 4],
       "space-before-function-paren": "off",
       "react/prefer-stateless-function": "warn",
       "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
       "linebreak-style": "off",
       "global-require": "off",
-      "semi": "warn",
       "arrow-body-style": "off"
     }
   }
