@@ -6,7 +6,7 @@ export class App extends React.Component {
         super(props)
 
         this.state = {
-            name: 'World. GOODBOYE',
+            name: 'World. GOODBYE ALL MY PROBLEMS',
         }
     }
     render() {
