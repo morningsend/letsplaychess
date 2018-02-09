@@ -1,5 +1,5 @@
 import React from 'react';
-
+import './assets/style/site.scss';
 
 export class App extends React.Component {
     constructor(props) {

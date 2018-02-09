@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-client": "./node_modules/.bin/webpack-dev-server --config webpack.dev.config.js --hot --inline",
+    "start-client": "./node_modules/.bin/webpack-dev-server --config webpack.devServer.config.js --hot --inline",
     "build-client": "./node_modules/.bin/webpack --config webpack.dev.config.js",
     "build-server": "",
     "start-server": "node src/server/index.js"
