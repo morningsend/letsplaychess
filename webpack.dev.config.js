@@ -17,7 +17,7 @@ const config = {
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, './build'),
-        publicPath: ''
+        publicPath: './assets'
     },
 
     module: {
@@ -51,6 +51,18 @@ const config = {
                 test: /\.html$/,
                 use: 'html-loader'
             },
+            {
+                test: /\.(png|jpg|gif|svg)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[path][name].[ext]',
+                            publicPath: './assets'
+                        }
+                    }
+                ]
+            }
         ]
     },
 
