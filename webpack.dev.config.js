@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const config = {
     context: path.resolve(__dirname, 'src/client'),
-    
+
     devtool: 'inline-source-map',
 
     entry: {
@@ -31,11 +31,10 @@ const config = {
             {
                 test: /\.(js|jsx)/,
                 exclude: /node_modules/,
-                include: /src\/client/,
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['react', 'env']
+                        presets: ['es2015', 'stage-2', 'react']
                     }
                 }
             },
