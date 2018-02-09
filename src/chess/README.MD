@@ -1,0 +1,1 @@
+The code for chess engine is shared between both client and server.

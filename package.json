@@ -4,14 +4,52 @@
   "description": "real time casual chess",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-client": "./node_modules/.bin/webpack-dev-server --config webpack.dev.config.js --hot --inline",
+    "build-client": "./node_modules/.bin/webpack --config webpack.dev.config.js",
+    "build-server": "",
+    "start-server": "node src/server/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    
+    "expressjs": "^1.0.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-hot-loader": "^3.1.3",
+    "react-router-dom": "^4.2.2",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
-    
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-jest": "^22.2.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-react-hmre": "^1.1.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "copy-webpack-plugin": "^4.4.1",
+    "css-loader": "^0.28.9",
+    "eslint": "^4.17.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.6.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.6",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^2.30.1",
+    "jest": "^22.2.1",
+    "json-loader": "^0.5.7",
+    "node-sass": "^4.7.2",
+    "open-browser-webpack-plugin": "0.0.5",
+    "react-test-renderer": "^16.2.0",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.20.1",
+    "webpack": "^3.10.0",
+    "webpack-dev-server": "^2.11.1"
   }
 }
