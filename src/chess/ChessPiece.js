@@ -8,7 +8,7 @@ export const Queen = 'Queen'
 export const Bishop = 'Bishop'
 export const King = 'King'
 
-export const PieceKinds = {
+const PieceKinds = {
     Pawn,
     Knight,
     Rook,
@@ -16,41 +16,46 @@ export const PieceKinds = {
     Bishop,
     King
 }
-export const PlayerColours = { 
+const PlayerColours = { 
     White,
     Black
 }
-export class ChessPiece {
+class ChessPiece {
 
     constructor(colour, kind) {
-        this.colour = colour
-        this.kind = kind
+        this._colour = colour
+        this._kind = kind
     }
 
     get kind() {
-        return this.kind
+        return this._kind
     }
 
     get colour() {
-        return this.colour
+        return this._colour
     }
 }
 
 const AllPieces = {
+    // white pieces
     WhiteKing: new ChessPiece(PlayerColours.White, PieceKinds.King),
     WhiteQueen: new ChessPiece(PlayerColours.White, PieceKinds.Queen),
     WhiteRook: new ChessPiece(PlayerColours.White, PieceKinds.Rook),
     WhiteBishop: new ChessPiece(PlayerColours.White, PieceKinds.Bishop),
     WhiteKnight: new ChessPiece(PlayerColours.White, PieceKinds.Knight),
     WhitePawn: new ChessPiece(PlayerColours.White, PieceKinds.Pawn),
-    BlackKing: new ChessPiece(PlayerColours.White, PieceKinds.King),
-    BlackQueen: new ChessPiece(PlayerColours.White, PieceKinds.Queen),
-    BlackRook: new ChessPiece(PlayerColours.White, PieceKinds.Rook),
-    BlackBishop: new ChessPiece(PlayerColours.White, PieceKinds.Bishop),
-    BlackKnight: new ChessPiece(PlayerColours.White, PieceKinds.Knight),
-    BlackPawn: new ChessPiece(PlayerColours.White, PieceKinds.Pawn),
+    // black pieces
+    BlackKing: new ChessPiece(PlayerColours.Black, PieceKinds.King),
+    BlackQueen: new ChessPiece(PlayerColours.Black, PieceKinds.Queen),
+    BlackRook: new ChessPiece(PlayerColours.Black, PieceKinds.Rook),
+    BlackBishop: new ChessPiece(PlayerColours.Black, PieceKinds.Bishop),
+    BlackKnight: new ChessPiece(PlayerColours.Black, PieceKinds.Knight),
+    BlackPawn: new ChessPiece(PlayerColours.Black, PieceKinds.Pawn),
 }
 
-export const AllPieces
-export const PlayerColours
-export const PieceKinds
+export {
+    AllPieces,
+    PlayerColours,
+    PieceKinds,
+    ChessPiece,
+}

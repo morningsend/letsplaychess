@@ -1,13 +1,13 @@
 import { PlayerColours, PieceKinds, AllPieces } from './ChessPiece'
-
-const A = 0
-const B = 1
-const C = 2
-const D = 3
-const E = 4
-const F = 5
-const G = 6
-const H = 7
+import { ChessBoardView } from './ChessBoardView'
+const A = 1
+const B = 2
+const C = 3
+const D = 4
+const E = 5
+const F = 6
+const G = 7
+const H = 8
 
 export const Columns = {
     A,
@@ -122,23 +122,53 @@ const EmptyBoardPosition = [
 ]
 
 export class ChessBoard {
+    static _rotateBoard(board) {
+        var newBoard = new Array(board.length)
+        for(var i = 0; i < board.length; i++) {
+            var columnIndex = board.length - 1 - i;
+            var rowLength = board[columnIndex].length;
+            newBoard[i] = new Array(rowLength);
+            for(var j = 0; j < board[columnIndex].length; j++) {
+                newBoard[i][j] = board[columnIndex][rowLength - 1 - j]
+            }
+        }
+        return newBoard
+    }
     constructor(boardPosition = InitialPosition) {
-        this.boardPosition = boardPosition
-        this.whitePiecesLost = []
-        this.blackPiecesLost = []
+        this._boardPosition = boardPosition
+        this._whiteBoardView = new ChessBoardView(boardPosition, PlayerColours.White)
+        this._blackBoardView = new ChessBoardView(ChessBoard._rotateBoard(boardPosition), PlayerColours.Black)
+        this._whitePiecesLost = []
+        this._blackPiecesLost = []
+        this._history = []
+        this._canCastle = {
+            White: true,
+            Black: true
+        }
     }
 
-    getPieceAtPosition(column, row) {
-        return this.boardPosition[column][row]
+    /**
+     * get piece at (column, row)
+     * 1 <= column <= 8
+     * 1 <= row <= 8
+     */
+    pieceAt(column, row) {
+        return this._boardPosition[column - 1][row - 1]
     }
-    getBoard() {
-        return this.boardPosition
+    get positions() {
+        return this._boardPosition
     }
-    getWhitePiecesLost() {
-        return this.whitePiecesLost
+    get whitePiecesLost() {
+        return this._whitePiecesLost
     }
-    getBlackPiecesLost() {
-        return this.blackPiecesLost
+    get blackPiecesLost() {
+        return this._blackPiecesLost
+    }
+    get whiteView() {
+        return this._whiteBoardView
+    }
+    get blackView() {
+        return this._blackBoardView
     }
 }
 
@@ -147,57 +177,97 @@ ChessBoard.emptyBoard = () => new ChessBoard(EmptyBoardPosition)
 
 ChessBoard.initialBoard = () => new ChessBoard()
 
-function computeValidMoves(boardPosition, column, row) {
-    piece = boardPosition[column][row]
+
+/**
+ * Valid moves for a pawn can be:
+ *      1. forward one or two square if not occupied.
+ *      2. forward diagonal one square if can take enemy pieces.
+ * A move cannot leave the king in check, so must verify resulting position.
+ * 
+ * @param {ChessBoard} boardPosition
+ * @param {PlayerColours} playerColour
+ * @param {integer} column
+ * @param {integer} row
+ */
+export function pawnValidMoves(board, playerColour, column, row) {
+    var candidateMoves = []
+    
+    const boardView = playerColour == PlayerColours.White ? board.whiteView : board.blackView
+    if(playerColour == PlayerColours.black) {
+        row = 8 - row + 1
+        column = 8 - column + 1
+    }
+
+    if(row == 8) {
+        return []
+    }
+
+    if(boardView.canPawnMove(column, row, row + 1)) {
+        candidateMoves.push({column, row: row + 1})
+    }
+
+    if(row == 2 && boardView.canPawnMove(column, row, row + 2)) {
+        candidateMoves.push({ column, row: row + 2})
+    }
+
+    if(column > 1 && boardView.canPawnTake(column - 1, row + 1)) {
+        candidateMoves.push({ column: column - 1, row: row + 1})
+    }
+
+    if(column < 8 && boardView.canPawnTake(column + 1, row + 1)) {
+        candidateMoves.push({ column: column + 1, row: row + 1})
+    }
+
+    return candidateMoves
+}
+
+export function knightValidMoves(board, playerColour, column, row) {
+    return []
+}
+
+export function bishopValidMoves(board, playerColour, column, row) {
+    return []
+}
+
+export function kingValidMoves(board, playerColour, column, row, castleAllowed) {
+    return []
+}
+
+export function queenValidMoves(board, playerColour, column, row) {
+    return []
+}
+
+export function rookValidMoves(board, playerColour, column, row) {
+    return []
+}
+
+export function computeValidMoves(board, column, row) {
+    piece = board.pieceAt(column, row)
     moves = []
     if ( piece == null) {
         return moves
     }
     switch( piece.kind ) {
         case PieceKinds.Pawn:
-            moves = pawnValidMoves(boardPosition, piece.colour, column, row)
+            moves = pawnValidMoves(board, piece.colour, column, row)
             break;
         case PieceKinds.Knight:
-            moves = knightValidMoves(boardPosition, piece.colour, column, row)
+            moves = knightValidMoves(board, piece.colour, column, row)
             break;
         case PieceKinds.King:
-            moves = knightValidMoves(boardPosition, piece.colour, column, row)
+            moves = kingValidMoves(board, piece.colour, column, row)
             break;
         case PieceKinds.Queen:
-            moves = knightValidMoves(boardPosition, piece.colour, column, row)
+            moves = queenValidMoves(board, piece.colour, column, row)
             break;
         case PieceKinds.Rook:
-            moves = knightValidMoves(boardPosition, piece.colour, column, row)
+            moves = rookValidMoves(board, piece.colour, column, row)
             break;
         case PieceKinds.Bishop:
-            moves = knightValidMoves(boardPosition, piece.colour, column, row)
+            moves = bishopValidMoves(board, piece.colour, column, row)
             break;
         default:
             throw new Error('chess piece not valid')
     }
-    return []
-}
-
-export function pawnValidMoves(boardPosition, playerColour, column, row) {
-    return []
-}
-
-export function knightValidMoves(boardPosition, playerColour, column, row) {
-    return []
-}
-
-export function bishopValidMoves(boardPosition, playerColour, column, row) {
-    return []
-}
-
-export function kingValidMoves(boardPosition, playerColour, column, row) {
-    return []
-}
-
-export function queenValidMoves(boardPosition, playerColour, column, row) {
-    return []
-}
-
-export function rookValidMoves(boardPosition, playerColour, column, row) {
     return []
 }
