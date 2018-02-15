@@ -62,8 +62,8 @@ export class ChessBoard {
     }
 
     makeMove(piece, columnTo, rowTo) {
-        const {c, r} = piece.position
-        this._boardPosition[c-1][r-1] = null
+        const {column, row} = piece.position
+        this._boardPosition[column - 1][row - 1] = null
         piece.firstMoveMade = true
         piece.position = {
             column: columnTo,
