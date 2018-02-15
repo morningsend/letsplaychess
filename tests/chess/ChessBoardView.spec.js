@@ -66,3 +66,62 @@ describe("ChessBoardView canPawnMove", () => {
         expect(view.canPawnMove(pawn, Columns.D, 5))
     })
 })
+
+describe("ChessBoardView canKnightMove", () => {
+    let board = ChessBoard.emptyBoard()
+
+    it("knight can move L shapes", ()=>{
+        board.placePiece(
+            new ChessPiece(PlayerColours.White, PieceKinds.Knight, { column: Columns.B, row: 1 })
+        )
+
+        const view = board.whiteView
+        const knight = board.pieceAt(Columns.B, 1)
+        expect(knight).not.toBeNull()
+        expect(view.canKnightMove(knight, Columns.C, 3)).toBeTruthy()
+    })
+
+    it("knight should not move in any other shapes", () => {
+        board.placePiece(
+            new ChessPiece(PlayerColours.White, PieceKinds.Knight, { column: Columns.B, row: 1 })
+        )
+        const view = board.whiteView
+        const knight = board.pieceAt(Columns.B, 1)
+
+        expect(knight).not.toBeNull()
+        expect(view.canKnightMove(knight, Columns.B, 3)).toBeFalsy()
+        expect(view.canKnightMove(knight, Columns.C, 2)).toBeFalsy()
+    })
+
+    it("knight cannot move to area with friendly piece", () => {
+        board.placePiece(
+            new ChessPiece(PlayerColours.White, PieceKinds.Knight, { column: Columns.B, row: 1 })
+        )
+
+        board.placePiece(
+            new ChessPiece(PlayerColours.White, PieceKinds.Pawn, { column: Columns.C, row: 3 })
+        )
+        const view = board.whiteView
+        const knight = board.pieceAt(Columns.B, 1)
+        expect(knight).not.toBeNull()
+        expect(view.isEmpty(Columns.C, 3)).toBeFalsy()
+        expect(view.canKnightMove(knight, Columns.C, 3)).toBeFalsy()
+    })
+})
+
+describe("ChessBoardView canKingMove", () => {
+
+})
+
+describe("ChessBoardView canRookMove", () => {
+
+})
+
+describe("ChessBoardView canQueenMove", () => {
+
+})
+
+describe("ChessBoardView canBishop", () => {
+
+})
+

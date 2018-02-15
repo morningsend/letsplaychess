@@ -19,6 +19,12 @@ export class ChessBoardView {
         return this._boardPosition
     }
     placePiece(piece, column, row) {
+        if(!column) {
+            column = piece.position.column
+        }
+        if(!row) {
+            row = piece.position.row
+        }
         this._boardPosition[column - 1][row - 1] = piece
         piece.position = { column, row }
     }
@@ -59,23 +65,22 @@ export class ChessBoardView {
     }
 
     canKnightMove(knight, columnTo, rowTo) {
+        
         if(!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
-        if(!this.validateKingNotInCheck(columnTo, rowTo)) {
+        const {column, row} = knight.position
+
+        if(
+            !(Math.abs(columnTo - column) == 1 && Math.abs(rowTo - row) == 2) &&
+            !(Math.abs(columnTo - column) == 2 && Math.abs(rowTo - row) == 1)) {
             return false
         }
-        const {column, row} = pawn.position
-        if(!(Math.abs(columnTo - column) == 1 && Math.abs(rowTo - row) == 2)) {
-            return false
+        
+        if(this.isEmpty(columnTo, rowTo) || this.canAttack(columnTo, rowTo)) {
+            return this.validateKingNotInCheck()
         }
-        if((Math.abs(columnTo - column) == 2 && Math.abs(rowTo - row) == 1)) {
-            return false
-        }
-        if(!(this.isEmpty(columnTo, rowTo) || this.canAttack(knight, columnTo, rowTo))) {
-            return false
-        }
-        return this.validateKingNotInCheck();
+        return false
     }
     
     canKingMove(king, columnTo, rowTo) {
@@ -169,7 +174,7 @@ export class ChessBoardView {
     }
 
     isEmpty(column, row) {
-        return this._boardPosition[column][row] == null
+        return this._boardPosition[column - 1][row - 1] == null
     }
 
     /**
@@ -182,10 +187,10 @@ export class ChessBoardView {
     isRowPathClear(column, rowFrom, rowTo) {
         const increment = rowFrom <= rowTo ? 1 : -1
         rowFrom += increment
-        const boardColumn = this._boardPosition[column]
+        const boardColumn = this._boardPosition[column - 1]
         let clear = true
         for(let i = rowFrom; i != rowTo ; i += increment) {
-            clear = clear && (boardColumn[i] == null)
+            clear = clear && (boardColumn[i - 1] == null)
         }
         return clear
     }

@@ -70,7 +70,7 @@ export class ChessBoard {
         //console.log("after placing piece",this._boardPosition[column - 1][row - 1])
         piece.position = { column, row }
 
-        this.whiteView.placePiece(piece, column, row)
+        this._whiteBoardView.placePiece(piece, column, row)
     }
 
     makeMove(piece, columnTo, rowTo) {
