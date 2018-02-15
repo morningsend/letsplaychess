@@ -23,10 +23,6 @@ export class ChessBoard {
         this._whitePiecesLost = []
         this._blackPiecesLost = []
         this._history = []
-        this._canCastle = {
-            White: true,
-            Black: true
-        }
     }
 
     /**
@@ -61,6 +57,22 @@ export class ChessBoard {
         return 8
     }
 
+    placePiece(piece, column, row) {
+        if(!column) {
+            column = piece.position.column
+        }
+        if(!row) {
+            row = piece.position.row
+        }
+        this._checkRange(column, row)
+        this._boardPosition[column - 1][row - 1] = piece
+        
+        //console.log("after placing piece",this._boardPosition[column - 1][row - 1])
+        piece.position = { column, row }
+
+        this.whiteView.placePiece(piece, column, row)
+    }
+
     makeMove(piece, columnTo, rowTo) {
         const {column, row} = piece.position
         this._boardPosition[column - 1][row - 1] = null
@@ -71,14 +83,12 @@ export class ChessBoard {
         }
         this._boardPosition[columnTo-1][rowTo-1] = piece
     }
-    _checkRowRange(row) {
-        if(row < 1 || row > this.boardHeight) {
-            throw new Error(row + " is out of range.")
-        }
-    }
-    _checkColumnRange(column) {
+    _checkRange(column, row) {
         if(column < 1 || column > this.boardWidth) {
             throw new Error(column + " is out of range.")
+        }
+        if(row < 1 || row > this.boardHeight) {
+            throw new Error(row + " is out of range.")
         }
     }
 }
@@ -102,7 +112,7 @@ ChessBoard.initialBoard = () => new ChessBoard()
  */
 export function pawnValidMoves(board, playerColour, column, row) {
     var candidateMoves = []
-    
+    const pawn = board.pieceAt(column, row)
     const boardView = playerColour == PlayerColours.White ? board.whiteView : board.blackView
     if(playerColour == PlayerColours.black) {
         row = 8 - row + 1
@@ -113,11 +123,11 @@ export function pawnValidMoves(board, playerColour, column, row) {
         return []
     }
 
-    if(boardView.canPawnMove(column, row, row + 1)) {
+    if(boardView.canPawnMove(pawn, column, row + 1)) {
         candidateMoves.push({column, row: row + 1})
     }
 
-    if(row == 2 && boardView.canPawnMove(column, row, row + 2)) {
+    if(row == 2 && boardView.canPawnMove(pawn, column, row + 2)) {
         candidateMoves.push({ column, row: row + 2})
     }
 

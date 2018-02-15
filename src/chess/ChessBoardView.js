@@ -18,25 +18,26 @@ export class ChessBoardView {
     get boardPosition() {
         return this._boardPosition
     }
-
+    placePiece(piece, column, row) {
+        this._boardPosition[column - 1][row - 1] = piece
+        piece.position = { column, row }
+    }
     canMovePiece(piece, columnTo, rowTo) {
         if(!this.validateMoveRange(columnTo, rowTo)) {
             return false;
         }
     }
-
     canPawnMove(pawn, columnTo, rowTo) {
         if(!this.validateMoveRange(columnTo, rowTo)) {
             return false;
         }
         
-        const { column, row} = pawn.position
+        const { column, row } = pawn.position
 
         // pawn can only move 1 or 2 squares forward on y-axis
         if(rowTo <= row || rowTo > row + 2) {
             return false
         }
-
         if(rowTo == row + 1) {
             if(columnTo == column && this.isEmpty(columnTo, rowTo)) {
                 return this.validateKingNotInCheck()
@@ -44,11 +45,12 @@ export class ChessBoardView {
                 if(this.canAttack(pawn, columnTo, rowTo)) {
                     return this.validateKingNotInCheck()
                 }
+                return false
             }
             return false
         }
         if(!pawn.firstMoveMade && rowTo == row + 2) {
-            if(columnTo == column && this.isEmpty(columnTo, rowTo) == null){
+            if(columnTo == column && this.isEmpty(columnTo, rowTo)){
                 return this.validateKingNotInCheck()
             }
             return false
@@ -65,7 +67,6 @@ export class ChessBoardView {
         }
         const {column, row} = pawn.position
         if(!(Math.abs(columnTo - column) == 1 && Math.abs(rowTo - row) == 2)) {
-
             return false
         }
         if((Math.abs(columnTo - column) == 2 && Math.abs(rowTo - row) == 1)) {
@@ -84,7 +85,7 @@ export class ChessBoardView {
         const { column, row} = king.position
         const piece = this._boardPosition[columnTo - 1][rowTo - 1]
         if(!king.firstMoveMade && piece.kind == PieceKinds.Rook && !piece.firstMoveMade) {
-            
+            return this.canKingCastle(king, piece, columnTo, rowTo)
         }
             // check can move one square
         if(Math.abs(column - columnTo)!= 1 || Math.abs(row - rowTo) != 1) {
@@ -95,7 +96,21 @@ export class ChessBoardView {
         }
         return this.validateKingNotInCheck()
     }
+    canKingCastle(king, rook, columnTo, rowTo) {
+        const { column, row } = king
+        if(king.kind != PieceKinds.King || rook.kind != PieceKings.Rook) {
+            return false
+        }
+        if(king.firstMoveMade || rook.firstMoveMade) {
+            return false
+        }
+        // move either 2 squares to left or right
+        if(Math.abs(column - columnTo) != 2 || rowTo != row) {
+            return false
+        }
+        // convoluted logic to check if king is moving through a square that can check
 
+    }
     canRookMove(rook, columnTo, rowTo) {
         if(!this.validateMoveRange(columnTo, rowTo)) {
             return false
@@ -223,7 +238,7 @@ export class ChessBoardView {
     }
 
     validateKingNotInCheck() {
-
+        return true
     }
 
     validateMoveRange(column, row) {
