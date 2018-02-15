@@ -6,11 +6,9 @@ import {
     queenValidMoves,
     bishopValidMoves,
     rookValidMoves,
-    Columns
 } from '../../src/chess/ChessBoard'
-
-import { PlayerColours, PieceKinds } from '../../src/chess/ChessPiece'
-
+import { Columns } from '../../src/chess/ChessBoardConstants'
+import { PlayerColours, PieceKinds } from '../../src/chess/ChessPieces'
 
 describe('ChessBoard', () => {
     const board = ChessBoard.initialBoard()

@@ -1,3 +1,5 @@
+import { Columns } from './ChessBoardConstants'
+import { AllPieces, PieceKinds } from './ChessPieces'
 /** 
  * A board with pieces rotated depending on player colour so we
  * only have to implement piece movement logic once.
@@ -17,16 +19,19 @@ export class ChessBoardView {
         return this._boardPosition
     }
 
-    canPawnMove(column, row, columnTo, rowTo) {
-        console.log("chessboardview.canPawnMove")
-        return true
+    canMovePiece(piece, columnFrom, rowTo) {
+        
     }
 
-    canPawnTake(column, row, columnTo, rowTo) {
+    canPawnMove(pawn, columnTo, rowTo) {
+
+
+        return this.validateKingNotInCheck(this._boardPosition)
+    }
+
+    validateKingNotInCheck(boardPosition) {
 
     }
 
-    canPawnPromote(column, row) {
-        return row == 8
-    }
+
 }

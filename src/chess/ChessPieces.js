@@ -8,7 +8,7 @@ export const Queen = 'Queen'
 export const Bishop = 'Bishop'
 export const King = 'King'
 
-const PieceKinds = {
+export const PieceKinds = {
     Pawn,
     Knight,
     Rook,
@@ -16,15 +16,17 @@ const PieceKinds = {
     Bishop,
     King
 }
-const PlayerColours = { 
+export const PlayerColours = { 
     White,
     Black
 }
-class ChessPiece {
+export class ChessPiece {
 
-    constructor(colour, kind) {
+    constructor(colour, kind, position) {
         this._colour = colour
         this._kind = kind
+        this._firstMoveMade = false
+        this._position = position
     }
 
     get kind() {
@@ -34,9 +36,24 @@ class ChessPiece {
     get colour() {
         return this._colour
     }
+
+    get firstMoveMade() {
+        return this._firstMoveMade
+    }
+    set firstMoveMade(value) {
+        this._firstMoveMade = value
+    }
+
+    get position() {
+        return this._position
+    }
+
+    set position(newPosition) {
+        this._position = newPosition
+    }
 }
 
-const AllPieces = {
+export const AllPieces = {
     // white pieces
     WhiteKing: new ChessPiece(PlayerColours.White, PieceKinds.King),
     WhiteQueen: new ChessPiece(PlayerColours.White, PieceKinds.Queen),
@@ -51,11 +68,4 @@ const AllPieces = {
     BlackBishop: new ChessPiece(PlayerColours.Black, PieceKinds.Bishop),
     BlackKnight: new ChessPiece(PlayerColours.Black, PieceKinds.Knight),
     BlackPawn: new ChessPiece(PlayerColours.Black, PieceKinds.Pawn),
-}
-
-export {
-    AllPieces,
-    PlayerColours,
-    PieceKinds,
-    ChessPiece,
 }

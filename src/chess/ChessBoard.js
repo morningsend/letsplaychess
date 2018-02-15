@@ -1,127 +1,9 @@
-import { PlayerColours, PieceKinds, AllPieces } from './ChessPiece'
+import { PlayerColours, PieceKinds, AllPieces } from './ChessPieces'
 import { ChessBoardView } from './ChessBoardView'
-const A = 1
-const B = 2
-const C = 3
-const D = 4
-const E = 5
-const F = 6
-const G = 7
-const H = 8
-
-export const Columns = {
-    A,
-    B,
-    C,
-    D,
-    E,
-    F,
-    G,
-    H
-}
-const InitialPosition = [
-    // column A
-    [
-        AllPieces.WhiteRook,
-        AllPieces.WhitePawn,
-        null,
-        null,
-        null,
-        null,
-        AllPieces.BlackPawn,
-        AllPieces.BlackPawn,
-    ],
-    // coloumn B
-    [
-        AllPieces.WhiteKnight,
-        AllPieces.WhitePawn,
-        null,
-        null,
-        null,
-        null,
-        AllPieces.BlackPawn,
-        AllPieces.BlackKnight,
-    ],
-    // coloumn C
-    [
-        AllPieces.WhiteBishop,
-        AllPieces.WhitePawn,
-        null,
-        null,
-        null,
-        null,
-        AllPieces.BlackBishop,
-        AllPieces.BlackKnight,
-    ],
-    // coloumn D
-    [
-        AllPieces.WhiteQueen,
-        AllPieces.WhitePawn,
-        null,
-        null,
-        null,
-        null,
-        AllPieces.BlackPawn,
-        AllPieces.BlackQueen,
-    ],
-    // coloumn E
-    [
-        AllPieces.WhiteKing,
-        AllPieces.WhitePawn,
-        null,
-        null,
-        null,
-        null,
-        AllPieces.BlackPawn,
-        AllPieces.BlackKing,
-    ],
-    // coloumn F
-    [
-        AllPieces.WhiteBishop,
-        AllPieces.WhitePawn,
-        null,
-        null,
-        null,
-        null,
-        AllPieces.BlackPawn,
-        AllPieces.BlackBishop,
-    ],
-    // coloumn G
-    [
-        AllPieces.WhiteKnight,
-        AllPieces.WhitePawn,
-        null,
-        null,
-        null,
-        null,
-        AllPieces.BlackPawn,
-        AllPieces.BlackKnight,
-    ],
-    // coloumn H
-    [
-        AllPieces.WhiteRook,
-        AllPieces.WhitePawn,
-        null,
-        null,
-        null,
-        null,
-        AllPieces.BlackPawn,
-        AllPieces.BlackRook,
-    ],
-]
-
-const EmptyBoardPosition = [
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-    [null, null, null, null, null, null, null, null],
-]
+import { Columns, EmptyBoardPosition, InitialPosition } from './ChessBoardConstants'
 
 export class ChessBoard {
+
     static _rotateBoard(board) {
         var newBoard = new Array(board.length)
         for(var i = 0; i < board.length; i++) {
@@ -134,7 +16,7 @@ export class ChessBoard {
         }
         return newBoard
     }
-    constructor(boardPosition = InitialPosition) {
+    constructor(boardPosition = InitialPosition()) {
         this._boardPosition = boardPosition
         this._whiteBoardView = new ChessBoardView(boardPosition, PlayerColours.White)
         this._blackBoardView = new ChessBoardView(ChessBoard._rotateBoard(boardPosition), PlayerColours.Black)
@@ -170,10 +52,39 @@ export class ChessBoard {
     get blackView() {
         return this._blackBoardView
     }
+
+    get boardWidth() {
+        return 8
+    }
+
+    get boardHeight() {
+        return 8
+    }
+
+    makeMove(piece, columnTo, rowTo) {
+        const {c, r} = piece.position
+        this._boardPosition[c-1][r-1] = null
+        piece.firstMoveMade = true
+        piece.position = {
+            column: columnTo,
+            row: rowTo
+        }
+        this._boardPosition[columnTo-1][rowTo-1] = piece
+    }
+    _checkRowRange(row) {
+        if(row < 1 || row > this.boardHeight) {
+            throw new Error(row + " is out of range.")
+        }
+    }
+    _checkColumnRange(column) {
+        if(column < 1 || column > this.boardWidth) {
+            throw new Error(column + " is out of range.")
+        }
+    }
 }
 
 // for testing
-ChessBoard.emptyBoard = () => new ChessBoard(EmptyBoardPosition)
+ChessBoard.emptyBoard = () => new ChessBoard(EmptyBoardPosition())
 
 ChessBoard.initialBoard = () => new ChessBoard()
 
@@ -208,14 +119,6 @@ export function pawnValidMoves(board, playerColour, column, row) {
 
     if(row == 2 && boardView.canPawnMove(column, row, row + 2)) {
         candidateMoves.push({ column, row: row + 2})
-    }
-
-    if(column > 1 && boardView.canPawnTake(column - 1, row + 1)) {
-        candidateMoves.push({ column: column - 1, row: row + 1})
-    }
-
-    if(column < 8 && boardView.canPawnTake(column + 1, row + 1)) {
-        candidateMoves.push({ column: column + 1, row: row + 1})
     }
 
     return candidateMoves
