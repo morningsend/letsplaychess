@@ -11,5 +11,5 @@ export {
     PlayerColours,
     ChessBoard,
     ChessBoardView,
-    ChessEngine
+    ChessEngine,
 }

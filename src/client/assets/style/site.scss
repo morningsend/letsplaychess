@@ -3,12 +3,17 @@ h1 {
     font-size: 40px;
 }
 
-.piece{
+button.piece{
+    outline: none;
     box-sizing: content-box;
     display: inline-block;
     width: 43px;
     height: 43px;
     border: 1px solid black;
     margin: 0px;
-    padding: 0px
+    padding: 0px;
+
+    &:hover {
+        background-color: rgba(0,0,0,0.3);
+    }
 }

@@ -78,6 +78,7 @@ describe('ChessBoardView canKnightMove', () => {
         const view = board.whiteView
         const knight = board.pieceAt(Columns.B, 1)
         expect(knight).not.toBeNull()
+        expect(view.isEmpty(Columns.C, 3))
         expect(view.canKnightMove(knight, Columns.C, 3)).toBeTruthy()
     })
 
@@ -129,9 +130,9 @@ describe('ChessBoardView canKnightMove', () => {
 describe('ChessBoardView canKingMove', () => {
     const board = ChessBoard.emptyBoard()
 
-    it("edge case: bishop cannot move to same place as it was before", () => {
+    it("edge case: king cannot move to same place as it was before", () => {
         board.placePiece(
-            new ChessPiece(PlayerColours.White, PieceKinds.Bishop, { column: Columns.E, row: 4})
+            new ChessPiece(PlayerColours.White, PieceKinds.King, { column: Columns.E, row: 4})
         )
         const view = board.whiteView
         const king = board.pieceAt(Columns.E, 4)
@@ -333,7 +334,7 @@ describe('ChessBoardView canRookMove', () => {
 })
 
 describe('ChessBoardView canBishop', () => {
-    const board = ChessBoard.initialBoard()
+    const board = ChessBoard.emptyBoard()
     it("edge case: bishop cannot move to same place as it was before", () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Bishop, { column: Columns.E, row: 4 })
@@ -345,14 +346,17 @@ describe('ChessBoardView canBishop', () => {
     })
 
     it('bishop can move diagonally', () => {
-        board.placePiece(
-            new ChessPiece(PlayerColours.White, PieceKinds.Bishop, { column: Columns.E, row: 4 })
-        )
+        let bishop1 = new ChessPiece(PlayerColours.White, PieceKinds.Bishop, { column: Columns.A, row: 8})
+        console.log(bishop1)
+        board.placePiece(bishop1)
 
         const view = board.whiteView
-        const bishop = board.pieceAt(Columns.E, 4)
+        const bishop = board.pieceAt(Columns.A, 8)
+        console.log(bishop)
+        console.log(board.positions)
         expect(bishop).not.toBeNull()
-        expect(view.canBishopMove(bishop, Columns.G, 2)).toBeTruthy()
+        expect(view.isEmpty(Columns.H, 1)).toBeTruthy()
+        expect(view.canBishopMove(bishop, Columns.H, 1)).toBeTruthy()
     })
 
     it('bishop cannot move to non-diagonal squares', () => {

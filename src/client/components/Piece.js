@@ -15,7 +15,7 @@ import queenWhite from '../assets/svg/queen_white.svg'
 import bishopWhite from '../assets/svg/bishop_white.svg'
 import rookWhite from '../assets/svg/rook_white.svg'
 import knightWhite from '../assets/svg/knight_white.svg'
-import empty from '../assets/svg/pawn_white.svg'
+import empty from '../assets/svg/empty.svg'
 
 const pieceImages = {
     kingBlack,
@@ -30,49 +30,84 @@ const pieceImages = {
     bishopWhite,
     rookWhite,
     knightWhite,
-    empty
+    empty,
 }
 
 function getPieceSVG(piece) {
     let imageName = 'empty'
-    if(!piece) {
+    if (!piece) {
         return pieceImages[imageName]
     }
 
-    switch(piece.kind) {
-        case PieceKinds.Pawn:
-        imageName= 'pawn'
-            break
-        case PieceKinds.Knight:
+    switch (piece.kind) {
+    case PieceKinds.Pawn:
+        imageName = 'pawn'
+        break
+    case PieceKinds.Knight:
         imageName = 'knight'
-            break
-        case PieceKinds.Bishop:
+        break
+    case PieceKinds.Bishop:
         imageName = 'bishop'
-            break
-        case PieceKinds.Rook:
+        break
+    case PieceKinds.Rook:
         imageName = 'rook'
-            break
-        case PieceKinds.King:
+        break
+    case PieceKinds.King:
         imageName = 'king'
-            break
-        case PieceKinds.Queen:
+        break
+    case PieceKinds.Queen:
         imageName = 'queen'
-            break
-        default:
-            break
+        break
+    default:
+        break
     }
     imageName += piece.colour === PlayerColours.White ? 'White' : 'Black'
     return pieceImages[imageName]
 }
 
-export const Piece = (props) => {
-    const piece = props.piece
-    return piece
-    ? <object className="piece" data={ getPieceSVG(props.piece) } /> 
-    : <div className="piece piece-empty"></div>
-        
+export class Piece extends React.PureComponent {
+    constructor(props) {
+        super(props)
+        this.handleClick = this.handleClick.bind(this)
+    }
+
+    handleClick() {
+        const { onPieceClick, position } = this.props
+        if (onPieceClick) {
+            onPieceClick(position)
+        }
+    }
+    render() {
+        const {
+            piece, selected,
+        } = this.props
+        const selectedClass = selected ? ' selected' : ''
+
+        return (
+            <button className={`piece ${selectedClass}`} onClick={this.handleClick}>
+                {piece ? <img src={getPieceSVG(piece)} alt="piece" /> : null}
+            </button>
+        )
+    }
 }
 
-Piece.propType = {
-    piece: PropTypes.object
+Piece.propTypes = {
+    piece: PropTypes.shape({
+        colour: PropTypes.string,
+        kind: PropTypes.string,
+    }),
+    position: PropTypes.shape({
+        column: PropTypes.number,
+        row: PropTypes.number,
+    }),
+    onPieceClick: PropTypes.func,
+    selected: PropTypes.bool,
 }
+Piece.defaultProps = {
+    piece: null,
+    onPieceClick: () => {},
+    selected: false,
+    position: { column: 1, row: 1 },
+}
+
+export default Piece

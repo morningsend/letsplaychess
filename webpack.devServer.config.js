@@ -12,7 +12,7 @@ const config = {
         hotLoader: 'react-hot-loader/patch',
         devServer: 'webpack-dev-server/client?http://localhost:8080',
         devServerOnly: 'webpack/hot/only-dev-server',
-        app: './main.js'
+        app: './main.js',
     },
     output: {
         filename: '[name].bundle.js',
@@ -22,20 +22,17 @@ const config = {
 
     module: {
         rules: [
-            /*{
+            {
                 enforce: 'pre',
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 loader: 'eslint-loader'
-            },*/
+            },
             {
                 test: /\.(js|jsx)/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: {
-                        presets: ['react', 'env']
-                    }
                 }
             },
             {
@@ -87,7 +84,8 @@ const config = {
         stats: 'errors-only',
         open: true,
         port: 12000,
-        publicPath: '/'
+        publicPath: '/',
+        inline: true
     }
 }
 

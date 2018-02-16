@@ -3,5 +3,5 @@ import { Board } from './Board'
 
 export {
     Piece,
-    Board
+    Board,
 }

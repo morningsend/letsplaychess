@@ -1,4 +1,4 @@
-import { AllPieces, PieceKinds, PlayerColours } from './ChessPieces'
+import { PlayerColours } from './ChessPieces'
 import { ChessBoard } from './ChessBoard'
 
 export class PlayerState {
@@ -9,13 +9,12 @@ export class PlayerState {
             inCheck: false,
             checkMate: false,
             staleMate: false,
-            timeRemaining: 0, //seconds
+            timeRemaining: 0, // seconds
         }
     }
 }
 
 export class ChessEngine {
-
     constructor() {
         this.chessBoard = ChessBoard.initialBoard()
         this.turn = PlayerColours.White
@@ -23,12 +22,29 @@ export class ChessEngine {
         this.blackPlayerState = new PlayerState()
     }
 
-    makeMove(piece, moveFrom, moveTo) {
-        return []
+    makeMove(piece, columnTo, rowTo) {
+        if (!this.isMoveValid(piece, columnTo, rowTo)) {
+            return false
+        }
+        this.chessBoard.makeMove(piece, columnTo, rowTo)
+        return true
     }
 
-    isMoveValid(piece, moveFrom, moveTo) {
-        
+    isMoveValid(piece, columnTo, rowTo) {
+        if (!piece) {
+            return false
+        }
+        const { color } = piece
+        if (color === PlayerColours.White) {
+            return this.chessBoard
+                .whiteView
+                .canMovePiece(piece, columnTo, rowTo)
+        }
+        return false
+    }
+
+    get board() {
+        return this.chessBoard
     }
 }
 

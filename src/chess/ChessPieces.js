@@ -16,16 +16,17 @@ export const PieceKinds = {
     Bishop,
     King,
 }
+
 export const PlayerColours = {
     White,
     Black,
 }
-export class ChessPiece {
 
-    constructor(colour, kind, position) {
+export class ChessPiece {
+    constructor(colour, kind, position, firstMoveMade = false) {
         this._colour = colour
         this._kind = kind
-        this._firstMoveMade = false
+        this._firstMoveMade = firstMoveMade
         this._position = position
     }
 

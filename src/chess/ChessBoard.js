@@ -1,16 +1,15 @@
-import { PlayerColours, PieceKinds, AllPieces } from './ChessPieces'
+import { PlayerColours, PieceKinds, ChessPiece } from './ChessPieces'
 import { ChessBoardView } from './ChessBoardView'
-import { Columns, EmptyBoardPosition, InitialPosition } from './ChessBoardConstants'
+import { EmptyBoardPosition, InitialPosition } from './ChessBoardConstants'
 
 export class ChessBoard {
-
-    static _rotateBoard(board) {
-        var newBoard = new Array(board.length)
-        for(var i = 0; i < board.length; i++) {
-            var columnIndex = board.length - 1 - i;
-            var rowLength = board[columnIndex].length;
-            newBoard[i] = new Array(rowLength);
-            for(var j = 0; j < board[columnIndex].length; j++) {
+    static rotateBoard(board) {
+        const newBoard = new Array(board.length)
+        for (let i = 0; i < board.length; i += 1) {
+            const columnIndex = board.length - 1 - i
+            const rowLength = board[columnIndex].length
+            newBoard[i] = new Array(rowLength)
+            for (let j = 0; j < board[columnIndex].length; j += 1) {
                 newBoard[i][j] = board[columnIndex][rowLength - 1 - j]
             }
         }
@@ -19,10 +18,15 @@ export class ChessBoard {
     constructor(boardPosition = InitialPosition()) {
         this._boardPosition = boardPosition
         this._whiteBoardView = new ChessBoardView(boardPosition, PlayerColours.White)
-        this._blackBoardView = new ChessBoardView(ChessBoard._rotateBoard(boardPosition), PlayerColours.Black)
+        this._blackBoardView = new ChessBoardView(
+            ChessBoard.rotateBoard(boardPosition),
+            PlayerColours.Black,
+        )
         this._whitePiecesLost = []
         this._blackPiecesLost = []
         this._history = []
+        this.width = boardPosition ? boardPosition.length : 0
+        this.height = boardPosition ? boardPosition[0].length : 0
     }
 
     /**
@@ -50,45 +54,47 @@ export class ChessBoard {
     }
 
     get boardWidth() {
-        return 8
+        return this.width
     }
 
     get boardHeight() {
-        return 8
+        return this.height
     }
 
-    placePiece(piece, column, row) {
-        if(!column) {
-            column = piece.position.column
-        }
-        if(!row) {
-            row = piece.position.row
-        }
-        this._checkRange(column, row)
-        this._boardPosition[column - 1][row - 1] = piece
-        
-        //console.log("after placing piece",this._boardPosition[column - 1][row - 1])
-        piece.position = { column, row }
+    placePiece(piece, c, r) {
+        const columnTo = c || piece.position.column
+        const rowTo = r || piece.position.row
 
-        this._whiteBoardView.placePiece(piece, column, row)
+        this._checkRange(columnTo, rowTo)
+        this._boardPosition[columnTo - 1][rowTo - 1] = piece
+
+        // console.log("after placing piece",this._boardPosition[column - 1][row - 1])
+        this._boardPosition[columnTo - 1][rowTo - 1].position
+            = { column: columnTo, row: rowTo }
+
+        this._blackBoardView.placePiece(
+            new ChessPiece(piece.colour, piece.kind, null, piece.firstMoveMade),
+            (this.width - columnTo) + 1,
+            (this.height - rowTo) + 1,
+        )
     }
 
     makeMove(piece, columnTo, rowTo) {
-        const {column, row} = piece.position
+        const { column, row } = piece.position
         this._boardPosition[column - 1][row - 1] = null
         piece.firstMoveMade = true
         piece.position = {
             column: columnTo,
-            row: rowTo
+            row: rowTo,
         }
-        this._boardPosition[columnTo-1][rowTo-1] = piece
+        this._boardPosition[columnTo - 1][rowTo - 1] = piece
     }
     _checkRange(column, row) {
-        if(column < 1 || column > this.boardWidth) {
-            throw new Error(column + " is out of range.")
+        if (column < 1 || column > this.boardWidth) {
+            throw new Error(`${column} is out of range.`)
         }
-        if(row < 1 || row > this.boardHeight) {
-            throw new Error(row + " is out of range.")
+        if (row < 1 || row > this.boardHeight) {
+            throw new Error(`${row} is out of range.`)
         }
     }
 }
@@ -104,31 +110,33 @@ ChessBoard.initialBoard = () => new ChessBoard()
  *      1. forward one or two square if not occupied.
  *      2. forward diagonal one square if can take enemy pieces.
  * A move cannot leave the king in check, so must verify resulting position.
- * 
+ *
  * @param {ChessBoard} boardPosition
  * @param {PlayerColours} playerColour
  * @param {integer} column
  * @param {integer} row
  */
-export function pawnValidMoves(board, playerColour, column, row) {
-    var candidateMoves = []
-    const pawn = board.pieceAt(column, row)
-    const boardView = playerColour == PlayerColours.White ? board.whiteView : board.blackView
-    if(playerColour == PlayerColours.black) {
-        row = 8 - row + 1
-        column = 8 - column + 1
+export function pawnValidMoves(board, playerColour, c, r) {
+    const candidateMoves = []
+    let column = c
+    let row = r
+    const pawn = board.pieceAt(c, r)
+    const boardView = playerColour === PlayerColours.White ? board.whiteView : board.blackView
+    if (playerColour === PlayerColours.black) {
+        row = (8 - c) + 1
+        column = (8 - r) + 1
     }
 
-    if(row == 8) {
+    if (row === 8) {
         return []
     }
 
-    if(boardView.canPawnMove(pawn, column, row + 1)) {
-        candidateMoves.push({column, row: row + 1})
+    if (boardView.canPawnMove(pawn, column, row + 1)) {
+        candidateMoves.push({ column, row: row + 1 })
     }
 
-    if(row == 2 && boardView.canPawnMove(pawn, column, row + 2)) {
-        candidateMoves.push({ column, row: row + 2})
+    if (row === 2 && boardView.canPawnMove(pawn, column, row + 2)) {
+        candidateMoves.push({ column, row: row + 2 })
     }
 
     return candidateMoves
@@ -155,32 +163,32 @@ export function rookValidMoves(board, playerColour, column, row) {
 }
 
 export function computeValidMoves(board, column, row) {
-    piece = board.pieceAt(column, row)
-    moves = []
-    if ( piece == null) {
+    const piece = board.pieceAt(column, row)
+    let moves = []
+    if (piece == null) {
         return moves
     }
-    switch( piece.kind ) {
-        case PieceKinds.Pawn:
-            moves = pawnValidMoves(board, piece.colour, column, row)
-            break;
-        case PieceKinds.Knight:
-            moves = knightValidMoves(board, piece.colour, column, row)
-            break;
-        case PieceKinds.King:
-            moves = kingValidMoves(board, piece.colour, column, row)
-            break;
-        case PieceKinds.Queen:
-            moves = queenValidMoves(board, piece.colour, column, row)
-            break;
-        case PieceKinds.Rook:
-            moves = rookValidMoves(board, piece.colour, column, row)
-            break;
-        case PieceKinds.Bishop:
-            moves = bishopValidMoves(board, piece.colour, column, row)
-            break;
-        default:
-            throw new Error('chess piece not valid')
+    switch (piece.kind) {
+    case PieceKinds.Pawn:
+        moves = pawnValidMoves(board, piece.colour, column, row)
+        break
+    case PieceKinds.Knight:
+        moves = knightValidMoves(board, piece.colour, column, row)
+        break
+    case PieceKinds.King:
+        moves = kingValidMoves(board, piece.colour, column, row)
+        break
+    case PieceKinds.Queen:
+        moves = queenValidMoves(board, piece.colour, column, row)
+        break
+    case PieceKinds.Rook:
+        moves = rookValidMoves(board, piece.colour, column, row)
+        break
+    case PieceKinds.Bishop:
+        moves = bishopValidMoves(board, piece.colour, column, row)
+        break
+    default:
+        throw new Error('chess piece not valid')
     }
     return []
 }
