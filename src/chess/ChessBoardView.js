@@ -70,16 +70,19 @@ export class ChessBoardView {
             return false
         }
         const {column, row} = knight.position
-
+        //console.log(knight, columnTo, rowTo)
+        //console.log(this._boardPosition[columnTo -1][ rowTo -1])
         if(
             !(Math.abs(columnTo - column) == 1 && Math.abs(rowTo - row) == 2) &&
             !(Math.abs(columnTo - column) == 2 && Math.abs(rowTo - row) == 1)) {
+                //console.log("not l shape")
             return false
         }
-        
-        if(this.isEmpty(columnTo, rowTo) || this.canAttack(columnTo, rowTo)) {
+        if(this.isEmpty(columnTo, rowTo) || this.canAttack(knight, columnTo, rowTo)) {
+            //console.log("empty or can attach")
             return this.validateKingNotInCheck()
         }
+
         return false
     }
     
@@ -88,12 +91,15 @@ export class ChessBoardView {
             return false
         }
         const { column, row} = king.position
+        if(columnTo == column && rowTo == row) {
+            return false
+        }
         const piece = this._boardPosition[columnTo - 1][rowTo - 1]
-        if(!king.firstMoveMade && piece.kind == PieceKinds.Rook && !piece.firstMoveMade) {
+        if(!king.firstMoveMade && piece && piece.kind == PieceKinds.Rook && !piece.firstMoveMade) {
             return this.canKingCastle(king, piece, columnTo, rowTo)
         }
             // check can move one square
-        if(Math.abs(column - columnTo)!= 1 || Math.abs(row - rowTo) != 1) {
+        if(Math.abs(column - columnTo) > 1 && Math.abs(row - rowTo) > 1) {
             return false
         }
         if(!(this.isEmpty(columnTo, rowTo)|| this.canAttack(king, columnTo, rowTo))){
@@ -103,7 +109,7 @@ export class ChessBoardView {
     }
     canKingCastle(king, rook, columnTo, rowTo) {
         const { column, row } = king
-        if(king.kind != PieceKinds.King || rook.kind != PieceKings.Rook) {
+        if(king.kind != PieceKinds.King || rook.kind != PieceKinds.Rook) {
             return false
         }
         if(king.firstMoveMade || rook.firstMoveMade) {
@@ -129,7 +135,7 @@ export class ChessBoardView {
             return false
         }
         if(column - columnTo == 0 && this.isRowPathClear(column, row, rowTo)) {
-            if(this.isEmpty(columnTo, rowTo) || this.canAttack(columnTo, rowTo)) {
+            if(this.isEmpty(columnTo, rowTo) || this.canAttack(rook, columnTo, rowTo)) {
                 return this.validateKingNotInCheck()
             }
             else {
@@ -138,7 +144,7 @@ export class ChessBoardView {
         }
 
         if(row - rowTo == 0 && this.isColumnPathClear(row, column, columnTo)) {
-            if(this.isEmpty(columnTo, rowTo) || this.canAttack(columnTo, rowTo)) {
+            if(this.isEmpty(columnTo, rowTo) || this.canAttack(rook, columnTo, rowTo)) {
                 return this.validateKingNotInCheck()
             }
             else {
@@ -164,12 +170,12 @@ export class ChessBoardView {
         if(!this.isDiagonalPathClear(column, row, columnTo, rowTo)) {
             return false
         }
-        if(this.isEmpty(columnTo, rowTo) || this.canAttack(columnTo, rowTo)) {
+        if(this.isEmpty(columnTo, rowTo) || this.canAttack(bishop, columnTo, rowTo)) {
             return this.validateKingNotInCheck()
         }
         return false
     }
-    canQueeMove(queen, columnTo, rowTo) {
+    canQueenMove(queen, columnTo, rowTo) {
         return this.canRookMove(queen, columnTo, rowTo) && this.canBishopMove(queen, columnTo, rowTo)
     }
 
@@ -229,7 +235,7 @@ export class ChessBoardView {
             i != columnTo;
             i += columnIncrement, j += rowIncrement
         ) {
-            clearn = clear && this.isEmpty(i, j)
+            clear = clear && this.isEmpty(i, j)
         }
         return clear
     }
