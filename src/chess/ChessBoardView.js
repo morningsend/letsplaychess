@@ -30,9 +30,10 @@ export class ChessBoardView {
         if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
             return false
         }
-        if (piece.color !== this.playerColour) {
+        if (piece.colour !== this.playerColour) {
             return false
         }
+
         switch (piece.kind) {
             case PieceKinds.Pawn:
                 return this.canPawnMove(piece, columnTo, rowTo)
@@ -118,7 +119,7 @@ export class ChessBoardView {
             return this.canKingCastle(king, piece, columnTo, rowTo)
         }
         // check can move one square
-        if (Math.abs(column - columnTo) > 1 && Math.abs(row - rowTo) > 1) {
+        if (Math.abs(column - columnTo) > 1 || Math.abs(row - rowTo) > 1) {
             return false
         }
         if (!(this.isEmpty(columnTo, rowTo) || this.canAttack(king, columnTo, rowTo))) {

@@ -34,8 +34,10 @@ export class ChessEngine {
         if (!piece) {
             return false
         }
-        const { color } = piece
-        if (color === PlayerColours.White) {
+        const { colour } = piece
+        console.log(colour)
+        if (colour === PlayerColours.White) {
+            console.log("calling white view an move piece", piece, columnTo, rowTo)
             return this.chessBoard
                 .whiteView
                 .canMovePiece(piece, columnTo, rowTo)

@@ -39,8 +39,8 @@ export const InitialPosition = () => [
         null,
         null,
         null,
-        new ChessPiece(PlayerColours.Black, PieceKinds.Knight, { column: Columns.B, row: 7 }),
-        new ChessPiece(PlayerColours.Black, PieceKinds.Rook, { column: Columns.B, row: 8 }),
+        new ChessPiece(PlayerColours.Black, PieceKinds.Pawn, { column: Columns.B, row: 7 }),
+        new ChessPiece(PlayerColours.Black, PieceKinds.Knight, { column: Columns.B, row: 8 }),
     ],
     // coloumn C
     [

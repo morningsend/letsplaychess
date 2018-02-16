@@ -9,21 +9,21 @@ describe('ChessBoardView canPawnMove', () => {
         const view = board.whiteView
         const pawn = board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeNull()
-        expect(view.canPawnMove(pawn, Columns.E, 3)).toBeTruthy()
+        expect(view.canPawnMove(pawn, Columns.E, 3)).toBe(true)
     })
 
     it('pawn move two square from initial position should be true', () => {
         const view = board.whiteView
         const pawn = board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeNull()
-        expect(view.canPawnMove(pawn, Columns.E, 4)).toBeTruthy()
+        expect(view.canPawnMove(pawn, Columns.E, 4)).toBe(true)
     })
 
     it('pawn cannot move sideways if no piece to capture', () => {
         const view = board.whiteView
         const pawn = board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeNull()
-        expect(view.canPawnMove(pawn, Columns.D, 3)).toBeFalsy()
+        expect(view.canPawnMove(pawn, Columns.D, 3)).toBe(false)
     })
 
     it('pawn cannot move forward if a piece is in front of it', () => {
@@ -48,7 +48,7 @@ describe('ChessBoardView canPawnMove', () => {
         const pawn = board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeNull()
         console.log('piece blocking e3')
-        expect(view.canPawnMove(pawn, Columns.E, 3)).toBeFalsy()
+        expect(view.canPawnMove(pawn, Columns.E, 3)).toBe(false)
     })
 
     it('pawn can take move if an enemy piece at correct place', () => {
@@ -79,7 +79,7 @@ describe('ChessBoardView canKnightMove', () => {
         const knight = board.pieceAt(Columns.B, 1)
         expect(knight).not.toBeNull()
         expect(view.isEmpty(Columns.C, 3))
-        expect(view.canKnightMove(knight, Columns.C, 3)).toBeTruthy()
+        expect(view.canKnightMove(knight, Columns.C, 3)).toBe(true)
     })
 
     it('knight should not move in any other shapes', () => {
@@ -90,8 +90,8 @@ describe('ChessBoardView canKnightMove', () => {
         const knight = board.pieceAt(Columns.B, 1)
 
         expect(knight).not.toBeNull()
-        expect(view.canKnightMove(knight, Columns.B, 3)).toBeFalsy()
-        expect(view.canKnightMove(knight, Columns.C, 2)).toBeFalsy()
+        expect(view.canKnightMove(knight, Columns.B, 3)).toBe(false)
+        expect(view.canKnightMove(knight, Columns.C, 2)).toBe(false)
     })
 
     it('knight cannot move to area with friendly piece', () => {
@@ -105,8 +105,8 @@ describe('ChessBoardView canKnightMove', () => {
         const view = board.whiteView
         const knight = board.pieceAt(Columns.B, 1)
         expect(knight).not.toBeNull()
-        expect(view.isEmpty(Columns.C, 3)).toBeFalsy()
-        expect(view.canKnightMove(knight, Columns.C, 3)).toBeFalsy()
+        expect(view.isEmpty(Columns.C, 3)).toBe(false)
+        expect(view.canKnightMove(knight, Columns.C, 3)).toBe(false)
     })
 
     it('knight can take an enemy piece', () => {
@@ -121,9 +121,9 @@ describe('ChessBoardView canKnightMove', () => {
         const view = board.whiteView
         const knight = board.pieceAt(Columns.B, 1)
         expect(knight).not.toBeNull()
-        expect(view.isEmpty(Columns.C, 3)).toBeFalsy()
-        expect(view.canAttack(knight, Columns.C, 3)).toBeTruthy()
-        expect(view.canKnightMove(knight, Columns.C, 3)).toBeTruthy()
+        expect(view.isEmpty(Columns.C, 3)).toBe(false)
+        expect(view.canAttack(knight, Columns.C, 3)).toBe(true)
+        expect(view.canKnightMove(knight, Columns.C, 3)).toBe(true)
     })
 })
 
@@ -137,7 +137,7 @@ describe('ChessBoardView canKingMove', () => {
         const view = board.whiteView
         const king = board.pieceAt(Columns.E, 4)
         expect(king).not.toBeNull()
-        expect(view.canKingMove(king, Columns.E, 4)).toBeFalsy()
+        expect(view.canKingMove(king, Columns.E, 4)).toBe(false)
     })
     it('king can move one square in 8 directions', () => {
         console.log('king can move on square in 8 directions')
@@ -148,14 +148,28 @@ describe('ChessBoardView canKingMove', () => {
         const king = board.pieceAt(Columns.E, 4)
         console.log(king)
         expect(king).not.toBeNull()
-        expect(view.canKingMove(king, Columns.E, 5)).toBeTruthy()
-        expect(view.canKingMove(king, Columns.E, 3)).toBeTruthy()
-        expect(view.canKingMove(king, Columns.D, 5)).toBeTruthy()
-        expect(view.canKingMove(king, Columns.D, 4)).toBeTruthy()
-        expect(view.canKingMove(king, Columns.D, 3)).toBeTruthy()
-        expect(view.canKingMove(king, Columns.F, 5)).toBeTruthy()
-        expect(view.canKingMove(king, Columns.F, 4)).toBeTruthy()
-        expect(view.canKingMove(king, Columns.F, 3)).toBeTruthy()
+        expect(view.canKingMove(king, Columns.E, 5)).toBe(true)
+        expect(view.canKingMove(king, Columns.E, 3)).toBe(true)
+        expect(view.canKingMove(king, Columns.D, 5)).toBe(true)
+        expect(view.canKingMove(king, Columns.D, 4)).toBe(true)
+        expect(view.canKingMove(king, Columns.D, 3)).toBe(true)
+        expect(view.canKingMove(king, Columns.F, 5)).toBe(true)
+        expect(view.canKingMove(king, Columns.F, 4)).toBe(true)
+        expect(view.canKingMove(king, Columns.F, 3)).toBe(true)
+    })
+
+    it('king cannot move more than one square either horizontally or vertically', () => {
+        console.log('king can move on square in 8 directions')
+        board.placePiece(
+            new ChessPiece(PlayerColours.White, PieceKinds.King, { column: Columns.E, row: 4})
+        )
+        const view = board.whiteView
+        const king = board.pieceAt(Columns.E, 4)
+        console.log(king)
+        expect(king).not.toBeNull()
+        expect(view.canKingMove(king, Columns.E, 6)).toBe(false)
+        expect(view.canKingMove(king, Columns.B, 4)).toBe(false)
+        expect(view.canKingMove(king, Columns.D, 6)).toBe(false)
     })
 
     it('king cannot move to square being attacked', () => {
@@ -168,7 +182,7 @@ describe('ChessBoardView canKingMove', () => {
         const view = board.whiteView
         const king = board.pieceAt(Columns.E, 4)
         expect(king).not.toBeNull()
-        expect(view.canKingMove(king, Columns.D, 4)).toBeFalsy()
+        expect(view.canKingMove(king, Columns.D, 4)).toBe(false)
     })
 
     it('king can move to take enemy pieces', () => {
@@ -182,8 +196,8 @@ describe('ChessBoardView canKingMove', () => {
         const view = board.whiteView
         const king = board.pieceAt(Columns.E, 4)
         expect(king).not.toBeNull()
-        expect(view.canAttack(king, Columns.E, 5)).toBeTruthy()
-        expect(view.canKingMove(king, Columns.E, 5)).toBeTruthy()
+        expect(view.canAttack(king, Columns.E, 5)).toBe(true)
+        expect(view.canKingMove(king, Columns.E, 5)).toBe(true)
     })
 })
 
@@ -203,7 +217,7 @@ describe('ChessBoardView canKingCastle', () => {
         const rook = board.pieceAt(Columns.H, 1)
         expect(king).not.toBeNull()
         expect(rook).not.toBeNull()
-        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBeTruthy()
+        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBe(true)
     })
 
     it('king cannot castle to a rook which has made a move', () => {
@@ -220,7 +234,7 @@ describe('ChessBoardView canKingCastle', () => {
         rook.firstMoveMade = true
         expect(king).not.toBeNull()
         expect(rook).not.toBeNull()
-        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBeFalsy()
+        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBe(false)
     })
     
     it('king cannot castle to a rook, if king has made a move', () => {
@@ -237,7 +251,7 @@ describe('ChessBoardView canKingCastle', () => {
         king.firstMoveMade = true
         expect(king).not.toBeNull()
         expect(rook).not.toBeNull()
-        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBeFalsy()
+        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBe(false)
     })
 
     it('king cannot castle if there are piece between rook', () => {
@@ -256,7 +270,7 @@ describe('ChessBoardView canKingCastle', () => {
         
         expect(king).not.toBeNull()
         expect(rook).not.toBeNull()
-        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBeFalsy()
+        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBe(false)
     })
 
     it('king cannot castle if it moves through a square that is being attacked', () => {
@@ -276,7 +290,7 @@ describe('ChessBoardView canKingCastle', () => {
         
         expect(king).not.toBeNull()
         expect(rook).not.toBeNull()
-        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBeFalsy()
+        expect(view.canKingCastle(king, rook, Columns.G, 1)).toBe(false)
     })
 })
 
@@ -290,7 +304,7 @@ describe('ChessBoardView canRookMove', () => {
         const view = board.whiteView
         const rook = board.pieceAt(Columns.E, 4)
         expect(rook).not.toBeNull()
-        expect(view.canRookMove(rook, Columns.E, 4)).toBeFalsy()
+        expect(view.canRookMove(rook, Columns.E, 4)).toBe(false)
     })
 
     it("rook can move horizontally and vertically", () => {
@@ -301,11 +315,11 @@ describe('ChessBoardView canRookMove', () => {
         const view = board.whiteView
         const rook = board.pieceAt(Columns.E, 4)
         expect(rook).not.toBeNull()
-        expect(view.canRookMove(rook, Columns.E, 1)).toBeTruthy()
-        expect(view.canRookMove(rook, Columns.E, 3)).toBeTruthy()
-        expect(view.canRookMove(rook, Columns.E, 8)).toBeTruthy()
-        expect(view.canRookMove(rook, Columns.A, 4)).toBeTruthy()
-        expect(view.canRookMove(rook, Columns.H, 4)).toBeTruthy()
+        expect(view.canRookMove(rook, Columns.E, 1)).toBe(true)
+        expect(view.canRookMove(rook, Columns.E, 3)).toBe(true)
+        expect(view.canRookMove(rook, Columns.E, 8)).toBe(true)
+        expect(view.canRookMove(rook, Columns.A, 4)).toBe(true)
+        expect(view.canRookMove(rook, Columns.H, 4)).toBe(true)
     })
 
     it("rook cannot move to any other area except horizontally or vertically", () => {
@@ -316,7 +330,7 @@ describe('ChessBoardView canRookMove', () => {
         const view = board.whiteView
         const rook = board.pieceAt(Columns.E, 4)
         expect(rook).not.toBeNull()
-        expect(view.canRookMove(rook, Columns.D, 3)).toBeFalsy()
+        expect(view.canRookMove(rook, Columns.D, 3)).toBe(false)
     })
 
     it("rook cannot move to location if there are pieces in between", () => {
@@ -329,7 +343,7 @@ describe('ChessBoardView canRookMove', () => {
         const view = board.whiteView
         const rook = board.pieceAt(Columns.E, 4)
         expect(rook).not.toBeNull()
-        expect(view.canRookMove(rook, Columns.A, 4)).toBeFalsy()
+        expect(view.canRookMove(rook, Columns.A, 4)).toBe(false)
     })
 })
 
@@ -342,21 +356,18 @@ describe('ChessBoardView canBishop', () => {
         const view = board.whiteView
         const bishop = board.pieceAt(Columns.E, 4)
         expect(bishop).not.toBeNull()
-        expect(view.canBishopMove(bishop, Columns.E, 4)).toBeFalsy()
+        expect(view.canBishopMove(bishop, Columns.E, 4)).toBe(false)
     })
 
     it('bishop can move diagonally', () => {
         let bishop1 = new ChessPiece(PlayerColours.White, PieceKinds.Bishop, { column: Columns.A, row: 8})
-        console.log(bishop1)
         board.placePiece(bishop1)
 
         const view = board.whiteView
         const bishop = board.pieceAt(Columns.A, 8)
-        console.log(bishop)
-        console.log(board.positions)
         expect(bishop).not.toBeNull()
-        expect(view.isEmpty(Columns.H, 1)).toBeTruthy()
-        expect(view.canBishopMove(bishop, Columns.H, 1)).toBeTruthy()
+        expect(view.isEmpty(Columns.H, 1)).toBe(true)
+        expect(view.canBishopMove(bishop, Columns.H, 1)).toBe(true)
     })
 
     it('bishop cannot move to non-diagonal squares', () => {
@@ -365,7 +376,7 @@ describe('ChessBoardView canBishop', () => {
         )
         const view = board.whiteView
         const bishop = board.pieceAt(Columns.E, 4)
-        expect(view.canBishopMove(bishop, Columns.E, 3)).toBeFalsy()
+        expect(view.canBishopMove(bishop, Columns.E, 3)).toBe(false)
     })
 
     it('bishop can not move to location if piece in between', () => {
@@ -377,14 +388,14 @@ describe('ChessBoardView canBishop', () => {
         )
         const view = board.whiteView
         const bishop = board.pieceAt(Columns.G, 1)
-        expect(view.canBishopMove(bishop, Columns.E, 3)).toBeFalsy()
+        expect(view.canBishopMove(bishop, Columns.E, 3)).toBe(false)
     })
 
 })
 
 
 describe('ChessBoardView canQueenMove', () => {
-    const board = ChessBoard.initialBoard()
+    const board = ChessBoard.emptyBoard()
     it("edge case: queen cannot move to same place as it was before", () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Queen, { column: Columns.E, row: 4 })
@@ -392,7 +403,7 @@ describe('ChessBoardView canQueenMove', () => {
         const view = board.whiteView
         const queen = board.pieceAt(Columns.E, 4)
         expect(queen).not.toBeNull()
-        expect(view.canQueenMove(queen, Columns.E, 4)).toBeFalsy()
+        expect(view.canQueenMove(queen, Columns.E, 4)).toBe(false)
     })
 
     it('queen can move diagonally, horizontally, and vertically', () => {
@@ -404,15 +415,31 @@ describe('ChessBoardView canQueenMove', () => {
         const queen = board.pieceAt(Columns.E, 4)
         expect(queen).not.toBeNull()
 
-        expect(view.canQueenMove(queen, Columns.A, 4)).toBeTruthy()
-        expect(view.canQueenMove(queen, Columns.H, 4)).toBeTruthy()
-        expect(view.canQueenMove(queen, Columns.E, 1)).toBeTruthy()
-        expect(view.canQueenMove(queen, Columns.E, 8)).toBeTruthy()
-        expect(view.canQueenMove(queen, Columns.C, 2)).toBeTruthy()
-        expect(view.canQueenMove(queen, Columns.G, 6)).toBeTruthy()
-        expect(view.canQueenMove(queen, Columns.G, 2)).toBeTruthy()
-        expect(view.canQueenMove(queen, Columns.C, 6)).toBeTruthy()
+        expect(view.canQueenMove(queen, Columns.A, 4)).toBe(true)
+        expect(view.canQueenMove(queen, Columns.H, 4)).toBe(true)
+        expect(view.canQueenMove(queen, Columns.E, 1)).toBe(true)
+        expect(view.canQueenMove(queen, Columns.E, 8)).toBe(true)
+        expect(view.canQueenMove(queen, Columns.C, 2)).toBe(true)
+        expect(view.canQueenMove(queen, Columns.G, 6)).toBe(true)
+        expect(view.canQueenMove(queen, Columns.G, 2)).toBe(true)
+        expect(view.canQueenMove(queen, Columns.C, 6)).toBe(true)
     })
 })
 
 
+describe("ChessBoardView canMovePiece", () => {
+    const board = ChessBoard.initialBoard()
+    it("should return true for valid move of any piece", () => {
+        board.placePiece(
+            new ChessPiece(
+                PlayerColours.White,
+                PieceKinds.Pawn,
+                { column: Columns.E, row: 2 })
+        )
+
+        const pawn = board.pieceAt(Columns.E, 2)
+        const view = board.whiteView
+        expect(pawn).not.toBeNull()
+        expect(view.canMovePiece(pawn, Columns.E, 3))
+    })
+})
