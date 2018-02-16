@@ -1,4 +1,4 @@
-import { PieceKinds, ChessPiece } from './ChessPieces'
+import { PieceKinds } from './ChessPieces'
 /**
  * A board with pieces rotated depending on player colour so we
  * only have to implement piece movement logic once.
@@ -202,7 +202,7 @@ export class ChessBoardView {
     }
     canQueenMove(queen, columnTo, rowTo) {
         return this.canRookMove(queen, columnTo, rowTo)
-                && this.canBishopMove(queen, columnTo, rowTo)
+                || this.canBishopMove(queen, columnTo, rowTo)
     }
 
     isEmpty(column, row) {
