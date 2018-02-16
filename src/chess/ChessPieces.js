@@ -14,11 +14,11 @@ export const PieceKinds = {
     Rook,
     Queen,
     Bishop,
-    King
+    King,
 }
-export const PlayerColours = { 
+export const PlayerColours = {
     White,
-    Black
+    Black,
 }
 export class ChessPiece {
 

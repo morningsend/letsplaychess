@@ -1,4 +1,4 @@
-import { AllPieces, PieceKinds, PlayerColours } from './ChessPiece'
+import { AllPieces, PieceKinds, PlayerColours } from './ChessPieces'
 import { ChessBoard } from './ChessBoard'
 
 export class PlayerState {

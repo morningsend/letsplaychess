@@ -22,12 +22,12 @@ const config = {
 
     module: {
         rules: [
-            {
+            /*{
                 enforce: 'pre',
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 loader: 'eslint-loader'
-            },
+            },*/
             {
                 test: /\.(js|jsx)/,
                 exclude: /node_modules/,
@@ -52,6 +52,19 @@ const config = {
                 test: /\.html$/,
                 use: 'html-loader'
             },
+            {
+                test: /\.(svg|png|tiff|woff|woff2|jpg)/,
+                exclude: /node_modules/,
+                include: /src/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[hash].[ext]'
+                        }
+                    }
+                ]
+            }
         ]
     },
 
