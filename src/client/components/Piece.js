@@ -85,7 +85,7 @@ export class Piece extends React.PureComponent {
 
         return (
             <button className={`piece ${selectedClass}`} onClick={this.handleClick}>
-                {piece ? <img src={getPieceSVG(piece)} alt="piece" /> : null}
+                {piece ? <img src={getPieceSVG(piece)} alt='piece' /> : null}
             </button>
         )
     }

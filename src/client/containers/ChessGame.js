@@ -22,12 +22,9 @@ export class ChessGame extends React.Component {
         this.handleMakeMove = this.handleMakeMove.bind(this)
     }
     handleMakeMove(piece, columnTo, rowTo) {
-        console.log('handle on make move', piece, columnTo, rowTo)
-        console.log('handle on make move', this.state.chessEngine.board)
         if (piece && columnTo && rowTo) {
             if (this.state.chessEngine.makeMove(piece, columnTo, rowTo)) {
                 this.setState({ movesMade: this.state.movesMade + 1 })
-                console.log(this.state.chessEngine.board)
             }
         }
     }
