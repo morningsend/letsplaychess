@@ -348,7 +348,11 @@ describe('ChessBoardView canRookMove', () => {
 })
 
 describe('ChessBoardView canBishop', () => {
-    const board = ChessBoard.emptyBoard()
+    let board = null
+
+    beforeEach(() => {
+        board = ChessBoard.emptyBoard()
+    })
     it("edge case: bishop cannot move to same place as it was before", () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Bishop, { column: Columns.E, row: 4 })
@@ -362,12 +366,14 @@ describe('ChessBoardView canBishop', () => {
     it('bishop can move diagonally', () => {
         let bishop1 = new ChessPiece(PlayerColours.White, PieceKinds.Bishop, { column: Columns.A, row: 8})
         board.placePiece(bishop1)
-
         const view = board.whiteView
         const bishop = board.pieceAt(Columns.A, 8)
         expect(bishop).not.toBeNull()
-        expect(view.isEmpty(Columns.H, 1)).toBe(true)
-        expect(view.canBishopMove(bishop, Columns.H, 1)).toBe(true)
+        expect(view.isEmpty(Columns.C, 6)).toBe(true)
+        expect(view.canBishopMove(bishop, Columns.B, 7)).toBe(true)
+        expect(view.canBishopMove(bishop, Columns.C, 6)).toBe(true)
+        expect(view.canBishopMove(bishop, Columns.D, 5)).toBe(true)
+        expect(view.canBishopMove(bishop, Columns.E, 4)).toBe(true)
     })
 
     it('bishop cannot move to non-diagonal squares', () => {
