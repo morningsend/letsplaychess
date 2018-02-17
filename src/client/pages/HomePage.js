@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { LoginForm } from '../containers'
 
 export class HomePage extends React.Component {
     constructor(props) {
@@ -8,11 +9,12 @@ export class HomePage extends React.Component {
     }
     render() {
         return (
-            <div>
-                <h1>home page</h1>
+            <div className='page home-page'>
                 <p><Link to='/game'>start a quick game</Link></p>
 
                 <p><Link to='/login'>Login To Your account</Link></p>
+
+                <LoginForm />
             </div>
         )
     }

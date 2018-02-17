@@ -1,3 +1,7 @@
+body, p {
+    margin: 0;
+}
+
 h1 {
     color: blue;
     font-size: 40px;
@@ -15,5 +19,52 @@ button.piece{
 
     &:hover {
         background-color: rgba(0,0,0,0.3);
+    }
+}
+
+form.login-form {
+    background-color: #bababa;
+    width: 360px;
+    border-radius: 5px;
+    padding: 20px 100px;
+    box-shadow: 1px 4px 4px rgba(0,0,0,0.3);
+
+    input {
+        width: 100%;
+        margin: 10px 0px;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        border-bottom: 2px solid #ddd;
+        color: #eee;
+        text-align: center;
+        padding: 10px;
+    }
+    .login-button {
+        width: 200px;
+        height: 40px;
+        margin: 20px auto 0px auto;
+        display: block;
+        background-color: #555;
+        outline: none;
+        border: none;
+        color: #d7d7d7;
+    }
+}
+
+
+.page {
+    background-color: #b0b0b0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    &.home-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #464646;
+        .login-form {
+            position: absolute;
+        }
     }
 }
