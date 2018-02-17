@@ -10,7 +10,7 @@ export class AccountPage extends React.Component {
     }
     render() {
         return (
-            <Page>
+            <Page className='page account-page'>
                 <h1>Account Page</h1>
                 <Link to='/game'>Quick Game</Link>
                 <p>
