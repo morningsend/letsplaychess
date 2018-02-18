@@ -6,7 +6,7 @@ import { Page } from '../components'
 export class GamePage extends React.Component {
     render() {
         return (
-            <Page>
+            <Page className='page game-page'>
                 <h1>Game Page</h1>
                 <Link to='/account'>Goto Acount</Link>
                 <ChessGame />

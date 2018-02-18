@@ -7,7 +7,7 @@ export class Page extends React.PureComponent {
     }
     render() {
         return (
-            <main>
+            <main className={this.props.className}>
                 {this.props.children}
             </main>
         )

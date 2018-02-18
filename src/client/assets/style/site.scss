@@ -1,4 +1,4 @@
-body, p {
+body, p, h1 {
     margin: 0;
 }
 
@@ -64,7 +64,7 @@ form.login-form {
         justify-content: center;
         background-color: #464646;
         .login-form {
-            position: absolute;
+        //position: absolute;
         }
     }
 }
