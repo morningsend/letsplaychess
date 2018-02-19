@@ -4,6 +4,7 @@ import { PlayerBadge } from './PlayerBadge'
 import { Page } from './Page'
 import { Header } from './Header'
 import { Content } from './Content'
+import { PopUpMenu, MenuItem } from './PopUpMenu'
 
 export {
     Piece,
@@ -12,4 +13,6 @@ export {
     Page,
     Header,
     Content,
+    PopUpMenu,
+    MenuItem,
 }
