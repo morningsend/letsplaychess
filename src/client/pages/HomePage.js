@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { LoginForm } from '../containers'
+import { Page, Header, Content } from '../components'
 
 export class HomePage extends React.Component {
     constructor(props) {
@@ -9,13 +10,18 @@ export class HomePage extends React.Component {
     }
     render() {
         return (
-            <div className='page home-page'>
-                <p><Link to='/game'>start a quick game</Link></p>
-
-                <p><Link to='/login'>Login To Your account</Link></p>
-
-                <LoginForm />
-            </div>
+            <Page className='page home-page'>
+                <Header>
+                    <h1>Let&#39;s Play Chess</h1>
+                    <p>
+                        <Link to='/game'>start a quick game</Link>
+                        <Link to='/login'>Login To Your account</Link>
+                    </p>
+                </Header>
+                <Content>
+                    <LoginForm />
+                </Content>
+            </Page>
         )
     }
 }

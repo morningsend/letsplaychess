@@ -3,7 +3,13 @@ import PropTypes from 'prop-types'
 
 export class Page extends React.PureComponent {
     static propTypes = {
-        children: PropTypes.arrayOf(PropTypes.element).isRequired,
+        children: PropTypes.element,
+        className: PropTypes.string,
+    }
+
+    static defaultProps = {
+        children: null,
+        className: '',
     }
     render() {
         return (
@@ -13,5 +19,6 @@ export class Page extends React.PureComponent {
         )
     }
 }
+
 
 export default Page
