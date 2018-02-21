@@ -1,18 +1,17 @@
 import React from 'react'
-import './assets/style/site.scss'
-import { Routes } from './Routes'
+import { PropTypes } from 'prop-types'
+import { renderRoutes } from 'react-router-config'
 
-export class App extends React.Component {
-    constructor(props) {
-        super(props)
+export const App = (props) => {
+    return (
+        <main>
+            {renderRoutes(props.route.routes)}
+        </main>
+    )
+}
 
-        this.state = {}
-    }
-    render() {
-        return (
-            <Routes />
-        )
-    }
+App.propTypes = {
+    route: PropTypes.object.isRequired,
 }
 
 export default App

@@ -12,22 +12,22 @@ const config = {
         hotLoader: 'react-hot-loader/patch',
         devServer: 'webpack-dev-server/client?http://localhost:8080',
         devServerOnly: 'webpack/hot/only-dev-server',
-        app: './main.js'
+        app: './main.js',
     },
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, './build'),
-        publicPath: './assets'
+        publicPath: '.'
     },
 
     module: {
         rules: [
-            {
+            /*{
                 enforce: 'pre',
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 loader: 'eslint-loader'
-            },
+            },*/
             {
                 test: /\.(js|jsx)/,
                 exclude: /node_modules/,

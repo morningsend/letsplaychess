@@ -45,12 +45,3 @@ describe('ChessBoard', () => {
         expect(view.playerColour).toBe(PlayerColours.White)
     })
 })
-
-describe('pawnValidMoves', ()=>{
-
-    test('pawn can move one or two squares from starting position', () =>{
-        const board = ChessBoard.initialBoard()
-        const moves = pawnValidMoves(board, PlayerColours, Columns.E, 2)
-        expect(moves.length).toBe(2)
-    })
-})

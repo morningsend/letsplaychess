@@ -2,3 +2,8 @@
 @import "./base.scss";
 @import "./wideScreen.scss";
 @import "./mediumScreen.scss";
+@import "../fonts/raleway.scss";
+
+* { 
+    font-family: 'Raleway', sans-serif;
+}

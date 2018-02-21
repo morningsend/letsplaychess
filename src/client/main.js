@@ -1,26 +1,28 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
+import { renderRoutes } from 'react-router-config'
 import { AppContainer } from 'react-hot-loader'
-import { App } from './App'
+import { Routes } from './Routes'
 
+import './assets/style/site.scss'
 
-const render = (Component) => {
+const render = (routes) => {
     ReactDOM.render(
         <AppContainer>
             <BrowserRouter>
-                <Component />
+                {renderRoutes(routes)}
             </BrowserRouter>
         </AppContainer>,
         document.getElementById('root'),
     )
 }
 
-render(App)
+render(Routes)
 
 if (module.hot) {
-    module.hot.accept('./App', () => {
-        const NewApp = require('./App').default
+    module.hot.accept('./Routes', () => {
+        const NewApp = require('./Routes').default
         render(NewApp)
     })
 }

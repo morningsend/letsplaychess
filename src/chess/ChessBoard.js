@@ -3,23 +3,31 @@ import { ChessBoardView } from './ChessBoardView'
 import { EmptyBoardPosition, InitialPosition } from './ChessBoardConstants'
 
 export class ChessBoard {
-    static rotateBoard(board) {
+    static flipBoard(board) {
         const newBoard = new Array(board.length)
         for (let i = 0; i < board.length; i += 1) {
-            const columnIndex = board.length - 1 - i
+            const columnIndex = i
             const rowLength = board[columnIndex].length
             newBoard[i] = new Array(rowLength)
             for (let j = 0; j < board[columnIndex].length; j += 1) {
-                newBoard[i][j] = board[columnIndex][rowLength - 1 - j]
+                const piece = board[columnIndex][rowLength - 1 - j]
+                if (piece) {
+                    newBoard[i][j] = new ChessPiece(
+                        piece.colour,
+                        piece.kind,
+                        { column: i + 1, row: j + 1 },
+                        piece.firstMoveMade,
+                    )
+                }
             }
         }
         return newBoard
     }
     constructor(boardPosition = InitialPosition()) {
-        this._boardPosition = boardPosition
         this._whiteBoardView = new ChessBoardView(boardPosition, PlayerColours.White)
+        this._boardPosition = this._whiteBoardView._boardPosition
         this._blackBoardView = new ChessBoardView(
-            ChessBoard.rotateBoard(boardPosition),
+            ChessBoard.flipBoard(boardPosition),
             PlayerColours.Black,
         )
         this._whitePiecesLost = []
@@ -64,30 +72,39 @@ export class ChessBoard {
     placePiece(piece, c, r) {
         const columnTo = c || piece.position.column
         const rowTo = r || piece.position.row
-
+        const blackViewRowTo = this.height - rowTo + 1
         this._checkRange(columnTo, rowTo)
-        this._boardPosition[columnTo - 1][rowTo - 1] = piece
 
-        // console.log("after placing piece",this._boardPosition[column - 1][row - 1])
-        this._boardPosition[columnTo - 1][rowTo - 1].position
-            = { column: columnTo, row: rowTo }
-
+        this._whiteBoardView.placePiece(
+            piece, columnTo, rowTo
+        )
         this._blackBoardView.placePiece(
-            new ChessPiece(piece.colour, piece.kind, null, piece.firstMoveMade),
-            (this.width - columnTo) + 1,
-            (this.height - rowTo) + 1,
+            new ChessPiece(
+                piece.colour,
+                piece.kind,
+                null,
+                piece.firstMoveMade
+            ),
+            columnTo,
+            blackViewRowTo,
         )
     }
 
     makeMove(piece, columnTo, rowTo) {
-        const { column, row } = piece.position
-        this._boardPosition[column - 1][row - 1] = null
-        piece.firstMoveMade = true
-        piece.position = {
-            column: columnTo,
-            row: rowTo,
+        if(!piece) {
+            return false
         }
-        this._boardPosition[columnTo - 1][rowTo - 1] = piece
+        this._checkRange(columnTo, rowTo)
+        const { column, row } = piece.position
+        
+        const blackViewPiece = new ChessPiece(
+            piece.colour,
+            piece.kind,
+            { column: column, row: this.boardHeight - row + 1},
+            piece.firstMoveMade
+        )
+        this.blackView.makeMove(blackViewPiece, columnTo, this.boardHeight - rowTo + 1)
+        this.whiteView.makeMove(piece, columnTo, rowTo)
     }
     _checkRange(column, row) {
         if (column < 1 || column > this.boardWidth) {

@@ -16,15 +16,32 @@ export class ChessBoardView {
     get boardPosition() {
         return this._boardPosition
     }
+    makeMove(piece, columnTo, rowTo) {
+        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+            return false
+        }
+        const { column, row } = piece.position
+        const i = columnTo - 1, j = rowTo - 1
+        this._boardPosition[column - 1][row - 1] = null
+        this._boardPosition[i][j] = piece
+        this._boardPosition[i][j].firstMoveMade = true
+        this._boardPosition[i][j].position = {
+            column: columnTo,
+            row: rowTo
+        }
+        return true
+    }
+    pieceAt(column, row) {
+        return this._boardPosition[column - 1][row - 1]
+    }
     placePiece(piece, columnTo, rowTo) {
         if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
             return
         }
         const column = columnTo || piece.position.column
         const row = rowTo || piece.position.row
-
         this._boardPosition[column - 1][row - 1] = piece
-        piece.position = { column, row }
+        piece.position = { column: column, row: row }
     }
     canMovePiece(piece, columnTo, rowTo) {
         if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
@@ -33,7 +50,6 @@ export class ChessBoardView {
         if (piece.colour !== this.playerColour) {
             return false
         }
-
         switch (piece.kind) {
             case PieceKinds.Pawn:
                 return this.canPawnMove(piece, columnTo, rowTo)
@@ -57,7 +73,6 @@ export class ChessBoardView {
         }
 
         const { column, row } = pawn.position
-
         // pawn can only move 1 or 2 squares forward on y-axis
         if (rowTo <= row || rowTo > row + 2) {
             return false
@@ -99,7 +114,6 @@ export class ChessBoardView {
             // console.log("empty or can attach")
             return this.validateKingNotInCheck()
         }
-
         return false
     }
 
@@ -155,6 +169,7 @@ export class ChessBoardView {
         }
         const { column, row } = rook.position
         // constraint rook to move on only columns or rows
+        
         if (column - columnTo === 0 && rowTo - row === 0) {
             return false
         }
@@ -165,7 +180,6 @@ export class ChessBoardView {
             if (this.isEmpty(columnTo, rowTo) || this.canAttack(rook, columnTo, rowTo)) {
                 return this.validateKingNotInCheck()
             }
-
             return false
         }
 
@@ -173,7 +187,6 @@ export class ChessBoardView {
             if (this.isEmpty(columnTo, rowTo) || this.canAttack(rook, columnTo, rowTo)) {
                 return this.validateKingNotInCheck()
             }
-
             return false
         }
         return false
@@ -206,7 +219,7 @@ export class ChessBoardView {
     }
 
     isEmpty(column, row) {
-        return this._boardPosition[column - 1][row - 1] === null
+        return !this._boardPosition[column - 1][row - 1]
     }
 
     /**
@@ -221,7 +234,7 @@ export class ChessBoardView {
         const boardColumn = this._boardPosition[column - 1]
         let clear = true
         for (let i = rowFrom + increment; i !== rowTo; i += increment) {
-            clear = clear && (boardColumn[i - 1] === null)
+            clear = clear && (!boardColumn[i - 1])
         }
         return clear
     }
@@ -267,7 +280,7 @@ export class ChessBoardView {
 
     canAttack(piece, columnAt, rowAt) {
         const otherPiece = this._boardPosition[columnAt - 1][rowAt - 1]
-        if (otherPiece === null || otherPiece.colour === piece.colour) {
+        if (!otherPiece || otherPiece.colour === piece.colour) {
             return false
         }
         return true

@@ -34,11 +34,22 @@ export class ChessEngine {
         if (!piece) {
             return false
         }
+        const { chessBoard } = this
         const { colour } = piece
         if (colour === PlayerColours.White) {
             return this.chessBoard
                 .whiteView
                 .canMovePiece(piece, columnTo, rowTo)
+        } else if(colour === PlayerColours.Black) {
+            const blackViewPiece = this.chessBoard
+                                    .blackView
+                                    .pieceAt(
+                                        piece.position.column,
+                                        chessBoard.boardHeight - piece.position.row + 1
+                                    )
+            return this.chessBoard
+                        .blackView
+                        .canMovePiece(blackViewPiece, columnTo, chessBoard.boardHeight - rowTo + 1)
         }
         return false
     }
