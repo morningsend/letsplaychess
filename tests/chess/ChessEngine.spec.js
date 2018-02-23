@@ -1,10 +1,10 @@
 import { ChessEngine, Columns, PlayerColours } from '../../src/chess'
 
-describe("ChessEngine isMoveValid", () => {
+describe('ChessEngine isMoveValid', () => {
 
     let engine = new ChessEngine()
 
-    it("should return true if a move is valid, white pawn", () => {
+    it('should return true if a move is valid, white pawn', () => {
         const pawn = engine.board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeFalsy()
         expect(pawn.colour).toBe(PlayerColours.White)
@@ -24,18 +24,18 @@ describe("ChessEngine isMoveValid", () => {
     })
 })
 
-describe("ChessEngine makeMove", () => {
+describe('ChessEngine makeMove', () => {
     let engine = null
     beforeEach(() => { engine = new ChessEngine() })
 
-    it("should return true if a move is valid", () => {
+    it('should return true if a move is valid', () => {
         const pawn = engine.board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeFalsy()
         expect(engine.isMoveValid(pawn, Columns.E, 3)).toBe(true)
         expect(engine.makeMove(pawn, Columns.E, 3)).toBe(true)
     })
 
-    it("should place piece at the position moved to", () => {
+    it('should place piece at the position moved to', () => {
         const pawn = engine.board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeFalsy()
         expect(engine.isMoveValid(pawn, Columns.E, 3))
@@ -44,7 +44,7 @@ describe("ChessEngine makeMove", () => {
         expect(pawn.position.row).toBe(3)
     })
 
-    it("should place piece at the position moved to on chessBoard", () => {
+    it('should place piece at the position moved to on chessBoard', () => {
         const pawn = engine.board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeFalsy()
         expect(engine.isMoveValid(pawn, Columns.E, 3))

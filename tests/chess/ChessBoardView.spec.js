@@ -128,7 +128,7 @@ describe('ChessBoardView canKnightMove', () => {
 describe('ChessBoardView canKingMove', () => {
     const board = ChessBoard.emptyBoard()
 
-    it("edge case: king cannot move to same place as it was before", () => {
+    it('edge case: king cannot move to same place as it was before', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.King, { column: Columns.E, row: 4})
         )
@@ -296,7 +296,7 @@ describe('ChessBoardView canRookMove', () => {
     let board = null
     beforeEach(() => { board = ChessBoard.emptyBoard() })
 
-    it("edge case: rook cannot move to same place as it was before", () => {
+    it('edge case: rook cannot move to same place as it was before', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Rook, { column: Columns.E, row: 4})
         )
@@ -306,7 +306,7 @@ describe('ChessBoardView canRookMove', () => {
         expect(view.canRookMove(rook, Columns.E, 4)).toBe(false)
     })
 
-    it("rook can move horizontally and vertically", () => {
+    it('rook can move horizontally and vertically', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Rook, { column: Columns.E, row: 4})
         )
@@ -321,7 +321,7 @@ describe('ChessBoardView canRookMove', () => {
         expect(view.canRookMove(rook, Columns.H, 4)).toBe(true)
     })
 
-    it("rook cannot move to any other area except horizontally or vertically", () => {
+    it('rook cannot move to any other area except horizontally or vertically', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Rook, { column: Columns.E, row: 4})
         )
@@ -332,7 +332,7 @@ describe('ChessBoardView canRookMove', () => {
         expect(view.canRookMove(rook, Columns.D, 3)).toBe(false)
     })
 
-    it("rook cannot move to location if there are pieces in between", () => {
+    it('rook cannot move to location if there are pieces in between', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Rook, { column: Columns.E, row: 4})
         )
@@ -365,7 +365,7 @@ describe('ChessBoardView canBishopMove', () => {
     beforeEach(() => {
         board = ChessBoard.emptyBoard()
     })
-    it("edge case: bishop cannot move to same place as it was before", () => {
+    it('edge case: bishop cannot move to same place as it was before', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Bishop, { column: Columns.E, row: 4 })
         )
@@ -427,7 +427,7 @@ describe('ChessBoardView canBishopMove', () => {
 
 describe('ChessBoardView canQueenMove', () => {
     const board = ChessBoard.emptyBoard()
-    it("edge case: queen cannot move to same place as it was before", () => {
+    it('edge case: queen cannot move to same place as it was before', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.Queen, { column: Columns.E, row: 4 })
         )
@@ -458,9 +458,9 @@ describe('ChessBoardView canQueenMove', () => {
 })
 
 
-describe("ChessBoardView canMovePiece", () => {
+describe('ChessBoardView canMovePiece', () => {
     const board = ChessBoard.initialBoard()
-    it("should return true for valid move of any piece", () => {
+    it('should return true for valid move of any piece', () => {
         board.placePiece(
             new ChessPiece(
                 PlayerColours.White,

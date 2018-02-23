@@ -26,7 +26,7 @@ export class ChessEngine {
         if (!this.isMoveValid(piece, columnTo, rowTo)) {
             return false
         }
-        this.chessBoard.makeMove(piece, columnTo, rowTo)
+        return this.chessBoard.makeMove(piece, columnTo, rowTo)
         return true
     }
 
