@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { LoginForm } from '../containers'
 import { Page, Header, Content } from '../components'
 
-export class HomePage extends React.Component {
+export class RegisterPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {}
@@ -34,4 +34,4 @@ export class HomePage extends React.Component {
     }
 }
 
-export default HomePage
+export default RegisterPage

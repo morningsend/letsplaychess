@@ -11,7 +11,7 @@ export class LoginForm extends React.Component {
             <form className='login-form'>
                 <input placeholder='Username or email' />
                 <input placeholder='password' type='password' />
-                <button className='login-button'>
+                <button className='button login-button'>
                     Login
                 </button>
             </form>

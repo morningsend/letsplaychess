@@ -1,5 +1,5 @@
 import { App } from './App'
-import { HomePage, GamePage, AccountPage } from './pages'
+import { HomePage, GamePage, AccountPage, RegisterPage } from './pages'
 
 export const Routes = [
     {
@@ -15,9 +15,13 @@ export const Routes = [
                 component: GamePage,
             },
             {
-                path: 'account',
+                path: '/account',
                 component: AccountPage,
             },
+            {
+                path: '/register',
+                component: RegisterPage,
+            }
         ],
     },
 ]
