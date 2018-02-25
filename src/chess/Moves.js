@@ -1,3 +1,4 @@
+import { ChessPiece } from './'
 
 export const MoveTypes = {
     Normal: 'Normal',
@@ -8,12 +9,12 @@ export const MoveTypes = {
 
 export class Move {
 
-    constructor(piece, moveType, positionFrom, positionTo, extra) {
-        this._piece = piece
+    constructor(piece, moveType, positionTo, extra = {}) {
+        this._piece = new ChessPiece(piece.colour, piece.kind, { ...piece.position}, piece.firstMoveMade)
         this._moveType = moveType
-        this._positionFrom = positionFrom
         this._positionTo = positionTo
         this._extra = extra
+        this._positionFrom = { ...piece.position }
     }
 
     get piece() {
@@ -23,15 +24,15 @@ export class Move {
         return this._moveType
     }
 
-    get from() {
-        return this._positionFrom
-    }
-
     get to() {
         return this._positionTo
     }
     get extra() {
         return this._extra
+    }
+
+    get from() {
+        return this._positionFrom
     }
 }
 

@@ -6,15 +6,15 @@ export class ChessEngine {
         this.chessBoard = ChessBoard.initialBoard()
     }
 
-    makeMove(piece, columnTo, rowTo) {
-        if (!this.isMoveValid(piece, columnTo, rowTo)) {
+    makeMove(move) {
+        if (!this.isMoveValid(move)) {
             return false
         }
-        return this.chessBoard.makeMove(piece, columnTo, rowTo)
+        return this.chessBoard.makeMove(move)
     }
 
-    isMoveValid(piece, columnTo, rowTo) {
-        return this.chessBoard.isMoveValid(piece, columnTo, rowTo)
+    isMoveValid(move) {
+        return this.chessBoard.isMoveValid(move)
     }
 
     get board() {

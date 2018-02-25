@@ -1,11 +1,5 @@
 import {
-    ChessBoard,
-    pawnValidMoves,
-    kingValidMoves,
-    knightValidMoves,
-    queenValidMoves,
-    bishopValidMoves,
-    rookValidMoves,
+    ChessBoard
 } from '../../src/chess/ChessBoard'
 import { Columns } from '../../src/chess/ChessBoardConstants'
 import { PlayerColours, PieceKinds, ChessPiece } from '../../src/chess/ChessPieces'

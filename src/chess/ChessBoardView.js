@@ -84,14 +84,27 @@ export class ChessBoardView {
             row: rowTo
         }
     }
+    promovePawn(pawn, newKind) {
+        if(!pawn || !kind) {
+            return
+        }
+        if(pawn.colour === this._playerColour && pawn.position == this._height) {
+            pawn.kind = newKind
+        } else if(pawn.colur !== this._playerColour && pawn.position === 1) {
+            pawn.kind = newKind
+        }
+    }
 
+    kingCastle(king, rook) {
+
+    }
     undoLastMove() {
         if(this.moves.length == 0) {
             return
         }
         const lastMove = this.moves[this.moves.length - 1]
         const piece = this.pieceAt(lastMove.to.column, lastMove.to.row)
-        this.repositionPiece(piece, lastMove.from.column, lastMove.from.row)
+        this.repositionPiece(piece, piece.position.column, piece.position.row)
         piece.firstMoveMade = lastMove.piece.firstMoveMade
         
         switch(lastMove.type) {
@@ -115,40 +128,44 @@ export class ChessBoardView {
         }
         this.moves.splice(this.moves.length - 1, 1)
     }
-    makeMove(piece, columnTo, rowTo) {
+    
+    makeMoveCompact(move) {
+        const piece = this.pieceAt(move.from.column, move.to.column)
+        const destination = move.to
+        this.moves.push(move)
+        switch(move.type) {
+            case MoveTypes.Normal:
+                break
+            case MoveTypes.TakePiece:
+                break
+            case MoveTypes.PawnPromotion:
+                break
+            case MoveTypes.Castle:
+                break
+            default:
+                break
+        }
+    }
+    makeMove(piece, moveType, columnTo, rowTo) {
         if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
 
-        let positionFrom = { ...piece.position }
         let positionTo = { column: columnTo, row: rowTo }
-        let moveType = MoveTypes.Normal
         let extra = {}
-
         const { column, row } = piece.position
         const i = columnTo - 1, j = rowTo - 1
         this._boardPosition[column - 1][row - 1] = null
         const removed = this.removePieceAt(columnTo, rowTo)
         if(removed) {
-            moveType = MoveTypes.TakePiece
             extra.pieceTaken = removed
         }
-        if(piece.kind == PieceKinds.Pawn) {
-            if(piece.colour === this._playerColour && rowTo == this._height) {
-                moveType = MoveTypes.PawnPromotion
-            } else if(piece.colour !== this._playerColour && rowTo == 1) {
-                moveType = MoveTypes.PawnPromotion
-            }
-        }
-        const move = new Move(piece, moveType, positionFrom, positionTo, extra)
+        const move = new Move(piece, moveType, positionTo, extra)
         this.moves.push(move)
-
+        piece.position = { ...positionTo }
+        piece.firstMoveMade = true
         this._boardPosition[i][j] = piece
-        this._boardPosition[i][j].firstMoveMade = true
-        this._boardPosition[i][j].position = {
-            column: columnTo,
-            row: rowTo
-        }
+        
         return true
     }
     pieceAt(column, row) {
@@ -263,7 +280,7 @@ export class ChessBoardView {
         const notInCheck =  this.validateKingNotInCheck(king, otherPlayerView, columnTo, rowTo)
         return notInCheck
     }
-    canKingCastle(king, rook, columnTo, rowTo) {
+    canKingCastle(king, rook, columnTo, rowTo, otherPlayerView) {
         const { column, row } = king
         if (king.kind !== PieceKinds.King || rook.kind !== PieceKinds.Rook) {
             return false

@@ -98,10 +98,13 @@ export class ChessBoard {
         )
     }
 
-    makeMove(piece, columnTo, rowTo) {
+    makeMove(move) {
+        const { piece, to } = move
         if(!piece) {
             return false
         }
+        const columnTo = to.column
+        const rowTo = to.row
         this._checkRange(columnTo, rowTo)
         const { column, row } = piece.position
         
@@ -111,8 +114,8 @@ export class ChessBoard {
             { column: column, row: this.boardHeight - row + 1},
             piece.firstMoveMade
         )
-        this.blackView.makeMove(blackViewPiece, columnTo, this.boardHeight - rowTo + 1)
-        this.whiteView.makeMove(piece, columnTo, rowTo)
+        this.blackView.makeMove(blackViewPiece, move.type, columnTo, this.boardHeight - rowTo + 1)
+        this.whiteView.makeMove(piece, move.type, columnTo, rowTo)
         return true
     }
     _checkRange(column, row) {
@@ -123,16 +126,37 @@ export class ChessBoard {
             throw new Error(`${row} is out of range.`)
         }
     }
-    isMoveValid(piece, columnTo, rowTo) {
+    isMoveValid(move) {
+        const { piece, to } = move
+        const columnTo = to.column
+        const rowTo = to.row
+
         if (!piece) {
             return false
         }
         const chessBoard = this
         const { colour } = piece
         if (colour === PlayerColours.White) {
-            return this
-                    .whiteView
-                    .canMovePiece(piece, columnTo, rowTo)
+            switch(move.type) {
+                case MoveTypes.Normal:
+                case MoveTypes.PawnPromotion:
+                case MoveTypes.TakePiece:
+                    return this
+                            .whiteView
+                            .canMovePiece(piece, columnTo, rowTo)
+                case MoveTypes.Castle:
+                    return this
+                            .whiteView
+                            .canKingCastle(
+                                move.piece,
+                                move.extra.rook,
+                                columnTo,
+                                rowTo,
+                                this.blackView
+                            )
+                default:
+                    return false
+            }
         } else if(colour === PlayerColours.Black) {
             const blackViewPiece = this
                                     .blackView
@@ -140,10 +164,33 @@ export class ChessBoard {
                                         piece.position.column,
                                         chessBoard.boardHeight - piece.position.row + 1
                                     )
-            const canMove = this
-                    .blackView
-                    .canMovePiece(blackViewPiece, columnTo, chessBoard.boardHeight - rowTo + 1)
-                    
+            switch(move.type) {
+                case MoveTypes.Normal:
+                case MoveTypes.PawnPromotion:
+                case MoveTypes.TakePiece:
+                    return this
+                            .blackView
+                            .canMovePiece(blackViewPiece, columnTo, chessBoard.boardHeight - rowTo + 1)
+                case MoveTypes.Castle:
+                    let rook = move.extra.rook 
+                    const rookBlackView = new ChessBoard(
+                        rook.colour,
+                        rook.kind,
+                        { column: rook.position.column, row: chessBoard.boardHeight - rook.position.row + 1},
+                        rook.firstMoveMade
+                    )
+                    return this
+                            .blackView
+                            .canKingCastle(
+                                blackViewPiece,
+                                rookBlackView,
+                                columnTo,
+                                chessBoard.boardHeight - rowTo + 1,
+                                this.whiteView
+                            )
+                default:
+                    return false
+            }
             return canMove
         }
         
