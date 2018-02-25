@@ -43,7 +43,7 @@ export class ChessBoard {
      * 1 <= row <= 8
      */
     pieceAt(column, row) {
-        return this._boardPosition[column - 1][row - 1]
+        return this.whiteView._boardPosition[column - 1][row - 1]
     }
     get positions() {
         return this._boardPosition
@@ -69,6 +69,13 @@ export class ChessBoard {
         return this.height
     }
 
+    /**
+     * Put a piece on the chess board
+     * c and r are optional.
+     * @param {ChessPiece} piece 
+     * @param {tnteger} c 
+     * @param {integer} r 
+     */
     placePiece(piece, c, r) {
         const columnTo = c || piece.position.column
         const rowTo = r || piece.position.row
@@ -105,6 +112,7 @@ export class ChessBoard {
         )
         this.blackView.makeMove(blackViewPiece, columnTo, this.boardHeight - rowTo + 1)
         this.whiteView.makeMove(piece, columnTo, rowTo)
+        return true
     }
     _checkRange(column, row) {
         if (column < 1 || column > this.boardWidth) {
@@ -113,6 +121,63 @@ export class ChessBoard {
         if (row < 1 || row > this.boardHeight) {
             throw new Error(`${row} is out of range.`)
         }
+    }
+    isMoveValid(piece, columnTo, rowTo) {
+        if (!piece) {
+            return false
+        }
+        const chessBoard = this
+        const { colour } = piece
+        if (colour === PlayerColours.White) {
+            return this
+                    .whiteView
+                    .canMovePiece(piece, columnTo, rowTo)
+        } else if(colour === PlayerColours.Black) {
+            const blackViewPiece = this
+                                    .blackView
+                                    .pieceAt(
+                                        piece.position.column,
+                                        chessBoard.boardHeight - piece.position.row + 1
+                                    )
+            return this
+                    .blackView
+                    .canMovePiece(blackViewPiece, columnTo, chessBoard.boardHeight - rowTo + 1)
+        }
+        
+        return false
+    }
+    isKingInCheck(playerColour) {
+        let thisPlayerPieces = null
+        let otherPlayerPieces = null
+        let otherPlayerView = null
+        let inCheck = false
+        if(playerColour === PlayerColours.White) {
+            thisPlayerPieces = this.whiteView.thisPlayerPieces
+            otherPlayerPieces = this.blackView.thisPlayerPieces
+            otherPlayerView = this.blackView
+        } else {
+            thisPlayerPieces = this.blackView.thisPlayerPieces
+            otherPlayerPieces = this.whiteView.thisPlayerPieces
+            otherPlayerView = this.whiteView
+            
+        }
+        let thisKing = thisPlayerPieces.find( (p, index, obj) => p || p.kind == PieceKinds.King)
+        if(!thisKing || otherPlayerPieces.length == 0) {
+            return false
+        }
+        for(var i = 0; i < otherPlayerPieces.length; i++) {
+            if(otherPlayerView.canMovePiece(otherPlayerPieces[i], thisKing.position.column, this.height - thisKing.position.row + 1)) {
+                inCheck = true
+                break
+            }
+        }
+        return inCheck
+    }
+    isCheckMate(playerColour) {
+        return false
+    }
+    isStaleMate(playerColour) {
+        return false
     }
 }
 

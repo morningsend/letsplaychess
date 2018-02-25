@@ -4,9 +4,27 @@ import { PieceKinds } from './ChessPieces'
  * only have to implement piece movement logic once.
  */
 export class ChessBoardView {
+
+    static validateMoveRange(column, row) {
+        return !(column < 1 || column > 8) && !(row < 1 || row > 8)
+    }
+
+    static getAllPlayerPieces(boardPosition, playerColour) {
+        let piecesOfPlayer = []
+        for(let i = 0; i < boardPosition.length; i++) {
+            for(let j = 0; j < boardPosition[0].length; j++) {
+                const piece = boardPosition[i][j]
+                if (piece && piece.colour === playerColour) {
+                    piecesOfPlayer.push(piece)
+                }
+            }
+        }
+        return piecesOfPlayer
+    }
     constructor(boardPosition, playerColour) {
         this._boardPosition = boardPosition
         this._playerColour = playerColour
+        this._playerPieces = ChessBoardView.getAllPlayerPieces(boardPosition, playerColour)
     }
 
     get playerColour() {
@@ -16,6 +34,30 @@ export class ChessBoardView {
     get boardPosition() {
         return this._boardPosition
     }
+    get thisPlayerPieces() {
+        return this._playerPieces
+    }
+    removePieceAt(column, row) {
+        const piece = this.boardPosition[column - 1][row - 1]
+
+        if(!piece) {
+            return
+        }
+        this.boardPosition[column - 1][row - 1] = null
+        
+        if(piece.colour !== this._playerColour) { 
+            return    
+        }
+        for(let i = this._playerPieces.length - 1; i > - 1; i--) {
+            const p = this._playerPieces[i]
+            if (p.kind === piece.kind 
+                && p.position.column === piece.position.column 
+                && p.position.row === piece.position.row) {
+                    this._playerPieces.splice(i, 1)
+                    break
+                }
+        }
+    }
     makeMove(piece, columnTo, rowTo) {
         if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
             return false
@@ -23,6 +65,7 @@ export class ChessBoardView {
         const { column, row } = piece.position
         const i = columnTo - 1, j = rowTo - 1
         this._boardPosition[column - 1][row - 1] = null
+        this.removePieceAt(columnTo, rowTo)
         this._boardPosition[i][j] = piece
         this._boardPosition[i][j].firstMoveMade = true
         this._boardPosition[i][j].position = {
@@ -42,6 +85,10 @@ export class ChessBoardView {
         const row = rowTo || piece.position.row
         this._boardPosition[column - 1][row - 1] = piece
         piece.position = { column: column, row: row }
+
+        if (piece.colour === this._playerColour) {
+            this._playerPieces.push(piece)
+        }
     }
     canMovePiece(piece, columnTo, rowTo) {
         if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
@@ -293,8 +340,11 @@ export class ChessBoardView {
         return true
     }
 
-    static validateMoveRange(column, row) {
-        return !(column < 1 || column > 8) && !(row < 1 || row > 8)
+    hasValidMoves() {
+        if (this._playerPieces.length == 0) {
+            return false
+        }
+        return true
     }
 }
 

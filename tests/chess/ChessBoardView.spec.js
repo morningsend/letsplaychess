@@ -474,3 +474,70 @@ describe('ChessBoardView canMovePiece', () => {
         expect(view.canMovePiece(pawn, Columns.E, 3))
     })
 })
+
+describe('ChessBoardView thisPlayerChessPieces', () => {
+    it('should return 16 pieces for initial board', () => {
+        const board = ChessBoard.initialBoard()
+        const pieces = board.whiteView.thisPlayerPieces
+        expect(pieces).toBeTruthy()
+        expect(pieces.length).toBe(16)
+
+        const blackPieces = board.blackView.thisPlayerPieces
+        expect(blackPieces).toBeTruthy()
+        expect(blackPieces.length).toBe(16)
+    })
+
+    it('empty board should return empty piece list', () => {
+        const board = ChessBoard.emptyBoard()
+        const whitePieces = board.whiteView.thisPlayerPieces
+        expect(whitePieces).toBeTruthy()
+        expect(whitePieces.length).toBe(0)
+    })
+
+    it('empty board placing a new piece should return the piece in list', () => {
+        const board = ChessBoard.emptyBoard()
+        board.placePiece(
+            new ChessPiece(
+                PlayerColours.White,
+                PieceKinds.King,
+                {
+                    column: Columns.E,
+                    row: 3
+                })
+        )
+        const whitePieces = board.whiteView.thisPlayerPieces
+        const blackPieces = board.blackView.thisPlayerPieces
+        expect(whitePieces.length).toBe(1)
+        expect(blackPieces.length).toBe(0)
+        expect(whitePieces[0].kind).toBe(PieceKinds.King)
+    })
+    
+    it('white takes black piece, black piece should be removed from list', () => {
+        const board = ChessBoard.emptyBoard()
+        const whiteKing = new ChessPiece(
+            PlayerColours.White,
+            PieceKinds.King,
+            {
+                column: Columns.E,
+                row: 3
+            })
+        board.placePiece(whiteKing)
+        board.placePiece(
+            new ChessPiece(
+                PlayerColours.Black,
+                PieceKinds.Pawn,
+                {
+                    column: Columns.E,
+                    row: 2
+                })
+        )
+        board.makeMove(whiteKing, Columns.E, 2)
+        const whitePieces = board.whiteView.thisPlayerPieces
+        expect(whitePieces.length).toBe(1)
+        expect(board.pieceAt(Columns.E, 2)).toBeTruthy()
+        expect(board.pieceAt(Columns.E, 2).kind).toBe(PieceKinds.King)
+        const blackPieces = board.blackView.thisPlayerPieces
+        expect(blackPieces.length).toBe(0)
+
+    })
+})

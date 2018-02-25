@@ -8,7 +8,7 @@ import {
     rookValidMoves,
 } from '../../src/chess/ChessBoard'
 import { Columns } from '../../src/chess/ChessBoardConstants'
-import { PlayerColours, PieceKinds } from '../../src/chess/ChessPieces'
+import { PlayerColours, PieceKinds, ChessPiece } from '../../src/chess/ChessPieces'
 
 describe('ChessBoard', () => {
     const board = ChessBoard.initialBoard()
@@ -43,5 +43,67 @@ describe('ChessBoard', () => {
     it('whiteView should return view with playerColour == white', () =>  {
         const view = board.whiteView
         expect(view.playerColour).toBe(PlayerColours.White)
+    })
+})
+
+describe('ChessBoard isKingInCheck', () => {
+    let board = null
+    let whiteKing = new ChessPiece(
+        PlayerColours.White,
+        PieceKinds.King,
+        {
+            column: Columns.E,
+            row: 4
+        }
+    )
+
+    let blackKing = new ChessPiece(
+        PlayerColours.Black,
+        PieceKinds.King,
+        {
+            column: Columns.E,
+            row: 4
+        }
+    )
+    let blackRook = new ChessPiece(
+        PlayerColours.Black,
+        PieceKinds.Rook,
+        {
+            column: Columns.E,
+            row: 1
+        }
+    )
+
+    let whiteRook = new ChessPiece(
+        PlayerColours.White,
+        PieceKinds.Rook,
+        {
+            column: Columns.E,
+            row: 1
+        }
+    )
+    beforeEach(() => {
+        board = ChessBoard.emptyBoard()
+    })
+    it('should be false if king is not on the board', () => {
+        expect(board.isKingInCheck(PlayerColours.White)).toBe(false)
+        expect(board.isKingInCheck(PlayerColours.Black)).toBe(false)
+    })
+
+    it('should be false if king is not attacked', () => {
+        board.placePiece(whiteKing)
+        expect(board.isKingInCheck(PlayerColours.White)).toBe(false)
+    })
+
+    it('should be true if king is attacked', () => {
+        board.placePiece(whiteKing)
+        board.placePiece(blackRook)
+        expect(board.isKingInCheck(PlayerColours.White)).toBe(true)
+    })
+
+    it.only('should be true if black king is attacked', () => {
+        board.placePiece(blackKing)
+        board.placePiece(whiteRook)
+        expect(board.isKingInCheck(PlayerColours.Black)).toBe(true)
     })
 })
