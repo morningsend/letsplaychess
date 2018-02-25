@@ -29,12 +29,7 @@ const InitialGameStates = {
 const InitialPlayerStates = {
 
 }
-export const MoveType = {
-    Normal: 'Normal',
-    Castle: 'Castle',
-    PawnPromotion: 'PawnPromotion',
-    TakePiece: 'TakePiece'
-}
+
 
 export const PlayerRequest = {
     Surrender: 'Surrender',
@@ -45,30 +40,6 @@ export const PlayerRequest = {
 export class PlayerOption {
     constructor()
 }
-export class Move {
-    constructor(playerColour, postionFrom, positionTo, type) {
-        this.from = postionFrom
-        this.to = positionTo
-        this.type = type
-        this.playerColour = playerColour
-    }
-    get colour() {
-        return this.playerColour
-    }
-
-    get positionFrom() {
-        return this.positionFrom
-    }
-
-    get positionTo() {
-        return this.positionTo
-    }
-
-    get moveType() {
-        return this.type
-    }
-}
-
 /**
  * 
  */

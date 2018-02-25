@@ -1,6 +1,7 @@
 import { PlayerColours, PieceKinds, ChessPiece } from './ChessPieces'
 import { ChessBoardView } from './ChessBoardView'
 import { EmptyBoardPosition, InitialPosition } from './ChessBoardConstants'
+import { MoveTypes, Move } from './Moves'
 
 export class ChessBoard {
     static flipBoard(board) {
@@ -139,9 +140,11 @@ export class ChessBoard {
                                         piece.position.column,
                                         chessBoard.boardHeight - piece.position.row + 1
                                     )
-            return this
+            const canMove = this
                     .blackView
                     .canMovePiece(blackViewPiece, columnTo, chessBoard.boardHeight - rowTo + 1)
+                    
+            return canMove
         }
         
         return false
@@ -185,7 +188,7 @@ export class ChessBoard {
             thisPlayerView = this.blackView
             otherPlayerView = this.whiteView
         }
-
+        
         thisKing = thisPlayerView.getPieceOfKind(PieceKinds.King)
         
         let { column, row } = thisKing.position
@@ -204,11 +207,13 @@ export class ChessBoard {
             if(!thisPlayerView.validateMoveRange(c, r)) {
                 continue
             }
-            if(thisPlayerView.canKingMove(thisKing, c, r)) {
-                
+            //console.log("checking king can move out of check", thisKing, c, r)
+            if(thisPlayerView.canKingMove(thisKing, c, r, otherPlayerView)) {
+                //console.log("king can move out of check")
+                return false
             }
         }
-        return false
+        return true
     }
     isStaleMate(playerColour) {
         return false
