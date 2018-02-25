@@ -86,24 +86,82 @@ describe('ChessBoard isKingInCheck', () => {
         board = ChessBoard.emptyBoard()
     })
     it('should be false if king is not on the board', () => {
-        expect(board.isKingInCheck(PlayerColours.White)).toBe(false)
-        expect(board.isKingInCheck(PlayerColours.Black)).toBe(false)
+        expect(board.isKingInCheck(PlayerColours.White).inCheck).toBe(false)
+        expect(board.isKingInCheck(PlayerColours.Black).inCheck).toBe(false)
     })
 
     it('should be false if king is not attacked', () => {
         board.placePiece(whiteKing)
-        expect(board.isKingInCheck(PlayerColours.White)).toBe(false)
+        const result = board.isKingInCheck(PlayerColours.White)
+        expect(board.isKingInCheck(PlayerColours.White).inCheck).toBe(false)
     })
 
     it('should be true if king is attacked', () => {
         board.placePiece(whiteKing)
         board.placePiece(blackRook)
-        expect(board.isKingInCheck(PlayerColours.White)).toBe(true)
+        expect(board.isKingInCheck(PlayerColours.White).inCheck).toBe(true)
     })
 
-    it.only('should be true if black king is attacked', () => {
+    it('should be true if black king is attacked', () => {
         board.placePiece(blackKing)
         board.placePiece(whiteRook)
-        expect(board.isKingInCheck(PlayerColours.Black)).toBe(true)
+        const result = board.isKingInCheck(PlayerColours.Black)
+        expect(result.inCheck).toBe(true)
     })
+})
+
+
+describe('ChessBoard isCheckMate', () => {
+    let whiteKing = null
+    let board = null
+    let blackQueen = null
+    let blackRook = null
+    beforeEach(() => {
+        board = ChessBoard.emptyBoard()
+        whiteKing = new ChessPiece(
+            PlayerColours.White,
+            PieceKinds.King,
+            { column: Columns.E, row: 1 },
+            false
+        )
+        blackQueen = new ChessPiece(
+            PlayerColours.Black,
+            PieceKinds.Queen,
+            { column: Columns.A, row: 1},
+            true
+        )
+        blackRook = new ChessPiece(
+            PlayerColours.Black,
+            PieceKinds.Rook,
+            { column: Columns.A, row: 2},
+            true
+        )
+    })
+    it('should be false if king is on not board', () => {
+        const result = board.isCheckMate(PlayerColours.White)
+        expect(result).toBe(false)
+
+    })
+
+    it('should be false if king is not attacked', () => {
+        board.placePiece(whiteKing) 
+        const result = board.isCheckMate(PlayerColours.White)
+        expect(result).toBe(false)
+    })
+
+    it('should be true if king can move out of check', () => {
+        board.placePiece(whiteKing)
+        board.placePiece(blackQueen)
+        const result = board.isCheckMate(PlayerColours.White)
+        expect(result).toBe(false)
+    })
+
+    it('should return true if king cannot move out of check', () => {
+        board.placePiece(whiteKing)
+        board.placePiece(blackQueen)
+        board.placePiece(blackRook)
+        const result = board.isCheckMate(PlayerColours.White)
+        expect(result).toBe(true)
+    })
+    
 })

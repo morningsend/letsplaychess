@@ -147,33 +147,67 @@ export class ChessBoard {
         return false
     }
     isKingInCheck(playerColour) {
-        let thisPlayerPieces = null
-        let otherPlayerPieces = null
-        let otherPlayerView = null
-        let inCheck = false
-        if(playerColour === PlayerColours.White) {
-            thisPlayerPieces = this.whiteView.thisPlayerPieces
-            otherPlayerPieces = this.blackView.thisPlayerPieces
-            otherPlayerView = this.blackView
+        if (playerColour === PlayerColours.White) {
+            return this
+                    .whiteView
+                    .isThisKingInCheck(this.blackView)
         } else {
-            thisPlayerPieces = this.blackView.thisPlayerPieces
-            otherPlayerPieces = this.whiteView.thisPlayerPieces
-            otherPlayerView = this.whiteView
-            
+            return this
+                    .blackView
+                    .isThisKingInCheck(this.whiteView)
         }
-        let thisKing = thisPlayerPieces.find( (p, index, obj) => p || p.kind == PieceKinds.King)
-        if(!thisKing || otherPlayerPieces.length == 0) {
+    }
+    /**
+     * Detected if player is checkmate
+     * @param {PlayerColours} playerColour 
+     */
+    isCheckMate(playerColour) {
+        // algorithm:
+        // 1. get all possible moves of king, see if king can move out of check，if possible, terminate, return false
+        // 
+        // 2. find all enemy pieces that are attacking the king,
+        // 3. for each enemy piece, see if they can be taken by a friendly piece.
+        // 4. if possible, terminate, return false
+        // 5. return true.
+        const kingInCheck = this.isKingInCheck(playerColour)
+
+        if(!kingInCheck.inCheck) {
             return false
         }
-        for(var i = 0; i < otherPlayerPieces.length; i++) {
-            if(otherPlayerView.canMovePiece(otherPlayerPieces[i], thisKing.position.column, this.height - thisKing.position.row + 1)) {
-                inCheck = true
-                break
+        
+        let thisPlayerView = null
+        let otherPlayerView = null
+        let thisKing = null
+        if(playerColour === PlayerColours.White) {
+            thisPlayerView = this.whiteView
+            otherPlayerView = this.blackView
+        } else {
+            thisPlayerView = this.blackView
+            otherPlayerView = this.whiteView
+        }
+
+        thisKing = thisPlayerView.getPieceOfKind(PieceKinds.King)
+        
+        let { column, row } = thisKing.position
+        let moves = [
+            [ column - 1, row],
+            [ column - 1, row -1],
+            [ column - 1, row + 1],
+            [ column, row + 1],
+            [ column, row - 1],
+            [ column + 1, row],
+            [ column + 1, row - 1],
+            [ column + 1, row + 1],
+        ]
+        for(let i = 0; i < moves.length; i++) {
+            const [c, r] = moves[i]
+            if(!thisPlayerView.validateMoveRange(c, r)) {
+                continue
+            }
+            if(thisPlayerView.canKingMove(thisKing, c, r)) {
+                
             }
         }
-        return inCheck
-    }
-    isCheckMate(playerColour) {
         return false
     }
     isStaleMate(playerColour) {

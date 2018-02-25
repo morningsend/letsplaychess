@@ -5,26 +5,30 @@ import { PieceKinds } from './ChessPieces'
  */
 export class ChessBoardView {
 
-    static validateMoveRange(column, row) {
-        return !(column < 1 || column > 8) && !(row < 1 || row > 8)
+    validateMoveRange(column, row) {
+        return !(column < 1 || column > this._width) && !(row < 1 || row > this._height)
     }
 
-    static getAllPlayerPieces(boardPosition, playerColour) {
-        let piecesOfPlayer = []
+    createPieceLists(boardPosition) {
+        this._thisPlayerPieces = []
+        this._otherPlayerPieces = []
         for(let i = 0; i < boardPosition.length; i++) {
             for(let j = 0; j < boardPosition[0].length; j++) {
                 const piece = boardPosition[i][j]
-                if (piece && piece.colour === playerColour) {
-                    piecesOfPlayer.push(piece)
+                if (piece && piece.colour === this._playerColour) {
+                    this._thisPlayerPieces.push(piece)
+                } else if(piece && piece.colour !== this._playerColour){
+                    this._otherPlayerPieces.push(piece)
                 }
             }
         }
-        return piecesOfPlayer
     }
     constructor(boardPosition, playerColour) {
         this._boardPosition = boardPosition
+        this._width = boardPosition.length
+        this._height = boardPosition[0].length
         this._playerColour = playerColour
-        this._playerPieces = ChessBoardView.getAllPlayerPieces(boardPosition, playerColour)
+        this.createPieceLists(boardPosition)
     }
 
     get playerColour() {
@@ -35,7 +39,10 @@ export class ChessBoardView {
         return this._boardPosition
     }
     get thisPlayerPieces() {
-        return this._playerPieces
+        return this._thisPlayerPieces
+    }
+    get otherPlayerPieces() {
+        return this._otherPlayerPieces
     }
     removePieceAt(column, row) {
         const piece = this.boardPosition[column - 1][row - 1]
@@ -44,22 +51,25 @@ export class ChessBoardView {
             return
         }
         this.boardPosition[column - 1][row - 1] = null
-        
+        let pieceList = []
         if(piece.colour !== this._playerColour) { 
-            return    
+            pieceList = this._otherPlayerPieces
+        } else {
+            pieceList = this._thisPlayerPieces
         }
-        for(let i = this._playerPieces.length - 1; i > - 1; i--) {
-            const p = this._playerPieces[i]
+        for(let i = pieceList.length - 1; i > - 1; i--) {
+            const p = this.pieceList[i]
             if (p.kind === piece.kind 
                 && p.position.column === piece.position.column 
                 && p.position.row === piece.position.row) {
-                    this._playerPieces.splice(i, 1)
+
+                    pieceList.splice(i, 1)
                     break
                 }
         }
     }
     makeMove(piece, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = piece.position
@@ -78,7 +88,7 @@ export class ChessBoardView {
         return this._boardPosition[column - 1][row - 1]
     }
     placePiece(piece, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return
         }
         const column = columnTo || piece.position.column
@@ -87,11 +97,13 @@ export class ChessBoardView {
         piece.position = { column: column, row: row }
 
         if (piece.colour === this._playerColour) {
-            this._playerPieces.push(piece)
+            this._thisPlayerPieces.push(piece)
+        } else {
+            this._otherPlayerPieces.push(piece)
         }
     }
     canMovePiece(piece, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         if (piece.colour !== this.playerColour) {
@@ -115,7 +127,7 @@ export class ChessBoardView {
         }
     }
     canPawnMove(pawn, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
 
@@ -145,7 +157,7 @@ export class ChessBoardView {
     }
 
     canKnightMove(knight, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = knight.position
@@ -165,7 +177,7 @@ export class ChessBoardView {
     }
 
     canKingMove(king, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = king.position
@@ -211,7 +223,7 @@ export class ChessBoardView {
         return true
     }
     canRookMove(rook, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = rook.position
@@ -240,7 +252,7 @@ export class ChessBoardView {
     }
 
     canBishopMove(bishop, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = bishop.position
@@ -341,10 +353,52 @@ export class ChessBoardView {
     }
 
     hasValidMoves() {
-        if (this._playerPieces.length == 0) {
+        if (this._thisPlayerPieces.length == 0) {
             return false
         }
         return true
+    }
+
+    getPiecesOfKind(pieceKind) {
+        let pieces = []
+        const allPieces = this._thisPlayerPieces
+        for(let i = 0; i < allPieces.length; i++) {
+            if(allPieces[i].kind === pieceKind) {
+                pieces.push(allPieces[i])
+            }
+        }
+        return pieces
+    }
+
+    getPieceOfKind(pieceKind) {
+        let piece = null
+        const allPieces = this._thisPlayerPieces
+        for(let i = 0; i < allPieces.length; i++) {
+            if(allPieces[i].kind === pieceKind) {
+                piece = allPieces[i]
+                break
+            }
+        }
+        return piece
+    }
+
+    isThisKingInCheck(otherPlayerView) {
+        let inCheck = false
+        let attackers = []
+        let thisKing = this.getPieceOfKind(PieceKinds.King)
+        let otherPlayerPieces = otherPlayerView.thisPlayerPieces
+        if(!thisKing || this._otherPlayerPieces.length == 0) {
+            return { inCheck, attackers }
+        }
+        
+        for(var i = 0; i < otherPlayerPieces.length; i++) {
+            if(otherPlayerView.canMovePiece(otherPlayerPieces[i], thisKing.position.column, this._height - thisKing.position.row + 1)) {
+                attackers.push(otherPlayerPieces[i])
+                inCheck = true
+            }
+        }
+
+        return { inCheck, attackers }
     }
 }
 
