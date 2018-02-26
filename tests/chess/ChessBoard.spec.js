@@ -1,8 +1,12 @@
 import {
-    ChessBoard
-} from '../../src/chess/ChessBoard'
-import { Columns } from '../../src/chess/ChessBoardConstants'
-import { PlayerColours, PieceKinds, ChessPiece } from '../../src/chess/ChessPieces'
+    ChessBoard,
+    Columns,
+    PlayerColours,
+    PieceKinds,
+    ChessPiece,
+    Move,
+    MoveTypes
+} from '../../src/chess'
 
 describe('ChessBoard', () => {
     const board = ChessBoard.initialBoard()
@@ -167,4 +171,24 @@ describe('ChessBoard isCheckMate', () => {
         //expect(result).toBe(true)
     })
 
+})
+
+describe('ChessBoard isMoveValid', () => {
+    let board = null
+
+    beforeEach(() => { board = ChessBoard.emptyBoard() })
+
+    it('king cannot move to square being attacked', () => {
+        board.placePiece(
+            new ChessPiece(PlayerColours.White, PieceKinds.King, { column: Columns.E, row: 4})
+        )
+        board.placePiece(
+            new ChessPiece(PlayerColours.Black, PieceKinds.Rook, { column: Columns.D, row: 8})
+        )
+        const view = board.whiteView
+        const king = board.pieceAt(Columns.E, 4)
+        const move = new Move(king, MoveTypes.Normal, { column: Columns.D, row: 4})
+        expect(king).not.toBeFalsy()
+        expect(board.isMoveValid(move)).toBe(false)
+    })
 })

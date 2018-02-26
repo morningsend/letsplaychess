@@ -46,6 +46,7 @@ export class ChessBoard {
     pieceAt(column, row) {
         return this.whiteView._boardPosition[column - 1][row - 1]
     }
+
     get positions() {
         return this._boardPosition
     }
@@ -68,6 +69,10 @@ export class ChessBoard {
 
     get boardHeight() {
         return this.height
+    }
+    undoLastMove() {
+        this.whiteView.undoLastMove()
+        this.blackView.undoLastMove()
     }
 
     /**
@@ -99,7 +104,8 @@ export class ChessBoard {
     }
 
     makeMove(move) {
-        const { piece, to } = move
+        const { to } = move
+        const piece = this.whiteView.pieceAt(move.piece.position.column, move.piece.position.row)
         if(!piece) {
             return false
         }
@@ -108,13 +114,8 @@ export class ChessBoard {
         this._checkRange(columnTo, rowTo)
         const { column, row } = piece.position
         
-        const blackViewPiece = new ChessPiece(
-            piece.colour,
-            piece.kind,
-            { column: column, row: this.boardHeight - row + 1},
-            piece.firstMoveMade
-        )
-        this.blackView.makeMove(blackViewPiece, move.type, columnTo, this.boardHeight - rowTo + 1)
+        const blackViewPiece = this.blackView.pieceAt(column, this.height - row + 1)
+        this.blackView.makeMove(blackViewPiece, move.type, columnTo, this.height- rowTo + 1)
         this.whiteView.makeMove(piece, move.type, columnTo, rowTo)
         return true
     }
@@ -127,74 +128,62 @@ export class ChessBoard {
         }
     }
     isMoveValid(move) {
-        const { piece, to } = move
-        const columnTo = to.column
-        const rowTo = to.row
-
+        let { piece, to } = move
+        let columnTo = to.column
+        let rowTo = to.row
+        let pieceOtherView = null
         if (!piece) {
             return false
         }
+
         const chessBoard = this
         const { colour } = piece
-        if (colour === PlayerColours.White) {
-            switch(move.type) {
-                case MoveTypes.Normal:
-                case MoveTypes.PawnPromotion:
-                case MoveTypes.TakePiece:
-                    return this
-                            .whiteView
-                            .canMovePiece(piece, columnTo, rowTo)
-                case MoveTypes.Castle:
-                    return this
-                            .whiteView
-                            .canKingCastle(
-                                move.piece,
-                                move.extra.rook,
-                                columnTo,
-                                rowTo,
-                                this.blackView
-                            )
-                default:
-                    return false
-            }
-        } else if(colour === PlayerColours.Black) {
-            const blackViewPiece = this
-                                    .blackView
-                                    .pieceAt(
-                                        piece.position.column,
-                                        chessBoard.boardHeight - piece.position.row + 1
-                                    )
-            switch(move.type) {
-                case MoveTypes.Normal:
-                case MoveTypes.PawnPromotion:
-                case MoveTypes.TakePiece:
-                    return this
-                            .blackView
-                            .canMovePiece(blackViewPiece, columnTo, chessBoard.boardHeight - rowTo + 1)
-                case MoveTypes.Castle:
-                    let rook = move.extra.rook 
-                    const rookBlackView = new ChessBoard(
-                        rook.colour,
-                        rook.kind,
-                        { column: rook.position.column, row: chessBoard.boardHeight - rook.position.row + 1},
-                        rook.firstMoveMade
-                    )
-                    return this
-                            .blackView
-                            .canKingCastle(
-                                blackViewPiece,
-                                rookBlackView,
-                                columnTo,
-                                chessBoard.boardHeight - rowTo + 1,
-                                this.whiteView
-                            )
-                default:
-                    return false
-            }
-            return canMove
-        }
+        let thisView = null
+        let otherView = null
         
-        return false
+        if (colour === PlayerColours.White) {
+            thisView = this.whiteView
+            otherView = this.blackView
+            pieceOtherView = otherView.pieceAt(piece.position.column, this.height - piece.position.row + 1)
+            piece = thisView.pieceAt(piece.position.column, piece.position.row)
+        } else {
+            thisView = this.blackView
+            otherView = this.whiteView
+            pieceOtherView = piece
+            piece = thisView.pieceAt(piece.position.column, this.height - piece.position.row + 1)
+            rowTo = this.height - rowTo + 1 
+        }
+
+        let canMove = false
+        switch(move.type) {
+            case MoveTypes.Normal:
+            case MoveTypes.PawnPromotion:
+            case MoveTypes.TakePiece:
+                canMove = thisView.canMovePiece(piece, columnTo, rowTo)
+                break
+            case MoveTypes.Castle:
+                canMove = thisView.canKingCastle(
+                    piece,
+                    move.extra.rook,
+                    columnTo,
+                    rowTo,
+                    otherView
+                    )
+            default:
+                throw new Error("move of type " + move.type  + " not recognized")
+        }
+        if(!canMove) {
+            return false
+        }
+        thisView.makeMove(piece, move.type, columnTo, rowTo)
+        otherView.makeMove(pieceOtherView, move.type, columnTo, this.height - rowTo + 1)
+
+        const kingCheck = thisView.isThisKingInCheck(otherView)
+        canMove = !kingCheck.inCheck
+        thisView.undoLastMove()
+        otherView.undoLastMove()
+
+        return canMove
     }
     isKingInCheck(playerColour) {
         if (playerColour === PlayerColours.White) {
@@ -224,7 +213,7 @@ export class ChessBoard {
         if(!kingInCheck.inCheck) {
             return false
         }
-        
+        let checkMate = true
         let thisPlayerView = null
         let otherPlayerView = null
         let thisKing = null
@@ -237,7 +226,8 @@ export class ChessBoard {
         }
         
         thisKing = thisPlayerView.getPieceOfKind(PieceKinds.King)
-        
+        console.log(thisKing.position.column, this.height - thisKing.position.row + 1)
+        let thisKingOtherView = otherPlayerView.pieceAt(thisKing.position.column, this.height - thisKing.position.row + 1)
         let { column, row } = thisKing.position
         let moves = [
             [ column - 1, row],
@@ -249,18 +239,32 @@ export class ChessBoard {
             [ column + 1, row - 1],
             [ column + 1, row + 1],
         ]
+        
         for(let i = 0; i < moves.length; i++) {
             const [c, r] = moves[i]
             if(!thisPlayerView.validateMoveRange(c, r)) {
                 continue
             }
+
+            thisPlayerView.makeMove(thisKing, MoveTypes.Normal, c, r)
+            otherPlayerView.makeMove(
+                thisKingOtherView,
+                MoveTypes.Normal,
+                c,
+                this.boardHeight - r + 1
+            )
             //console.log("checking king can move out of check", thisKing, c, r)
-            if(thisPlayerView.canKingMove(thisKing, c, r, otherPlayerView)) {
+            if(thisPlayerView.isThisKingInCheck(otherPlayerView)) {
                 //console.log("king can move out of check")
-                return false
+                thisPlayerView.undoLastMove()
+                otherPlayerView.undoLastMove()
+                checkMate = false
+                break
             }
+            thisPlayerView.undoLastMove()
+            otherPlayerView.undoLastMove()
         }
-        return true
+        return checkMate
     }
     isStaleMate(playerColour) {
         return false

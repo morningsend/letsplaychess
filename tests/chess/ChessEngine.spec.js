@@ -9,27 +9,25 @@ import {
 
 describe('ChessEngine isMoveValid', () => {
 
-    let engine = new ChessEngine()
+    let engine = null
+    beforeEach(() => { engine = new ChessEngine })
+
 
     it('should return true if a move is valid, white pawn', () => {
         const pawn = engine.board.pieceAt(Columns.E, 2)
         expect(pawn).not.toBeFalsy()
         const move = new Move(pawn, MoveTypes.Normal, { column: Columns.E, row: 3 })
         expect(pawn.colour).toBe(PlayerColours.White)
-        expect(engine.board.whiteView.isEmpty(Columns.E, 3))
-        expect(engine.board.whiteView.canMovePiece(move))
-        expect(engine.isMoveValid(move)).toBeTruthy()
-        expect(engine.isMoveValid(move)).toBeTruthy()
+        expect(engine.board.whiteView.isEmpty(Columns.E, 3)).toBe(true)
+        expect(engine.isMoveValid(move)).toBe(true)
     })
 
     it('should be return true if move is valid, black pawn', () => {
         const pawn = engine.board.pieceAt(Columns.E, 7)
-        const move = new Move(pawn, MoveTypes.Normal, { column: Columns.E, row:6 })
+        const move = new Move(pawn, MoveTypes.Normal, { column: Columns.E, row: 6 })
         expect(pawn).not.toBeFalsy()
         expect(pawn.colour).toBe(PlayerColours.Black)
         expect(engine.board.blackView.isEmpty(Columns.E, 3))
-        expect(engine.isMoveValid(move)).toBe(true)
-        move.to.row = 5
         expect(engine.isMoveValid(move)).toBe(true)
     })
 })

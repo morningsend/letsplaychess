@@ -46,7 +46,9 @@ export class ChessBoardView {
     get otherPlayerPieces() {
         return this._otherPlayerPieces
     }
-
+    get playerMoves() {
+        return this.moves
+    }
 
     removePieceAt(column, row) {
         const piece = this.boardPosition[column - 1][row - 1]
@@ -103,8 +105,9 @@ export class ChessBoardView {
             return
         }
         const lastMove = this.moves[this.moves.length - 1]
+        const pieceLastMove = lastMove.piece
         const piece = this.pieceAt(lastMove.to.column, lastMove.to.row)
-        this.repositionPiece(piece, piece.position.column, piece.position.row)
+        this.repositionPiece(piece, pieceLastMove.position.column, pieceLastMove.position.row)
         piece.firstMoveMade = lastMove.piece.firstMoveMade
         
         switch(lastMove.type) {
@@ -150,10 +153,11 @@ export class ChessBoardView {
         if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
-
+        
         let positionTo = { column: columnTo, row: rowTo }
         let extra = {}
         const { column, row } = piece.position
+        piece = this.pieceAt(column, row)
         const i = columnTo - 1, j = rowTo - 1
         this._boardPosition[column - 1][row - 1] = null
         const removed = this.removePieceAt(columnTo, rowTo)
@@ -276,9 +280,8 @@ export class ChessBoardView {
         if (!(this.isEmpty(columnTo, rowTo) || this.canAttack(king, columnTo, rowTo))) {
             return false
         }
-        //console.log('validate king not in check at new position')
-        const notInCheck =  this.validateKingNotInCheck(king, otherPlayerView, columnTo, rowTo)
-        return notInCheck
+        //console.log('validate king not in check at new position'
+        return true
     }
     canKingCastle(king, rook, columnTo, rowTo, otherPlayerView) {
         const { column, row } = king
