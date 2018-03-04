@@ -195,7 +195,10 @@ describe('ChessBoardView canKingMove', () => {
 })
 
 describe('ChessBoardView canKingCastle', () => {
-    let board = ChessBoard.emptyBoard()
+    let board = null
+    beforeEach(() => {
+        board = ChessBoard.emptyBoard()
+    })
 
     it('king can castle if it has not made a move and rook has not made a move, and no piece in between', () => {
         board.placePiece(
@@ -266,7 +269,7 @@ describe('ChessBoardView canKingCastle', () => {
         expect(view.canKingCastle(king, rook, Columns.G, 1, board.blackView)).toBe(false)
     })
 
-    it('king cannot castle if it moves through a square that is being attacked', () => {
+    it.only('king cannot castle if it moves through or land on a square that is being attacked', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.King, { column: Columns.E, row: 1})
         )

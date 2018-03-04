@@ -265,6 +265,7 @@ export class ChessBoardView {
     }
 
     canKingMove(king, columnTo, rowTo, otherPlayerView) {
+        
         if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
@@ -284,13 +285,15 @@ export class ChessBoardView {
         return true
     }
     canKingCastle(king, rook, columnTo, rowTo, otherPlayerView) {
-        const { column, row } = king
+        const { column, row } = king.position
+        
         if (king.kind !== PieceKinds.King || rook.kind !== PieceKinds.Rook) {
             return false
         }
         if (king.firstMoveMade || rook.firstMoveMade) {
             return false
         }
+
         // move either 2 squares to left or right
         if (Math.abs(column - columnTo) !== 2 || rowTo !== row) {
             return false
@@ -302,8 +305,13 @@ export class ChessBoardView {
             rook.position.column,
         )) {
             return false
+        } else {
+            let isAttacked = false
+            const step = column < columnTo ? 1 : -1
+            for(let i = column; i <= columnTo; i += step) {
+                
+            }
         }
-        return true
     }
     canRookMove(rook, columnTo, rowTo) {
         if (!this.validateMoveRange(columnTo, rowTo)) {
