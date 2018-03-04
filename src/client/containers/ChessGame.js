@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChessEngine, Move, MoveTypes } from '../../chess'
+import { ChessEngine, Move, MoveTypes, GameStateMachine, GameStatus } from '../../chess'
 import { Board } from '../components/Board'
 import { PlayerBadge } from '../components/PlayerBadge'
 
@@ -16,7 +16,7 @@ export class ChessGame extends React.Component {
                 name: 'bb',
                 rating: 1243,
             },
-            chessEngine: new ChessEngine(),
+            game: GameStateMachine.newGame({ duration: 900 }),
             movesMade: 0,
         }
         this.handleMakeMove = this.handleMakeMove.bind(this)
@@ -32,7 +32,7 @@ export class ChessGame extends React.Component {
                 },
                 null
             )
-            if (this.state.chessEngine.makeMove(move)) {
+            if (this.state.game.onMove(move)) {
                 this.setState({ movesMade: this.state.movesMade + 1 })
             }
         }
@@ -42,7 +42,8 @@ export class ChessGame extends React.Component {
             <div className='chess-game-container'>
                 <PlayerBadge player={this.state.playerWhite} />
                 <Board
-                    board={this.state.chessEngine.board}
+                    moveEnabled={ this.state.game.gameStatus !== GameStatus.End }
+                    board={this.state.game.chessEngine.board}
                     onMakeMove={this.handleMakeMove}
                     />
                 <PlayerBadge player={this.state.playerBlack} />

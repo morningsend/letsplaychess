@@ -1,8 +1,9 @@
-import { ChessPiece } from './'
+import { ChessPiece, ChessMoveNotation, ChessPieceNotation } from './'
 
 export const MoveTypes = {
     Normal: 'Normal',
-    Castle: 'Castle',
+    CastleKingSide: 'CastleKingSide',
+    CastleQueenSide: 'CastleQueenSide',
     PawnPromotion: 'PawnPromotion',
     TakePiece: 'TakePiece'
 }
@@ -15,6 +16,7 @@ export class Move {
         this._positionTo = positionTo
         this._extra = extra
         this._positionFrom = { ...piece.position }
+        this._notation = ''
     }
 
     get piece() {
@@ -33,6 +35,35 @@ export class Move {
 
     get from() {
         return this._positionFrom
+    }
+    toString() {
+        if(!this._notation) {
+            const piece = ChessPieceNotation[this._piece.kind]
+            const move = ChessMoveNotation[this.moveType]
+            const column = String.fromCharCode(96 + this._positionTo.column)
+            const row = this._positionTo.row
+            switch(this._moveType) {
+                case MoveTypes.Normal:
+                case MoveTypes.TakePiece:
+                    this._notation = `${piece}${move}${column}${row}`
+                    break
+                case MoveTypes.CastleKingSide:
+                case MoveTypes.CastleQueenSide:
+                    this._notation = move
+                    break
+
+                case MoveTypes.PawnPromotion:
+                    const promoted = ChessPieceNotation[this._extra.promoted]
+                    this._notation = `${piece}${move}${column}${row}=${promoted}`
+                    break
+                default:
+                    this._notation = '<>'
+                    break
+            }
+
+            this._
+        }
+        return this._notation
     }
 }
 

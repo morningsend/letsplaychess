@@ -122,7 +122,7 @@ export class ChessBoardView {
                     this.placePiece(lastMove.extra.pieceTaken)
                 }
                 break
-            case MoveTypes.Castle:
+            case MoveTypes.CastleKingSide:
                 const rook = this.pieceAt(lastMove.extra.rookTo.column, lastMove.extra.rookTo.row)
                 this.repositionPiece(rook, lastMove.extra.rookFrom.column, lastMove.extra.rookFrom.row)
                 break
@@ -143,19 +143,19 @@ export class ChessBoardView {
                 break
             case MoveTypes.PawnPromotion:
                 break
-            case MoveTypes.Castle:
+            case MoveTypes.CastleKingSide:
                 break
             default:
                 break
         }
     }
-    makeMove(piece, moveType, columnTo, rowTo) {
+    makeMove(piece, moveType, columnTo, rowTo, extraParams = {}) {
         if (!this.validateMoveRange(columnTo, rowTo)) {
             throw new Error("cannot move to location")
         }
         //console.log(piece, moveType, columnTo, rowTo)
         let positionTo = { column: columnTo, row: rowTo }
-        let extra = {}
+        let extra = { ...extraParams }
         const { column, row } = piece.position
         piece = this.pieceAt(column, row)
         const i = columnTo - 1, j = rowTo - 1

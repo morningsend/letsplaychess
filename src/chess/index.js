@@ -5,6 +5,7 @@ import { Columns } from './ChessBoardConstants'
 import { ChessEngine } from './ChessEngine'
 import { Move, MoveTypes } from './Moves'
 import { PlayerAction, PlayerActions, GameStateMachine, GameOutcome, GameStatus } from './GameStateMachine'
+import { ChessPieceNotation, ChessMoveNotation } from './ChessNotations'
 export {
     Columns,
     ChessPiece,
@@ -19,5 +20,7 @@ export {
     PlayerActions,
     GameStateMachine,
     GameOutcome,
-    GameStatus
+    GameStatus,
+    ChessPieceNotation,
+    ChessMoveNotation
 }

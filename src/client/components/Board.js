@@ -8,11 +8,13 @@ export class Board extends React.Component {
         playerColourPOV: PropTypes.string,
         board: PropTypes.object,
         onMakeMove: PropTypes.func,
+        moveEnabled: PropTypes.bool
     }
     static defaultProps = {
         playerColourPOV: PlayerColours.White,
         board: null,
         onMakeMove: null,
+        moveEnabled: true
     }
 
     static renderEmptyBoard() {
@@ -29,6 +31,12 @@ export class Board extends React.Component {
     }
 
     handlePieceClick(position) {
+        if(!this.props.moveEnabled) {
+            this.setState({
+                selectedPiece: null
+            })
+            return
+        }
         const { column, row } = position
         if (this.state.selectedPiece && this.props.onMakeMove) {
             this

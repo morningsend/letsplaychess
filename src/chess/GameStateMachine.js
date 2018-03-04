@@ -65,7 +65,8 @@ export class PlayerAction {
     }
 }
 /**
- * 
+ * Top level game object.
+ * Implements game state transitions.
  */
 export class GameStateMachine {
 
@@ -74,9 +75,11 @@ export class GameStateMachine {
         this.whitePlayerState = {}
         this.blackPlayerState = {}
         this.gameState.duration = options.duration
-        this.chessEngine = new ChessEngine(options.initialBoard)
+        this._chessEngine = new ChessEngine(options.initialBoard)
     }
-    
+    get chessEngine() {
+        return this._chessEngine
+    }
     get hasGameEnded() {
         return this.gameState.status === GameStatus.End
     }
@@ -107,18 +110,18 @@ export class GameStateMachine {
      */
     onMove(move) {
         if(this.hashGameEnded) {
-            return
+            return false
         }
         if(!move || !move.piece) {
-            return
+            return false
         }
         if(move.piece.colour !== this.gameState.turnToMove) {
-            return
+            return false
         }
         
         let playerState = this.getPlayerState(move.piece.colour)
-        if(!this.chessEngine.makeMove(move, playerState)) {
-            return
+        if(!this._chessEngine.makeMove(move, playerState)) {
+            return false
         }
 
         const nextPlayerTurn = GameStateMachine.nextTurn(move.piece.colour)
@@ -126,13 +129,14 @@ export class GameStateMachine {
         this.gameState.turnToMove = nextPlayerTurn
         this.gameState.status = GameStatus.OnGoing
 
-        if(this.chessEngine.chessBoard.isCheckMate(nextPlayerTurn)) {
+        if(this._chessEngine.chessBoard.isCheckMate(nextPlayerTurn)) {
             this.gameState.status = GameStatus.End
             this.gameState.outcome = GameStateMachine.winOutComeFor(move.piece.colour)
-        } else if(this.chessEngine.chessBoard.isStaleMate(nextPlayerTurn)) {
+        } else if(this._chessEngine.chessBoard.isStaleMate(nextPlayerTurn)) {
             this.gameState.status = GameStatus.End
             this.gameState.outcome = GameOutcome.Draw
         }
+        return true
     }
 
     onPlayerAction(action) {
