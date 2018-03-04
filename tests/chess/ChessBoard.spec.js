@@ -138,7 +138,6 @@ describe('ChessBoard isCheckMate', () => {
     it('should be false if king is on not board', () => {
         const result = board.isCheckMate(PlayerColours.White)
         expect(result).toBe(false)
-
     })
 
     it('should be false if king is not attacked', () => {
@@ -158,19 +157,22 @@ describe('ChessBoard isCheckMate', () => {
         board.placePiece(whiteKing)
         board.placePiece(blackQueen)
         board.placePiece(blackRook)
-        //const result = board.isCheckMate(PlayerColours.White)
-        //console.log(result)
-        //expect(board.blackView.isAnyPieceAttacking(Columns.E, 8)).toBe(true)
-        //expect(board.blackView.isAnyPieceAttacking(Columns.E, 7)).toBe(true)
-        console.log(board.blackView.thisPlayerPieces)
-        console.log(board.blackView.otherPlayerPieces)
-        expect(board.blackView.isAnyPieceAttacking(Columns.F, 8)).toBe(true)
-        //expect(board.blackView.isAnyPieceAttacking(Columns.F, 7)).toBe(true)
-        //expect(board.blackView.isAnyPieceAttacking(Columns.D, 7)).toBe(true)
-        //expect(board.blackView.isAnyPieceAttacking(Columns.D, 8)).toBe(true)
-        //expect(result).toBe(true)
+        const result = board.isCheckMate(PlayerColours.White)
+        expect(result).toBe(true)
     })
 
+    it('should be false if king can take the enemy attacking piece', () => {
+        board.placePiece(whiteKing, Columns.H, 1)
+        board.placePiece(blackQueen, Columns.G, 1)
+        expect(board.pieceAt(Columns.H, 1)).toBeTruthy()
+        expect(board.pieceAt(Columns.G, 1)).toBeTruthy()
+        const result = board.isCheckMate(PlayerColours.White)
+
+        console.log(board.whiteView.thisPlayerPieces)
+        console.log(board.whiteView.otherPlayerPieces)
+        
+        expect(result).toBe(false)
+    })
 })
 
 describe('ChessBoard isMoveValid', () => {
