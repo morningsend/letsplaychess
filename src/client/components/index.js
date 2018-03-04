@@ -6,6 +6,7 @@ import { Header } from './Header'
 import { Content } from './Content'
 import { PopUpMenu, MenuItem } from './PopUpMenu'
 import { Message } from './Message'
+import { MessageList } from './MessageList'
 import { PostMessageForm } from './PostMessageForm'
 
 export {
@@ -19,4 +20,5 @@ export {
     MenuItem,
     Message,
     PostMessageForm,
+    MessageList,
 }
