@@ -23,9 +23,9 @@ export class HomePage extends React.Component {
                     </Link>
                   </div>
                   <div className='guest-button-container'>
-                      <button className='button button-primary'>
+                      <Link to='/game' className='button button-primary'>
                         Play As Guest
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </Content>

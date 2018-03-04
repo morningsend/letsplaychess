@@ -1,4 +1,6 @@
 import React from 'react'
+import { Message } from '../components'
+import { PostMessageForm } from '../components'
 
 export class InstantMessenger extends React.Component {
     constructor(props) {
@@ -9,34 +11,42 @@ export class InstantMessenger extends React.Component {
         }
 
         this.sendMessage = this.sendMessage.bind(this)
-        this.handleTyping = this.handleTyping.bind(this)
     }
 
     sendMessage(e) {
         e.preventDefault()
         if (this.state.text) {
+          let now = new Date();
+          let hhmmss = now.getTime();
+
+          const newMessage = { id: this.state.messages.length + 1,
+                               timestamp: hhmmss,
+                               text: this.state.text,
+                               owner: 'Chuck',}
+
             this.setState({
-                messages: [...this.state.messages, this.state.text],
+                messages: [...this.state.messages, newMessage],
                 text: '',
             })
         }
     }
-    handleTyping(e) {
-        this.setState({
-            text: e.target.value,
-        })
-    }
+
     render() {
         return (
             <div>
                 <ul>
                     {
-                        this.state.messages.map(m => <li>{m}</li>)
+                        this.state.messages.map(message =>
+                        <Message text={message.text}
+                                 owner={message.owner}
+                                 timestamp={message.timestamp}
+                                 key={message.id} />)
                     }
                 </ul>
                 <div>
-                    <form onSubmit={this.sendMessage}>
-                        <input value={this.state.text} onChange={this.handleTyping} />
+                <PostMessageForm
+                    {/*<form onSubmit={this.sendMessage}>*/}
+                        {/*<input value={this.state.text} onChange={this.handleSubmit} />*/}
                         <button disabled={!this.state.text} onClick={this.sendMessage}>send</button>
                     </form>
                 </div>
