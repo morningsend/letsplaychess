@@ -59,15 +59,15 @@ export class ChessBoardView {
         
         this.boardPosition[column - 1][row - 1] = null
         let pieceList = []
-        if(piece.colour !== this._playerColour) { 
-            pieceList = this._otherPlayerPieces
-        } else {
+        if(piece.colour === this._playerColour) { 
             pieceList = this._thisPlayerPieces
+        } else {
+            pieceList = this._otherPlayerPieces
         }
 
         for(let i = pieceList.length - 1; i > - 1; i--) {
             const p = pieceList[i]
-            if (p.kind === piece.kind 
+            if (p.kind === piece.kind
                 && p.position.column === piece.position.column 
                 && p.position.row === piece.position.row) {
                     pieceList.splice(i, 1)
@@ -151,9 +151,9 @@ export class ChessBoardView {
     }
     makeMove(piece, moveType, columnTo, rowTo) {
         if (!this.validateMoveRange(columnTo, rowTo)) {
-            return false
+            throw new Error("cannot move to location")
         }
-        
+        //console.log(piece, moveType, columnTo, rowTo)
         let positionTo = { column: columnTo, row: rowTo }
         let extra = {}
         const { column, row } = piece.position
@@ -310,7 +310,6 @@ export class ChessBoardView {
             let isAttacked = false
             const step = column < columnTo ? 1 : -1
             const otherViewRow = this._height - rowTo + 1
-            console.log(otherViewRow, step)
             for(let i = column; i <= columnTo; i += step) {
                 isAttacked = isAttacked || otherPlayerView.isAnyPieceAttacking(i, otherViewRow)
             }
@@ -481,10 +480,8 @@ export class ChessBoardView {
         for (let i = 0; i < this._thisPlayerPieces.length; i++) {
             const piece = this._thisPlayerPieces[i]
             if(piece && this.isPieceAttacking(piece, columnTo, rowTo)) {
-                console.log( piece, 'is attacking', columnTo, rowTo)
                 return true
             }
-            console.log( piece, 'not attacking', columnTo, rowTo)
         }
         return false
     }

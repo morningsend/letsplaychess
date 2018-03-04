@@ -20,6 +20,9 @@ export class ChessBoard {
                         piece.firstMoveMade,
                     )
                 }
+                else {
+                    newBoard[i][j] = null
+                }
             }
         }
         return newBoard
@@ -33,7 +36,6 @@ export class ChessBoard {
         )
         this._whitePiecesLost = []
         this._blackPiecesLost = []
-        this._history = []
         this.width = boardPosition ? boardPosition.length : 0
         this.height = boardPosition ? boardPosition[0].length : 0
     }
@@ -95,11 +97,12 @@ export class ChessBoard {
             new ChessPiece(
                 piece.colour,
                 piece.kind,
-                null,
+                {
+                    column: columnTo,
+                    row: blackViewRowTo
+                },
                 piece.firstMoveMade
-            ),
-            columnTo,
-            blackViewRowTo,
+            )
         )
     }
 
@@ -209,11 +212,9 @@ export class ChessBoard {
         // 4. if possible, terminate, return false
         // 5. return true.
         const kingInCheck = this.isKingInCheck(playerColour)
-        console.log('isCheckMate', kingInCheck)
         if(!kingInCheck.inCheck) {
             return false
         }
-        console.log('isCheckMate', 1)
         let checkMate = true
         let thisPlayerView = null
         let otherPlayerView = null
@@ -225,9 +226,9 @@ export class ChessBoard {
             thisPlayerView = this.blackView
             otherPlayerView = this.whiteView
         }
-        console.log('isCheckMate', 2)
+        //console.log('isCheckMate', 2)
         thisKing = thisPlayerView.getPieceOfKind(PieceKinds.King)
-        console.log(thisKing.position.column, this.height - thisKing.position.row + 1)
+        //console.log(thisKing.position.column, this.height - thisKing.position.row + 1)
         let thisKingOtherView = otherPlayerView.pieceAt(thisKing.position.column, this.height - thisKing.position.row + 1)
         let { column, row } = thisKing.position
         let moves = [
@@ -246,27 +247,38 @@ export class ChessBoard {
             if(!thisPlayerView.validateMoveRange(c, r)) {
                 continue
             }
+            const piece = thisPlayerView.pieceAt(c, r)
 
-            thisPlayerView.makeMove(thisKing, MoveTypes.Normal, c, r)
+            let moveType = MoveTypes.Normal
+            if(!piece) {
+                moveType = MoveTypes.Normal
+            } else {
+                if(piece.colour === this._playerColour) {
+                    continue
+                } else {
+                    moveType = MoveTypes.TakePiece
+                }
+            }
+
+            thisPlayerView.makeMove(thisKing, moveType, c, r)
             otherPlayerView.makeMove(
                 thisKingOtherView,
-                MoveTypes.Normal,
+                moveType,
                 c,
                 this.boardHeight - r + 1
             )
-            console.log("checking king can move out of check", c, r)
-            console.log(thisPlayerView._thisPlayerPieces)
-            console.log(thisPlayerView._otherPlayerPieces)
-            console.log(otherPlayerView._thisPlayerPieces)
-            console.log(otherPlayerView._otherPlayerPieces)
             checkMate = checkMate && thisPlayerView.isThisKingInCheck(otherPlayerView).inCheck
+
             thisPlayerView.undoLastMove()
             otherPlayerView.undoLastMove()
             if(!checkMate) {
                 break
             }
         }
-        console.log('isCheckMate', 3, checkMate)
+        if(kingInCheck.attackers && kingInCheck.attackers.length < 2) {
+            // see if attackers can be taken.
+            // attackers frame reference is in otherPlayerView
+        }
         return checkMate
     }
     isStaleMate(playerColour) {

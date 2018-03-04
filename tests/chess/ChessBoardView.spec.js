@@ -344,7 +344,6 @@ describe('ChessBoardView canRookMove', () => {
     })
 
     it('black rook can move horizontally or vertically', () => {
-        console.log('black rook can move horizontally or vertically')
         board.placePiece(
             new ChessPiece(PlayerColours.Black, PieceKinds.Rook, { column: Columns.E, row: 4})
         )
@@ -412,7 +411,6 @@ describe('ChessBoardView canBishopMove', () => {
         )
         const view = board.blackView
         const bishop = view.pieceAt(Columns.H, 8)
-        console.log(bishop)
         expect(bishop).not.toBeFalsy()
         expect(view.canBishopMove(bishop, Columns.G, 7))
         expect(view.canBishopMove(bishop, Columns.F, 6))
@@ -541,12 +539,13 @@ describe('ChessBoardView thisPlayerChessPieces', () => {
 
 describe('ChessBoardView undoLastMove', () => {
     let board = null
-    let rook = new ChessPiece(
-        PlayerColours.White,
-        PieceKinds.Rook, null, false
-    )
+    let rook = null
     beforeEach(() => {
         board = ChessBoard.emptyBoard()
+        rook = new ChessPiece(
+            PlayerColours.White,
+            PieceKinds.Rook, null, false
+        )
     })
 
     it('undo when no moves has been made should do nothing', () => {
@@ -568,13 +567,47 @@ describe('ChessBoardView undoLastMove', () => {
         expect(board.whiteView.playerMoves.length).toBe(1)
         
         board.whiteView.undoLastMove()
-        console.log('after undo')
-        console.log(board.whiteView.playerMoves)
-        console.log(board.whiteView.thisPlayerPieces)
         expect(board.whiteView.pieceAt(Columns.E, 8)).toBeFalsy()
         
         expect(board.whiteView.pieceAt(Columns.E, 1)).toBeTruthy()
         expect(board.whiteView.playerMoves.length).toBe(0)
+    })
+
+    it('undo a take piece move should place back the taken piece', () => {
+        board.placePiece(
+            new ChessPiece(
+                PlayerColours.White,
+                PieceKinds.Rook,
+                {
+                    column: Columns.E,
+                    row: 1
+                }
+            )
+        )
+        board.placePiece(
+            new ChessPiece(
+                PlayerColours.Black,
+                PieceKinds.Pawn,
+                {
+                    column: Columns.E,
+                    row: 2
+                },
+                false
+            )
+        )
+        const rook = board.whiteView.pieceAt(Columns.E, 1)
+        board.whiteView.makeMove(rook, MoveTypes.TakePiece, Columns.E, 2)
+
+        expect(board.whiteView.thisPlayerPieces.length).toBe(1)
+        expect(board.whiteView.otherPlayerPieces.length).toBe(0)
+
+        board.whiteView.undoLastMove()
+
+        expect(board.whiteView.thisPlayerPieces.length).toBe(1)
+        expect(board.whiteView.otherPlayerPieces.length).toBe(1)
+        const pawn = board.whiteView.pieceAt(Columns.E, 2)
+        expect(pawn).toBeTruthy()
+        expect(pawn.kind).toBe(PieceKinds.Pawn)
     })
 })
 
