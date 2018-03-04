@@ -209,10 +209,11 @@ export class ChessBoard {
         // 4. if possible, terminate, return false
         // 5. return true.
         const kingInCheck = this.isKingInCheck(playerColour)
-
+        console.log('isCheckMate', kingInCheck)
         if(!kingInCheck.inCheck) {
             return false
         }
+        console.log('isCheckMate', 1)
         let checkMate = true
         let thisPlayerView = null
         let otherPlayerView = null
@@ -224,7 +225,7 @@ export class ChessBoard {
             thisPlayerView = this.blackView
             otherPlayerView = this.whiteView
         }
-        
+        console.log('isCheckMate', 2)
         thisKing = thisPlayerView.getPieceOfKind(PieceKinds.King)
         console.log(thisKing.position.column, this.height - thisKing.position.row + 1)
         let thisKingOtherView = otherPlayerView.pieceAt(thisKing.position.column, this.height - thisKing.position.row + 1)
@@ -253,17 +254,19 @@ export class ChessBoard {
                 c,
                 this.boardHeight - r + 1
             )
-            //console.log("checking king can move out of check", thisKing, c, r)
-            if(thisPlayerView.isThisKingInCheck(otherPlayerView)) {
-                //console.log("king can move out of check")
-                thisPlayerView.undoLastMove()
-                otherPlayerView.undoLastMove()
-                checkMate = false
-                break
-            }
+            console.log("checking king can move out of check", c, r)
+            console.log(thisPlayerView._thisPlayerPieces)
+            console.log(thisPlayerView._otherPlayerPieces)
+            console.log(otherPlayerView._thisPlayerPieces)
+            console.log(otherPlayerView._otherPlayerPieces)
+            checkMate = checkMate && thisPlayerView.isThisKingInCheck(otherPlayerView).inCheck
             thisPlayerView.undoLastMove()
             otherPlayerView.undoLastMove()
+            if(!checkMate) {
+                break
+            }
         }
+        console.log('isCheckMate', 3, checkMate)
         return checkMate
     }
     isStaleMate(playerColour) {

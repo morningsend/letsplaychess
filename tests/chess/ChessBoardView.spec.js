@@ -269,7 +269,7 @@ describe('ChessBoardView canKingCastle', () => {
         expect(view.canKingCastle(king, rook, Columns.G, 1, board.blackView)).toBe(false)
     })
 
-    it.only('king cannot castle if it moves through or land on a square that is being attacked', () => {
+    it('king cannot castle if it moves through or land on a square that is being attacked', () => {
         board.placePiece(
             new ChessPiece(PlayerColours.White, PieceKinds.King, { column: Columns.E, row: 1})
         )
@@ -594,7 +594,12 @@ describe('ChessBoardView isThisKingInCheck', () => {
 
         expect(board.whiteView.isThisKingInCheck(board.blackView).inCheck).toBe(false)
     })
+    it('king not attack should not be in check2', () => {
+        board.placePiece(whiteKing, Columns.A, 1)
+        board.placePiece(blackQueen, Columns.F, 2)
 
+        expect(board.whiteView.isThisKingInCheck(board.blackView).inCheck).toBe(false)
+    })
     it('king attacked is in check', () => {
         board.placePiece(whiteKing, Columns.E, 1)
         board.placePiece(blackQueen, Columns.A, 1)

@@ -304,13 +304,18 @@ export class ChessBoardView {
             king.position.column,
             rook.position.column,
         )) {
+            //console.log('king castle path blocked')
             return false
         } else {
             let isAttacked = false
             const step = column < columnTo ? 1 : -1
+            const otherViewRow = this._height - rowTo + 1
+            console.log(otherViewRow, step)
             for(let i = column; i <= columnTo; i += step) {
-                
+                isAttacked = isAttacked || otherPlayerView.isAnyPieceAttacking(i, otherViewRow)
             }
+            //console.log('king castle path is attacked')
+            return !isAttacked
         }
     }
     canRookMove(rook, columnTo, rowTo) {
@@ -475,7 +480,7 @@ export class ChessBoardView {
     isAnyPieceAttacking(columnTo, rowTo) {
         for (let i = 0; i < this._thisPlayerPieces.length; i++) {
             const piece = this._thisPlayerPieces[i]
-            if(this.isPieceAttacking(piece, columnTo, rowTo)) {
+            if(piece && this.isPieceAttacking(piece, columnTo, rowTo)) {
                 console.log( piece, 'is attacking', columnTo, rowTo)
                 return true
             }
