@@ -27,6 +27,9 @@ a {
   &-primary {
     background-color: #0072bc;
   }
+  &.register-button{
+    margin: 60px auto 0px auto;
+  }
 }
 
 button.piece{
@@ -42,6 +45,24 @@ button.piece{
     &:hover {
         background-color: rgba(0,0,0,0.3);
     }
+}
+
+form.register-form {
+  flex-direction: column;
+  align-items: center;
+
+    input {
+        width: 100%;
+        margin: 10px 0px;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        border-bottom: 2px solid #ddd;
+        color: #eee;
+        text-align: center;
+        padding: 10px;
+    }
+
 }
 
 form.login-form {
@@ -67,6 +88,17 @@ a.register-here-link {
   margin: 30px 0px 0px 0px;
 }
 
+
+a.back-to-login{
+  display: block;
+  margin: 100px 0px 0px 0px;
+  color: #a1a1a1;
+  font-weight: bolder;
+  font-size: 20px;
+  &:hover {
+    text-decoration: none;
+  }
+}
 
 .page {
     background-color: #b0b0b0;
@@ -117,6 +149,11 @@ a.register-here-link {
             flex: 0.5 1 auto;
             display: flex;
             flex-direction: column;
+            justify-content: flex-end;
+          }
+          .back-to-login-container{
+            display: flex;
+            flex-direction: row;
             justify-content: flex-end;
           }
         }
