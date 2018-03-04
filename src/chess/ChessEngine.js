@@ -1,9 +1,10 @@
 import { PlayerColours } from './ChessPieces'
 import { ChessBoard } from './ChessBoard'
+import { Move, MoveTypes } from './Moves'
 
 export class ChessEngine {
-    constructor() {
-        this.chessBoard = ChessBoard.initialBoard()
+    constructor(board) {
+        this.chessBoard = board || ChessBoard.initialBoard()
     }
 
     makeMove(move) {
@@ -13,7 +14,11 @@ export class ChessEngine {
         return this.chessBoard.makeMove(move)
     }
 
-    isMoveValid(move) {
+    isMoveValid(move, playerStates) {
+        //const enrichedMove = this.board.analyzeMove(move)
+        //if(enrichedMove.type === MoveTypes.Castle && playerStates.castled) {
+        //    return false
+        //}
         return this.chessBoard.isMoveValid(move)
     }
 

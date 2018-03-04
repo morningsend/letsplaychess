@@ -16,7 +16,7 @@ export class GamePage extends React.Component {
                         </PopUpMenu>
                     </div>
                 </Header>
-                <Content>
+                <Content className='game-page-content'>
                     <ChessGame />
                     <InstantMessenger />
                 </Content>

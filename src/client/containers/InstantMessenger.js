@@ -44,11 +44,7 @@ export class InstantMessenger extends React.Component {
                     }
                 </ul>
                 <div>
-                <PostMessageForm
-                    {/*<form onSubmit={this.sendMessage}>*/}
-                        {/*<input value={this.state.text} onChange={this.handleSubmit} />*/}
-                        <button disabled={!this.state.text} onClick={this.sendMessage}>send</button>
-                    </form>
+                <PostMessageForm />
                 </div>
             </div>
         )

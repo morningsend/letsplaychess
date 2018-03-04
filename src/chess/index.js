@@ -4,7 +4,7 @@ import { ChessBoardView } from './ChessBoardView'
 import { Columns } from './ChessBoardConstants'
 import { ChessEngine } from './ChessEngine'
 import { Move, MoveTypes } from './Moves'
-
+import { PlayerAction, PlayerActions, GameStateMachine, GameOutcome, GameStatus } from './GameStateMachine'
 export {
     Columns,
     ChessPiece,
@@ -14,5 +14,10 @@ export {
     ChessBoardView,
     ChessEngine,
     Move,
-    MoveTypes
+    MoveTypes,
+    PlayerAction,
+    PlayerActions,
+    GameStateMachine,
+    GameOutcome,
+    GameStatus
 }

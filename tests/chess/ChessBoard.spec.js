@@ -168,8 +168,8 @@ describe('ChessBoard isCheckMate', () => {
         expect(board.pieceAt(Columns.G, 1)).toBeTruthy()
         const result = board.isCheckMate(PlayerColours.White)
 
-        console.log(board.whiteView.thisPlayerPieces)
-        console.log(board.whiteView.otherPlayerPieces)
+        expect(board.pieceAt(Columns.H, 1)).toBeTruthy()
+        expect(board.pieceAt(Columns.G, 1)).toBeTruthy()
         
         expect(result).toBe(false)
     })

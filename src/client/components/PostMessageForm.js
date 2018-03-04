@@ -1,6 +1,6 @@
 import React from 'react';
 
-class PostMessageForm extends React.Component {
+export class PostMessageForm extends React.Component {
     constructor( props, context ) {
         super( props, context );
 

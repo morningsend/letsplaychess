@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChessEngine } from '../../chess/ChessEngine'
+import { ChessEngine, Move, MoveTypes } from '../../chess'
 import { Board } from '../components/Board'
 import { PlayerBadge } from '../components/PlayerBadge'
 
@@ -23,14 +23,23 @@ export class ChessGame extends React.Component {
     }
     handleMakeMove(piece, columnTo, rowTo) {
         if (piece && columnTo && rowTo) {
-            if (this.state.chessEngine.makeMove(piece, columnTo, rowTo)) {
+            const move = new Move(
+                piece, 
+                MoveTypes.Normal,
+                {
+                    column: columnTo,
+                    row: rowTo
+                },
+                null
+            )
+            if (this.state.chessEngine.makeMove(move)) {
                 this.setState({ movesMade: this.state.movesMade + 1 })
             }
         }
     }
     render() {
         return (
-            <div>
+            <div className='chess-game-container'>
                 <PlayerBadge player={this.state.playerWhite} />
                 <Board
                     board={this.state.chessEngine.board}
