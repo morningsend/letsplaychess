@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { LoginForm } from '../containers'
+import { RegisterForm } from '../containers'
 import { Page, Header, Content } from '../components'
 
 export class RegisterPage extends React.Component {
@@ -16,17 +16,14 @@ export class RegisterPage extends React.Component {
                     <h1 className='page-title'>
                       Let&apos;s Play Chess
                     </h1>
-                  <div>
-                    <LoginForm />
-                    <Link to='/register' className='register-here-link'>
-                      Don&apos;t have an account? Register here.
-                    </Link>
-                  </div>
-                  <div className='guest-button-container'>
-                      <button className='button button-primary'>
-                        Play As Guest
-                      </button>
-                    </div>
+                    <div>
+                      <RegisterForm />
+                      </div>
+                  <div className='back-to-login-container'>
+                      <Link to='/' className='back-to-login'>
+                        Back to login &#62;
+                      </Link>
+                      </div>
                   </div>
                 </Content>
             </Page>

@@ -5,9 +5,9 @@ import { GamePage } from './GamePage'
 import { RegisterPage } from './RegisterPage'
 
 export {
-    RegisterPage,
     AccountPage,
     HomePage,
     LoginPage,
     GamePage,
+    RegisterPage,
 }
