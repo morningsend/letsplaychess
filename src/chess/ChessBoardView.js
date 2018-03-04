@@ -1,12 +1,36 @@
-import { PieceKinds } from './ChessPieces'
+import { PieceKinds, PlayerColours } from './ChessPieces'
+import { Move, MoveTypes } from './Moves'
 /**
  * A board with pieces rotated depending on player colour so we
  * only have to implement piece movement logic once.
  */
 export class ChessBoardView {
+
+    validateMoveRange(column, row) {
+        return !(column < 1 || column > this._width) && !(row < 1 || row > this._height)
+    }
+
+    createPieceLists(boardPosition) {
+        this._thisPlayerPieces = []
+        this._otherPlayerPieces = []
+        for(let i = 0; i < boardPosition.length; i++) {
+            for(let j = 0; j < boardPosition[0].length; j++) {
+                const piece = boardPosition[i][j]
+                if (piece && piece.colour === this._playerColour) {
+                    this._thisPlayerPieces.push(piece)
+                } else if(piece && piece.colour !== this._playerColour){
+                    this._otherPlayerPieces.push(piece)
+                }
+            }
+        }
+    }
     constructor(boardPosition, playerColour) {
         this._boardPosition = boardPosition
+        this._width = boardPosition.length
+        this._height = boardPosition[0].length
         this._playerColour = playerColour
+        this.createPieceLists(boardPosition)
+        this.moves = []
     }
 
     get playerColour() {
@@ -16,35 +40,158 @@ export class ChessBoardView {
     get boardPosition() {
         return this._boardPosition
     }
-    makeMove(piece, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
-            return false
+    get thisPlayerPieces() {
+        return this._thisPlayerPieces
+    }
+    get otherPlayerPieces() {
+        return this._otherPlayerPieces
+    }
+    get playerMoves() {
+        return this.moves
+    }
+
+    removePieceAt(column, row) {
+        const piece = this.boardPosition[column - 1][row - 1]
+
+        if(!piece) {
+            return null
         }
+        
+        this.boardPosition[column - 1][row - 1] = null
+        let pieceList = []
+        if(piece.colour !== this._playerColour) { 
+            pieceList = this._otherPlayerPieces
+        } else {
+            pieceList = this._thisPlayerPieces
+        }
+
+        for(let i = pieceList.length - 1; i > - 1; i--) {
+            const p = pieceList[i]
+            if (p.kind === piece.kind 
+                && p.position.column === piece.position.column 
+                && p.position.row === piece.position.row) {
+                    pieceList.splice(i, 1)
+                    break
+                }
+        }
+        return piece
+    }
+    repositionPiece(piece, columnTo, rowTo) {
         const { column, row } = piece.position
-        const i = columnTo - 1, j = rowTo - 1
         this._boardPosition[column - 1][row - 1] = null
-        this._boardPosition[i][j] = piece
-        this._boardPosition[i][j].firstMoveMade = true
-        this._boardPosition[i][j].position = {
+        this._boardPosition[columnTo - 1][rowTo - 1] = piece
+
+        piece.position = {
             column: columnTo,
             row: rowTo
         }
+    }
+    promovePawn(pawn, newKind) {
+        if(!pawn || !kind) {
+            return
+        }
+        if(pawn.colour === this._playerColour && pawn.position == this._height) {
+            pawn.kind = newKind
+        } else if(pawn.colur !== this._playerColour && pawn.position === 1) {
+            pawn.kind = newKind
+        }
+    }
+
+    kingCastle(king, rook) {
+
+    }
+    undoLastMove() {
+        if(this.moves.length == 0) {
+            return
+        }
+        const lastMove = this.moves[this.moves.length - 1]
+        const pieceLastMove = lastMove.piece
+        const piece = this.pieceAt(lastMove.to.column, lastMove.to.row)
+        this.repositionPiece(piece, pieceLastMove.position.column, pieceLastMove.position.row)
+        piece.firstMoveMade = lastMove.piece.firstMoveMade
+        
+        switch(lastMove.type) {
+            case MoveTypes.Normal:
+                break
+            case MoveTypes.TakePiece:
+                this.placePiece(lastMove.extra.pieceTaken)
+                break
+            case MoveTypes.PawnPromotion:
+                piece.kind = PieceKinds.Pawn
+                if(lastMove.extra.pieceTaken) {
+                    this.placePiece(lastMove.extra.pieceTaken)
+                }
+                break
+            case MoveTypes.Castle:
+                const rook = this.pieceAt(lastMove.extra.rookTo.column, lastMove.extra.rookTo.row)
+                this.repositionPiece(rook, lastMove.extra.rookFrom.column, lastMove.extra.rookFrom.row)
+                break
+            default:
+                break
+        }
+        this.moves.splice(this.moves.length - 1, 1)
+    }
+    
+    makeMoveCompact(move) {
+        const piece = this.pieceAt(move.from.column, move.to.column)
+        const destination = move.to
+        this.moves.push(move)
+        switch(move.type) {
+            case MoveTypes.Normal:
+                break
+            case MoveTypes.TakePiece:
+                break
+            case MoveTypes.PawnPromotion:
+                break
+            case MoveTypes.Castle:
+                break
+            default:
+                break
+        }
+    }
+    makeMove(piece, moveType, columnTo, rowTo) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
+            return false
+        }
+        
+        let positionTo = { column: columnTo, row: rowTo }
+        let extra = {}
+        const { column, row } = piece.position
+        piece = this.pieceAt(column, row)
+        const i = columnTo - 1, j = rowTo - 1
+        this._boardPosition[column - 1][row - 1] = null
+        const removed = this.removePieceAt(columnTo, rowTo)
+        if(removed) {
+            extra.pieceTaken = removed
+        }
+        const move = new Move(piece, moveType, positionTo, extra)
+        this.moves.push(move)
+        piece.position = { ...positionTo }
+        piece.firstMoveMade = true
+        this._boardPosition[i][j] = piece
+        
         return true
     }
     pieceAt(column, row) {
         return this._boardPosition[column - 1][row - 1]
     }
     placePiece(piece, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return
         }
         const column = columnTo || piece.position.column
         const row = rowTo || piece.position.row
         this._boardPosition[column - 1][row - 1] = piece
         piece.position = { column: column, row: row }
+
+        if (piece.colour === this._playerColour) {
+            this._thisPlayerPieces.push(piece)
+        } else {
+            this._otherPlayerPieces.push(piece)
+        }
     }
     canMovePiece(piece, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         if (piece.colour !== this.playerColour) {
@@ -68,7 +215,7 @@ export class ChessBoardView {
         }
     }
     canPawnMove(pawn, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
 
@@ -96,9 +243,9 @@ export class ChessBoardView {
         }
         return false
     }
-
+    
     canKnightMove(knight, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = knight.position
@@ -117,8 +264,8 @@ export class ChessBoardView {
         return false
     }
 
-    canKingMove(king, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+    canKingMove(king, columnTo, rowTo, otherPlayerView) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = king.position
@@ -126,12 +273,6 @@ export class ChessBoardView {
             return false
         }
         const piece = this._boardPosition[columnTo - 1][rowTo - 1]
-        if (!king.firstMoveMade
-            && piece
-            && piece.kind === PieceKinds.Rook
-            && !piece.firstMoveMade) {
-            return this.canKingCastle(king, piece, columnTo, rowTo)
-        }
         // check can move one square
         if (Math.abs(column - columnTo) > 1 || Math.abs(row - rowTo) > 1) {
             return false
@@ -139,9 +280,10 @@ export class ChessBoardView {
         if (!(this.isEmpty(columnTo, rowTo) || this.canAttack(king, columnTo, rowTo))) {
             return false
         }
-        return this.validateKingNotInCheck()
+        //console.log('validate king not in check at new position'
+        return true
     }
-    canKingCastle(king, rook, columnTo, rowTo) {
+    canKingCastle(king, rook, columnTo, rowTo, otherPlayerView) {
         const { column, row } = king
         if (king.kind !== PieceKinds.King || rook.kind !== PieceKinds.Rook) {
             return false
@@ -164,7 +306,7 @@ export class ChessBoardView {
         return true
     }
     canRookMove(rook, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = rook.position
@@ -193,7 +335,7 @@ export class ChessBoardView {
     }
 
     canBishopMove(bishop, columnTo, rowTo) {
-        if (!ChessBoardView.validateMoveRange(columnTo, rowTo)) {
+        if (!this.validateMoveRange(columnTo, rowTo)) {
             return false
         }
         const { column, row } = bishop.position
@@ -218,6 +360,121 @@ export class ChessBoardView {
                 || this.canBishopMove(queen, columnTo, rowTo)
     }
 
+    isPawnAttacking(pawn, columnTo, rowTo) {
+        if(!this.validateMoveRange(columnTo, rowTo)) {
+            return false
+        }
+        const { column, row } = pawn.position
+        if(rowTo == row + 1 || Math.abs(column - columnTo) == 1) {
+            return true
+        }
+        return false
+    }
+
+    isKnightAttacking(knight, columnTo, rowTo) {
+        if(!this.validateMoveRange(columnTo, rowTo)) {
+            return false
+        }
+        const { column, row } = knight.position
+        if (
+            !(Math.abs(columnTo - column) === 1 && Math.abs(rowTo - row) === 2) &&
+            !(Math.abs(columnTo - column) === 2 && Math.abs(rowTo - row) === 1)) {
+            // console.log("not l shape")
+            return false
+        }
+        return true
+    }
+    isRookAttacking(rook, columnTo, rowTo) {
+        if(!this.validateMoveRange(columnTo, rowTo)) {
+            return false
+        }
+        const { column, row } = rook.position
+        // constraint rook to move on only columns or rows
+        const dx = Math.abs(column - columnTo)
+        const dy = Math.abs(row - rowTo)
+        if (dx === 0 && dy === 0) {
+            return false
+        }
+        if (dx !== 0 && dy !== 0) {
+            return false
+        }
+        if (dx === 0 && this.isRowPathClear(column, row, rowTo)) {
+            return true
+        }
+
+        if (dy === 0 && this.isColumnPathClear(row, column, columnTo)) {
+            return true
+        }
+        return false
+    }
+
+    isKingAttacking(king, columnTo, rowTo ) {
+        if(!this.validateMoveRange(columnTo, rowTo)) {
+            return false
+        }
+        const { column, row } = king.position
+        if(column === columnTo && rowTo === row ) {
+            return false
+        }
+        if(Math.abs(column - columnTo) <= 1 && Math.abs(row - rowTo) <= 1) {
+            return true
+        }
+        return false
+    }
+
+    isBishopAttacking(bishop, columnTo, rowTo) {
+        if(!this.validateMoveRange(columnTo, rowTo)) {
+            return false
+        }
+        const { column, row } = bishop.position
+        const dx = Math.abs(column - columnTo)
+        const dy = Math.abs(rowTo - row)
+        if(dx != dy || dx == 0) {
+            return false
+        }
+        return this.isDiagonalPathClear(column, row, columnTo, rowTo)
+    }
+
+    isQueenAttacking(queen, columnTo, rowTo) {
+        if(!this.validateMoveRange(columnTo, rowTo)) {
+            return false
+        }
+
+        return this.isRookAttacking(queen, columnTo, rowTo) ||
+                this.isBishopAttacking(queen, columnTo, rowTo)
+    }
+    isPieceAttacking(piece, columnTo, rowTo) {
+        if(!piece) {
+            return false
+        }
+        switch (piece.kind) {
+            case PieceKinds.Pawn:
+                return this.isPawnAttacking(piece, columnTo, rowTo)
+            case PieceKinds.Knight:
+                return this.isKnightAttacking(piece, columnTo, rowTo)
+            case PieceKinds.King:
+                return this.isKingAttacking(piece, columnTo, rowTo)
+            case PieceKinds.Queen:
+                return this.isQueenAttacking(piece, columnTo, rowTo)
+            case PieceKinds.Rook:
+                return this.isRookAttacking(piece, columnTo, rowTo)
+            case PieceKinds.Bishop:
+                return this.isBishopAttacking(piece, columnTo, rowTo)
+            default:
+                return false
+        }
+    }
+    isAnyPieceAttacking(columnTo, rowTo) {
+        for (let i = 0; i < this._thisPlayerPieces.length; i++) {
+            const piece = this._thisPlayerPieces[i]
+            if(this.isPieceAttacking(piece, columnTo, rowTo)) {
+                console.log( piece, 'is attacking', columnTo, rowTo)
+                return true
+            }
+            console.log( piece, 'not attacking', columnTo, rowTo)
+        }
+        return false
+    }
     isEmpty(column, row) {
         return !this._boardPosition[column - 1][row - 1]
     }
@@ -286,15 +543,73 @@ export class ChessBoardView {
         return true
     }
 
-    validateKingNotInCheck() {
-        if (this._boardPosition) {
+    validateKingNotInCheck(king, otherPlayerView, column, row) {
+        if(arguments.length < 4) {
             return true
+        }
+        
+        const otherViewColumn = column
+        const otherViewRow = this._height - row + 1
+        const thisKingOtherView = otherPlayerView.pieceAt(king.position.column, this._height - king.position.row + 1)
+
+        this.makeMove(king, column, row)
+        otherPlayerView.makeMove(thisKingOtherView, otherViewColumn, otherViewRow)
+
+        const isAttacked = !otherPlayerView.isAnyPieceAttacking(column, this._height - row + 1)
+
+        this.undoLastMove()
+        otherPlayerView.undoLastMove()
+
+        return isAttacked
+    }
+
+    hasValidMoves() {
+        if (this._thisPlayerPieces.length == 0) {
+            return false
         }
         return true
     }
 
-    static validateMoveRange(column, row) {
-        return !(column < 1 || column > 8) && !(row < 1 || row > 8)
+    getPiecesOfKind(pieceKind) {
+        let pieces = []
+        const allPieces = this._thisPlayerPieces
+        for(let i = 0; i < allPieces.length; i++) {
+            if(allPieces[i].kind === pieceKind) {
+                pieces.push(allPieces[i])
+            }
+        }
+        return pieces
+    }
+
+    getPieceOfKind(pieceKind) {
+        let piece = null
+        const allPieces = this._thisPlayerPieces
+        for(let i = 0; i < allPieces.length; i++) {
+            if(allPieces[i].kind === pieceKind) {
+                piece = allPieces[i]
+                break
+            }
+        }
+        return piece
+    }
+
+    isThisKingInCheck(otherPlayerView) {
+        let inCheck = false
+        let attackers = []
+        let thisKing = this.getPieceOfKind(PieceKinds.King)
+        let otherPlayerPieces = otherPlayerView.thisPlayerPieces
+        if(!thisKing || this._otherPlayerPieces.length == 0) {
+            return { inCheck, attackers }
+        }
+        
+        for(var i = 0; i < otherPlayerPieces.length; i++) {
+            if(otherPlayerView.canMovePiece(otherPlayerPieces[i], thisKing.position.column, this._height - thisKing.position.row + 1)) {
+                attackers.push(otherPlayerPieces[i])
+                inCheck = true
+            }
+        }
+
+        return { inCheck, attackers }
     }
 }
 

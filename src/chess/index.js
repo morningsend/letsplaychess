@@ -3,6 +3,7 @@ import { ChessBoard } from './ChessBoard'
 import { ChessBoardView } from './ChessBoardView'
 import { Columns } from './ChessBoardConstants'
 import { ChessEngine } from './ChessEngine'
+import { Move, MoveTypes } from './Moves'
 
 export {
     Columns,
@@ -12,4 +13,6 @@ export {
     ChessBoard,
     ChessBoardView,
     ChessEngine,
+    Move,
+    MoveTypes
 }

@@ -1,6 +1,7 @@
 import { PlayerColours, PieceKinds, ChessPiece } from './ChessPieces'
 import { ChessBoardView } from './ChessBoardView'
 import { EmptyBoardPosition, InitialPosition } from './ChessBoardConstants'
+import { MoveTypes, Move } from './Moves'
 
 export class ChessBoard {
     static flipBoard(board) {
@@ -43,8 +44,9 @@ export class ChessBoard {
      * 1 <= row <= 8
      */
     pieceAt(column, row) {
-        return this._boardPosition[column - 1][row - 1]
+        return this.whiteView._boardPosition[column - 1][row - 1]
     }
+
     get positions() {
         return this._boardPosition
     }
@@ -68,7 +70,18 @@ export class ChessBoard {
     get boardHeight() {
         return this.height
     }
+    undoLastMove() {
+        this.whiteView.undoLastMove()
+        this.blackView.undoLastMove()
+    }
 
+    /**
+     * Put a piece on the chess board
+     * c and r are optional.
+     * @param {ChessPiece} piece 
+     * @param {tnteger} c 
+     * @param {integer} r 
+     */
     placePiece(piece, c, r) {
         const columnTo = c || piece.position.column
         const rowTo = r || piece.position.row
@@ -90,21 +103,21 @@ export class ChessBoard {
         )
     }
 
-    makeMove(piece, columnTo, rowTo) {
+    makeMove(move) {
+        const { to } = move
+        const piece = this.whiteView.pieceAt(move.piece.position.column, move.piece.position.row)
         if(!piece) {
             return false
         }
+        const columnTo = to.column
+        const rowTo = to.row
         this._checkRange(columnTo, rowTo)
         const { column, row } = piece.position
         
-        const blackViewPiece = new ChessPiece(
-            piece.colour,
-            piece.kind,
-            { column: column, row: this.boardHeight - row + 1},
-            piece.firstMoveMade
-        )
-        this.blackView.makeMove(blackViewPiece, columnTo, this.boardHeight - rowTo + 1)
-        this.whiteView.makeMove(piece, columnTo, rowTo)
+        const blackViewPiece = this.blackView.pieceAt(column, this.height - row + 1)
+        this.blackView.makeMove(blackViewPiece, move.type, columnTo, this.height- rowTo + 1)
+        this.whiteView.makeMove(piece, move.type, columnTo, rowTo)
+        return true
     }
     _checkRange(column, row) {
         if (column < 1 || column > this.boardWidth) {
@@ -113,6 +126,148 @@ export class ChessBoard {
         if (row < 1 || row > this.boardHeight) {
             throw new Error(`${row} is out of range.`)
         }
+    }
+    isMoveValid(move) {
+        let { piece, to } = move
+        let columnTo = to.column
+        let rowTo = to.row
+        let pieceOtherView = null
+        if (!piece) {
+            return false
+        }
+
+        const chessBoard = this
+        const { colour } = piece
+        let thisView = null
+        let otherView = null
+        
+        if (colour === PlayerColours.White) {
+            thisView = this.whiteView
+            otherView = this.blackView
+            pieceOtherView = otherView.pieceAt(piece.position.column, this.height - piece.position.row + 1)
+            piece = thisView.pieceAt(piece.position.column, piece.position.row)
+        } else {
+            thisView = this.blackView
+            otherView = this.whiteView
+            pieceOtherView = piece
+            piece = thisView.pieceAt(piece.position.column, this.height - piece.position.row + 1)
+            rowTo = this.height - rowTo + 1 
+        }
+
+        let canMove = false
+        switch(move.type) {
+            case MoveTypes.Normal:
+            case MoveTypes.PawnPromotion:
+            case MoveTypes.TakePiece:
+                canMove = thisView.canMovePiece(piece, columnTo, rowTo)
+                break
+            case MoveTypes.Castle:
+                canMove = thisView.canKingCastle(
+                    piece,
+                    move.extra.rook,
+                    columnTo,
+                    rowTo,
+                    otherView
+                    )
+            default:
+                throw new Error("move of type " + move.type  + " not recognized")
+        }
+        if(!canMove) {
+            return false
+        }
+        thisView.makeMove(piece, move.type, columnTo, rowTo)
+        otherView.makeMove(pieceOtherView, move.type, columnTo, this.height - rowTo + 1)
+
+        const kingCheck = thisView.isThisKingInCheck(otherView)
+        canMove = !kingCheck.inCheck
+        thisView.undoLastMove()
+        otherView.undoLastMove()
+
+        return canMove
+    }
+    isKingInCheck(playerColour) {
+        if (playerColour === PlayerColours.White) {
+            return this
+                    .whiteView
+                    .isThisKingInCheck(this.blackView)
+        } else {
+            return this
+                    .blackView
+                    .isThisKingInCheck(this.whiteView)
+        }
+    }
+    /**
+     * Detected if player is checkmate
+     * @param {PlayerColours} playerColour 
+     */
+    isCheckMate(playerColour) {
+        // algorithm:
+        // 1. get all possible moves of king, see if king can move out of check，if possible, terminate, return false
+        // 
+        // 2. find all enemy pieces that are attacking the king,
+        // 3. for each enemy piece, see if they can be taken by a friendly piece.
+        // 4. if possible, terminate, return false
+        // 5. return true.
+        const kingInCheck = this.isKingInCheck(playerColour)
+
+        if(!kingInCheck.inCheck) {
+            return false
+        }
+        let checkMate = true
+        let thisPlayerView = null
+        let otherPlayerView = null
+        let thisKing = null
+        if(playerColour === PlayerColours.White) {
+            thisPlayerView = this.whiteView
+            otherPlayerView = this.blackView
+        } else {
+            thisPlayerView = this.blackView
+            otherPlayerView = this.whiteView
+        }
+        
+        thisKing = thisPlayerView.getPieceOfKind(PieceKinds.King)
+        console.log(thisKing.position.column, this.height - thisKing.position.row + 1)
+        let thisKingOtherView = otherPlayerView.pieceAt(thisKing.position.column, this.height - thisKing.position.row + 1)
+        let { column, row } = thisKing.position
+        let moves = [
+            [ column - 1, row],
+            [ column - 1, row -1],
+            [ column - 1, row + 1],
+            [ column, row + 1],
+            [ column, row - 1],
+            [ column + 1, row],
+            [ column + 1, row - 1],
+            [ column + 1, row + 1],
+        ]
+        
+        for(let i = 0; i < moves.length; i++) {
+            const [c, r] = moves[i]
+            if(!thisPlayerView.validateMoveRange(c, r)) {
+                continue
+            }
+
+            thisPlayerView.makeMove(thisKing, MoveTypes.Normal, c, r)
+            otherPlayerView.makeMove(
+                thisKingOtherView,
+                MoveTypes.Normal,
+                c,
+                this.boardHeight - r + 1
+            )
+            //console.log("checking king can move out of check", thisKing, c, r)
+            if(thisPlayerView.isThisKingInCheck(otherPlayerView)) {
+                //console.log("king can move out of check")
+                thisPlayerView.undoLastMove()
+                otherPlayerView.undoLastMove()
+                checkMate = false
+                break
+            }
+            thisPlayerView.undoLastMove()
+            otherPlayerView.undoLastMove()
+        }
+        return checkMate
+    }
+    isStaleMate(playerColour) {
+        return false
     }
 }
 
