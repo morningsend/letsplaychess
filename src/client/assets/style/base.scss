@@ -1,14 +1,15 @@
+html, body, #root, .app {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
 body, p, h1 {
     margin: 0;
 }
 
-h1 {
-    color: blue;
-    font-size: 40px;
-}
 
 a {
-    color: #d2d2d2;
+    color: inherit;
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -102,8 +103,8 @@ a.back-to-login{
 
 .page {
     background-color: #b0b0b0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -160,12 +161,26 @@ a.back-to-login{
     }
 
     .page-header {
+        box-sizing: border-box;
         width: 100%;
-        height: 80px;
-        background-color: #999;
+        height: 88px;
+        background-color: #464646;
         display:flex;
         justify-content: space-between;
         flex-shrink: 0;
+        color: #c6c6c6;
+        padding: 0 40px;
+        display: flex;
+        align-items: center;
+
+        .title {
+            font-size: 24px;
+            font-weight: normal;
+        }
+
+        .header-item {
+            height: inherit;
+        }
     }
 }
 
@@ -173,7 +188,7 @@ a.back-to-login{
 .game-page-content {
     display: flex;
     flex-direction: row;
-
+    
 }
 
 .chess-game-container {
@@ -183,4 +198,59 @@ a.back-to-login{
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: #252525;
 }
+
+.menu-container {
+    height: 100%;
+    position: relative;
+    .menu-toggle {
+        height: inherit;
+        background-color: transparent;
+        border: none;
+        height: inherit;
+        font-size: inherit;
+        color: inherit;
+        &:focus {
+            outline: none;
+        }
+    }
+    .menu {
+        padding: 0px;
+        position: absolute;
+        right: 0;
+        width: 160px;
+        background-color: #efefef;
+        font-size: 16px;
+        box-shadow: 1px 4px 4px rgba(0,0,0,0.15);
+        .menu-item {
+            list-style-type: none;
+            color: #464646;
+        }
+    }
+}
+
+.avatar {
+    height: inherit;
+    display: flex;
+    align-items: center;
+    .avatar-image{
+        background-color: #ee3366;
+        border-radius: 50%;
+        height: 48px;
+        width: 48px;
+        margin-right: 8px;
+        &::before{
+            content: ' ';
+        }
+    }
+
+    .avatar-name {
+        font-size: 14px;
+        color: #464646;
+    }
+}
+
+$blackSquareColour: #595959;
+$whiteSquareColour: #e1e1e1;
+

@@ -6,24 +6,30 @@ export const MenuItem = ({
     onClick,
     ...rest
 }) => (
-    <button className='menu-item' onClick={onClick} {...rest}>{children}</button>
+    <li className='menu-item' onClick={onClick} {...rest}>{children}</li>
 )
 
 MenuItem.propTypes = {
     children: PropTypes.element,
     onClick: PropTypes.func,
+    offsetX: PropTypes.number,
+    offsetY: PropTypes.number,
 }
 
 MenuItem.defaultProps = {
     children: null,
     onClick: null,
+    offsetX: 0,
+    offsetY: 0,
 }
 export class PopUpMenu extends React.Component {
     static propTypes = {
         children: PropTypes.arrayOf(PropTypes.element),
+        button: PropTypes.element,
     }
     static defaultProps = {
         children: [],
+        button: null,
     }
 
     constructor(props) {
@@ -41,16 +47,20 @@ export class PopUpMenu extends React.Component {
 
     renderMenu() {
         return (
-            <div className='menu-items'>{this.props.children}</div>
+            <ul className='menu-items'>{this.props.children}</ul>
         )
     }
 
     render() {
         const menu = this.state.visible ? this.renderMenu() : null
+        const menuToggle = React.cloneElement(
+            this.props.button,
+            { onClick: this.handleMenuToggle, className: 'menu-toggle' }
+        ) || <button className='menu-toggle' onClick={this.handleMenuToggle}>Click</button>
         return (
             <div className='menu-container'>
-                <button className='menu-toggle' onClick={this.handleMenuToggle}>Click</button>
-                {menu}
+                {menuToggle}
+                <div className='menu'>{menu}</div>
             </div>
         )
     }

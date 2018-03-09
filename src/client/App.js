@@ -4,7 +4,7 @@ import { renderRoutes } from 'react-router-config'
 
 export const App = (props) => {
     return (
-        <main>
+        <main className='app'>
             {renderRoutes(props.route.routes)}
         </main>
     )

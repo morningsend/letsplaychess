@@ -1,6 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+
+export const HeaderItem = (props) => (
+    <div className='header-item'>
+        {props.children}
+    </div>
+)
 export const Header = ({
     className, style, children, ...rest
 }) => (
