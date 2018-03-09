@@ -164,7 +164,7 @@ export class ChessBoard {
             case MoveTypes.TakePiece:
                 canMove = thisView.canMovePiece(piece, columnTo, rowTo)
                 break
-            case MoveTypes.Castle:
+            case MoveTypes.CastleKingSide:
                 canMove = thisView.canKingCastle(
                     piece,
                     move.extra.rook,

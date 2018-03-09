@@ -3,9 +3,8 @@ import { ChessBoard } from './ChessBoard'
 import { ChessBoardView } from './ChessBoardView'
 import { Columns } from './ChessBoardConstants'
 import { ChessEngine } from './ChessEngine'
-import { Move, MoveTypes } from './Moves'
+import { Move, MoveTypes, ChessPieceNotation, ChessMoveNotation } from './Moves'
 import { PlayerAction, PlayerActions, GameStateMachine, GameOutcome, GameStatus } from './GameStateMachine'
-import { ChessPieceNotation, ChessMoveNotation } from './ChessNotations'
 export {
     Columns,
     ChessPiece,

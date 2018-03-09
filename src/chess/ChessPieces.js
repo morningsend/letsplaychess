@@ -28,6 +28,7 @@ export class ChessPiece {
         this._kind = kind
         this._firstMoveMade = firstMoveMade
         this._position = position
+        this._enpassant = false
     }
 
     get kind() {
@@ -41,6 +42,14 @@ export class ChessPiece {
     get firstMoveMade() {
         return this._firstMoveMade
     }
+    get enpassant() {
+        return this._enpassant
+    }
+
+    set enpassant(value) {
+        this._enpassant = value
+    }
+    
     set firstMoveMade(value) {
         this._firstMoveMade = value
     }
