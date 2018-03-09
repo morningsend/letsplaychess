@@ -33,7 +33,7 @@ export class InstantMessenger extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className='messenger-container'>
               <MessageList messages={this.state.messages} />
               <PostMessageForm sendMessage={this.sendMessage}/>
             </div>

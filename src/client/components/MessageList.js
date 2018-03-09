@@ -5,7 +5,7 @@ export class MessageList extends React.Component {
     render() {
         console.log(this.props.messages)
         return (
-            <div>
+            <div className='message-container'>
                 {
                     this.props.messages.map( message =>
                         <Message timestamp={message.timestamp}

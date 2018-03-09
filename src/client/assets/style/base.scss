@@ -276,3 +276,44 @@ $whiteSquareColour: #e1e1e1;
 
     }
 }
+
+.messenger-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width:360px;
+    min-width: 240px;
+    .message-container {
+        flex: 1;
+    }
+
+    .post-message-form {
+        flex-grow: 0;
+        flex-shrink: 0;
+        width: 100%;
+        min-height: 80px;
+        background-color: #cccccc;
+        display: flex;
+        min-height: 80px;
+        font-size: 14px;
+        & > * { 
+            border: none;
+        }
+        & > *:focus {
+            outline: none;
+        }
+        .text-input {
+            width: 80%;
+            margin: 0;
+            padding: 0px;
+            font-size: inherit;
+            padding-left: 16px;
+        }
+        .submit-button {
+            width: 20%;
+            height: inherit;
+            font-size: inherit;
+            font-weight: bold;
+        }
+    }
+}

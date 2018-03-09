@@ -31,18 +31,17 @@ export class PostMessageForm extends React.Component {
     }
 
     render() {
-        const canSubmit=this.state.name && this.state.text
+        const canSubmit = this.state.text
         return (
-            <form onSubmit={this.handleSubmit}>
-                <input type="text"
-                       value={this.state.name}
-                       onChange={this.handleTypingName}
-                       placeholder="Name" />
-                <input type="text"
-                       value={this.state.text}
-                       onChange={this.handleTypingText}
-                       placeholder="Message" />
-                <input disabled={!canSubmit} type="submit" value="Send" />
+            <form onSubmit={this.handleSubmit} className='post-message-form'>
+                <input
+                    className="text-input"
+                    type="text"
+                    value={this.state.text}
+                    onChange={this.handleTypingText}
+                    placeholder="Message"
+                    />
+                <button disabled={!canSubmit} type="submit" value="Send" className="submit-button">Send</button>
             </form>
         );
     }
