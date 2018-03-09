@@ -12,15 +12,11 @@ export const MenuItem = ({
 MenuItem.propTypes = {
     children: PropTypes.element,
     onClick: PropTypes.func,
-    offsetX: PropTypes.number,
-    offsetY: PropTypes.number,
 }
 
 MenuItem.defaultProps = {
     children: null,
     onClick: null,
-    offsetX: 0,
-    offsetY: 0,
 }
 export class PopUpMenu extends React.Component {
     static propTypes = {
@@ -38,13 +34,35 @@ export class PopUpMenu extends React.Component {
             visible: false,
         }
         this.handleMenuToggle = this.handleMenuToggle.bind(this)
+        this.detectClickOutside = this.detectClickOutside.bind(this)
+    }
+    detectClickOutside(event) {
+        if(!this.menuNode || !this.state.visible) {
+            return
+        }
+        console.log(event)
+        console.log(this.menuNode)
+        const isContained = this.menuNode && (
+            this.menuNode == event.srcElement ||
+            this.menuNode.contains(event.srcElement)
+        )
+        console.log(isContained)
+        if(this.state.visible && !isContained) {
+            console.log('clicked outside')
+        }
     }
     handleMenuToggle(e) {
         this.setState({
             visible: !this.state.visible,
         })
     }
+    componentDidMount() {
+        window.document.addEventListener('click', this.detectClickOutside)
+    }
 
+    componentWillUnmount() {
+        window.document.removeEventListener('click', this.detectClickOutside)
+    }
     renderMenu() {
         return (
             <ul className='menu-items'>{this.props.children}</ul>
@@ -60,7 +78,7 @@ export class PopUpMenu extends React.Component {
         return (
             <div className='menu-container'>
                 {menuToggle}
-                <div className='menu'>{menu}</div>
+                <div className='menu' ref={node => this.menuNode = node }>{menu}</div>
             </div>
         )
     }

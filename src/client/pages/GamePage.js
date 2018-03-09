@@ -14,8 +14,14 @@ export class GamePage extends React.Component {
                             <button>
                                 <Avatar name='Jonsnow283ac' img='' />
                             </button>
-                        }>
-                            <MenuItem><Link to='/account'>Goto Acount</Link></MenuItem>
+                        }>  
+                            <MenuItem>
+                                <p>Game History (Last 7 days)</p>
+                            </MenuItem>
+                            <MenuItem><Link to='/account'>Your Acount</Link></MenuItem>
+                            <MenuItem><Link to='/account'>Achievements</Link></MenuItem>
+                            <MenuItem><Link to='/account'>Settings</Link></MenuItem>
+                            
                         </PopUpMenu>
                     </HeaderItem>
                 </Header>

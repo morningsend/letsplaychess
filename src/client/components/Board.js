@@ -27,7 +27,11 @@ export class Board extends React.Component {
         this.state = {
             selectedPiece: null,
         }
+        this.squareSize = 64
         this.handlePieceClick = this.handlePieceClick.bind(this)
+        this.renderBoard = this.renderBoard.bind(this)
+        this.renderPieces = this.renderPieces.bind(this)
+        this.boardGraphics = this.renderBoard()
     }
 
     handlePieceClick(position) {
@@ -48,34 +52,61 @@ export class Board extends React.Component {
             this.setState({ selectedPiece: piece })
         }
     }
+    renderBoard() {
+        console.log('rendering board')
+        const board = []
+        const { boardWidth, boardHeight } = this.props.board
+        for(let i = 0; i < boardWidth; i++) {
+            for(let j = 0; j < boardHeight; j++) {
+                const colour = ( i + j ) % 2 == 0 ? 'square black' : 'square white'
+                board.push(
+                    <rect
+                        key={i+j}
+                        width={this.squareSize}
+                        height={this.squareSize}
+                        className={colour}
+                        x={j * this.squareSize}
+                        y={i * this.squareSize}
+                    />
+                )
+            }
+        }
 
+        return <g className='chess-board-tiles'>{board}</g>
+    }
+
+    renderPieces() {
+        const piecesGraphics = []
+        const whitePieces = this.props.board.whiteView.thisPlayerPieces
+        const blackPieces = this.props.board.whiteView.otherPlayerPieces
+
+        for(let i = 0; i < whitePieces.length; i++) {
+            piecesGraphics.push(<Piece key={'white-' + i} piece={whitePieces[i]} size={this.squareSize}/>)
+        }
+
+        for(let i = 0; i < blackPieces.length; i++) {
+            piecesGraphics.push(<Piece key={'black-' + i} piece={blackPieces[i]} size={this.squareSize}/>)
+        }
+        return <g>{piecesGraphics}</g>
+    }
     render() {
         if (!this.props.board) {
             return this.renderEmptyBoard()
         }
-        const board = []
-        for (let i = this.props.board.boardHeight; i >= 1; i -= 1) {
-            const row = []
-            for (let j = 1; j <= this.props.board.boardWidth; j += 1) {
-                const piece = this.props.board.pieceAt(j, i)
-                const position = {
-                    column: j,
-                    row: i,
-                }
-                row.push(<Piece
-                            key={j}
-                            piece={piece}
-                            onPieceClick={this.handlePieceClick}
-                            selected={false}
-                            position={position}
-                            />)
-            }
-            board.push(<div key={i}>{ row }</div>)
-        }
+        const { boardWidth, boardHeight } = this.props.board
+        const pieces = this.renderPieces()
+        console.log(this.boardGraphics)
         return (
             <div className={this.props.playerColourPOV}>
-                {board}
+                <svg
+                    className='chess-board'
+                    width={boardWidth * this.squareSize}
+                    height={boardHeight * this.squareSize}>
+                    {this.boardGraphics}
+                    {pieces}
+                </svg>
                 {this.state.selectedPiece ? this.state.selectedPiece.kind : null}
+
             </div>
         )
     }

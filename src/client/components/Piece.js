@@ -17,6 +17,8 @@ import rookWhite from '../assets/svg/rook_white.svg'
 import knightWhite from '../assets/svg/knight_white.svg'
 import empty from '../assets/svg/empty.svg'
 
+import atlas from '../assets/svg/pieces_atlas.svg'
+
 const pieceImages = {
     kingBlack,
     pawnBlack,
@@ -66,6 +68,14 @@ function getPieceSVG(piece) {
 }
 
 export class Piece extends React.PureComponent {
+    static propTypes = {
+        piece: PropTypes.object.isRequired,
+        size: PropTypes.number,
+    }
+    static defaultProps = {
+        size: 0,
+        piece: null,
+    }
     constructor(props) {
         super(props)
         this.handleClick = this.handleClick.bind(this)
@@ -79,14 +89,19 @@ export class Piece extends React.PureComponent {
     }
     render() {
         const {
-            piece, selected,
+            piece, size, selected
         } = this.props
+        const {
+            kind, colour, position
+        } = piece
         const selectedClass = selected ? ' selected' : ''
-
+        const transform = `translate(${size * (position.column - 1)} ${size * (position.row - 1)})`
         return (
-            <button className={`piece ${selectedClass}`} onClick={this.handleClick}>
-                {piece ? <img src={getPieceSVG(piece)} alt='piece' /> : null}
-            </button>
+            <use
+                transform={transform} 
+                href={atlas + `#${colour}-${kind}`}
+                onClick={this.handleClick}
+            />
         )
     }
 }
