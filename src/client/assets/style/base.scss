@@ -282,20 +282,84 @@ a.back-to-login{
 .game-page-content {
     display: flex;
     flex-direction: row;
-
+    .game-wrapper {
+        flex-grow: 1;
+        flex-shrink: 0;
+        overflow-y: scroll;
+        background-color: #252525;
+    }
 }
 
 .chess-game-container {
-    flex-grow: 1;
-    flex-shrink: 0;
     min-width: 480px;
+    width: 512px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background-color: #252525;
-    overflow-y: scroll;
+    align-items: stretch;
+    margin: auto;
+    padding: 16px 0px;
+
+    .chess-game-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        & > * {
+            flex: 0.33333;
+            flex-shrink: 0;
+        }
+        .chess-clock-container {
+            text-align: right;
+        }
+    }
 }
 
+@keyframes blinkinganimation {
+  49.9% {
+    opacity: 0;
+  }
+  50%,
+  to {
+    opacity: 1;
+  }
+}
+.chess-clock-container {
+    
+    font-size: 24px;
+    font-weight: bolder;
+
+
+    .time {
+        color: #999;
+        padding: 4px;
+    }
+    .time.active {
+        color: white;
+        border-bottom: 4px solid white;
+        .ticker {
+            animation: blinkinganimation 1s linear infinite;
+        }
+    }
+}
+.player-badge-container {
+    color: $textColor;
+    padding: 8px;
+    font-weight: bold;
+    display: table;
+    .player-avatar-small {
+        height: 40px;
+        width: 40px;
+        background-color: gray;
+        border-radius: 50%;
+    }
+    .player-name {
+        padding-left: 16px;
+    }
+    & > div {
+        display: table-cell;
+        vertical-align: middle;
+    }
+}
 .menu-container {
     height: 100%;
     position: relative;

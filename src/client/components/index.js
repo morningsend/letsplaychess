@@ -9,6 +9,7 @@ import { Message } from './Message'
 import { MessageList } from './MessageList'
 import { PostMessageForm } from './PostMessageForm'
 import { Avatar } from './Avatar'
+import { ChessClock } from './ChessClock'
 
 export {
     Avatar,
@@ -24,4 +25,5 @@ export {
     Message,
     PostMessageForm,
     MessageList,
+    ChessClock,
 }
