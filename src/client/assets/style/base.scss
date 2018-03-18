@@ -315,8 +315,8 @@ $whiteSquareColour: #e1e1e1;
         }
     }
 
-    .piece {
-
+    .chess-piece {
+        transition: transform 0.1s ease-in;
     }
 }
 
@@ -328,6 +328,7 @@ $whiteSquareColour: #e1e1e1;
     min-width: 240px;
     .message-container {
         flex: 1;
+        overflow-y: scroll;
     }
 
     .post-message-form {

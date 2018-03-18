@@ -3,7 +3,10 @@ import PropTypes from 'prop-types'
 
 export class Page extends React.PureComponent {
     static propTypes = {
-        children: PropTypes.element,
+        children: PropTypes.oneOfType([
+            PropTypes.element,
+            PropTypes.array
+        ]),
         className: PropTypes.string,
     }
 

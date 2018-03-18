@@ -11,7 +11,10 @@ export const Content = ({
 
 Content.propTypes = {
     className: PropTypes.string,
-    children: PropTypes.element,
+    children: PropTypes.oneOfType([
+        PropTypes.element,
+        PropTypes.array
+    ]),
 }
 
 Content.defaultProps = {

@@ -71,36 +71,35 @@ export class Piece extends React.PureComponent {
     static propTypes = {
         piece: PropTypes.object.isRequired,
         size: PropTypes.number,
+        key: PropTypes.string,
+        displayRow: PropTypes.number,
+        displayColumn: PropTypes. number,
     }
     static defaultProps = {
         size: 0,
         piece: null,
+        key: '',
+        displayRow: 1,
+        displayColumn: 1
     }
     constructor(props) {
         super(props)
-        this.handleClick = this.handleClick.bind(this)
-    }
-
-    handleClick() {
-        const { onPieceClick, position } = this.props
-        if (onPieceClick) {
-            onPieceClick(position)
-        }
     }
     render() {
         const {
-            piece, size, selected
+            piece, size, selected, key, displayColumn, displayRow
         } = this.props
         const {
             kind, colour, position
         } = piece
         const selectedClass = selected ? ' selected' : ''
-        const transform = `translate(${size * (position.column - 1)} ${size * (position.row - 1)})`
+        const transform = `translate(${size * (displayColumn - 1)} ${size * (displayRow - 1)})`
         return (
             <use
+                key={key}
                 transform={transform} 
                 href={atlas + `#${colour}-${kind}`}
-                onClick={this.handleClick}
+                className='chess-piece'
             />
         )
     }

@@ -1,9 +1,17 @@
 import React from 'react'
-import { ChessEngine, Move, MoveTypes, GameStateMachine, GameStatus } from '../../chess'
+import PropTypes from 'prop-types'
+import { ChessEngine, Move, MoveTypes, GameStateMachine, GameStatus, PlayerColours } from '../../chess'
 import { Board } from '../components/Board'
 import { PlayerBadge } from '../components/PlayerBadge'
 
 export class ChessGame extends React.Component {
+    static propTypes = {
+        thisPlayerColour: PropTypes.string,
+    }
+
+    static defaultProps = {
+        thisPlayerColour: PlayerColours.White,
+    }
     constructor(props) {
         super(props)
 
@@ -24,7 +32,7 @@ export class ChessGame extends React.Component {
     handleMakeMove(piece, columnTo, rowTo) {
         if (piece && columnTo && rowTo) {
             const move = new Move(
-                piece, 
+                piece,
                 MoveTypes.Normal,
                 {
                     column: columnTo,
@@ -38,15 +46,21 @@ export class ChessGame extends React.Component {
         }
     }
     render() {
+        const { thisPlayerColour } = this.props
         return (
             <div className='chess-game-container'>
-                <PlayerBadge player={this.state.playerWhite} />
+                <div>
+                    <PlayerBadge player={this.state.playerBlack} />
+                </div>
                 <Board
                     moveEnabled={ this.state.game.gameStatus !== GameStatus.End }
                     board={this.state.game.chessEngine.board}
                     onMakeMove={this.handleMakeMove}
                     />
-                <PlayerBadge player={this.state.playerBlack} />
+                <div>
+                    <PlayerBadge player={this.state.playerWhite}/>
+
+                </div>
                 {this.state.movesMade}
             </div>
         )
