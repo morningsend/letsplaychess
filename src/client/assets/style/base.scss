@@ -7,6 +7,7 @@ body, p, h1 {
     margin: 0;
 }
 
+$textColor: #676767;
 
 a {
     color: inherit;
@@ -83,6 +84,48 @@ form.login-form {
     }
 
 }
+
+.profile-bar {
+  flex-direction: column;
+  align-items: center;
+
+  background-color: rgba(240,240,240, 0.9);
+  height: 100%;
+  max-width: 296px;
+  padding: 32px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .profile-picture{
+      width: 150px;
+      height: 150px;
+
+      border-radius: 50%;
+
+      background-image: url(../images/default_profile.png);
+      background-size: cover;
+
+      background-color: #a1a1a1;
+  }
+
+  .profile-name{
+      padding: 12px 0px 0px 0px;
+      font-size: 13px;
+      text-align: center;
+      color: #a1a1a1;
+  }
+  .profile-score{
+      padding: 0px 0px 0px 0px;
+      font-size: 13px;
+      font-weight: bold;
+      text-align: center;
+      color: $textColor;
+  }
+
+}
+
+
 
 a.register-here-link {
   display: block;
@@ -188,7 +231,7 @@ a.back-to-login{
 .game-page-content {
     display: flex;
     flex-direction: row;
-    
+
 }
 
 .chess-game-container {
@@ -296,7 +339,7 @@ $whiteSquareColour: #e1e1e1;
         display: flex;
         min-height: 80px;
         font-size: 14px;
-        & > * { 
+        & > * {
             border: none;
         }
         & > *:focus {
