@@ -91,7 +91,7 @@ export class Board extends React.Component {
         const { boardHeight, boardWidth } = this.props.board
         for(let i = 0; i < whitePieces.length; i++) {
             piecesGraphics.push(<Piece
-                                    key={'white-' + i}
+                                    key={whitePieces[i].id}
                                     piece={whitePieces[i]}
                                     size={this.squareSize}
                                     displayRow={boardHeight - whitePieces[i].position.row + 1}
@@ -101,7 +101,7 @@ export class Board extends React.Component {
 
         for(let i = 0; i < blackPieces.length; i++) {
             piecesGraphics.push(<Piece
-                                    key={'black-' + i}
+                                    key={blackPieces[i].id}
                                     piece={blackPieces[i]}
                                     size={this.squareSize}
                                     displayRow={boardHeight - blackPieces[i].position.row + 1}

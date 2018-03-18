@@ -1,3 +1,5 @@
+import { uniqueId } from './Utility'
+
 export const White = 'White'
 export const Black = 'Black'
 
@@ -23,12 +25,14 @@ export const PlayerColours = {
 }
 
 export class ChessPiece {
+    
     constructor(colour, kind, position, firstMoveMade = false) {
         this._colour = colour
         this._kind = kind
         this._firstMoveMade = firstMoveMade
         this._position = position
         this._enpassant = false
+        this._id = uniqueId()
     }
 
     get kind() {
@@ -57,7 +61,9 @@ export class ChessPiece {
     get position() {
         return this._position
     }
+    get id() {
 
+    }
     set position(newPosition) {
         this._position = newPosition
     }

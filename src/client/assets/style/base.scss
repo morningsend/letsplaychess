@@ -304,7 +304,7 @@ a.back-to-login{
 
 $blackSquareColour: #595959;
 $whiteSquareColour: #e1e1e1;
-
+$hoverSquareColour: #777;
 .chess-board {
     .chess-board-tiles {
         .square.black {
@@ -312,6 +312,9 @@ $whiteSquareColour: #e1e1e1;
         }
         .square.white {
             fill: $whiteSquareColour;
+        }
+        .square:hover {
+            fill: $hoverSquareColour;
         }
     }
 

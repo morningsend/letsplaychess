@@ -56,6 +56,7 @@ export class ChessGame extends React.Component {
                     moveEnabled={ this.state.game.gameStatus !== GameStatus.End }
                     board={this.state.game.chessEngine.board}
                     onMakeMove={this.handleMakeMove}
+                    thisPlayerColour={this.props.thisPlayerColour}
                     />
                 <div>
                     <PlayerBadge player={this.state.playerWhite}/>
