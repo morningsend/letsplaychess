@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ProfileBar } from '../containers'
+import { ProfileBar, GameHistory } from '../containers'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem } from '../components'
 
 export class AccountPage extends React.Component {
@@ -11,7 +11,7 @@ export class AccountPage extends React.Component {
     }
     render() {
         return (
-            <Page className='page game-page'>
+            <Page className='page account-page'>
                 <Header>
                     <h1 className='title'>Let&apos;s Play Chess</h1>
                     <HeaderItem>
@@ -32,6 +32,7 @@ export class AccountPage extends React.Component {
                 </Header>
                 <Content className='game-page-content'>
                     <ProfileBar />
+                    <GameHistory />
                 </Content>
 
             </Page>
