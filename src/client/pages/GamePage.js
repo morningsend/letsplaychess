@@ -8,20 +8,20 @@ export class GamePage extends React.Component {
         return (
             <Page className='page game-page'>
                 <Header>
-                    <h1 className='title'>Let's Play Chess</h1>
+                    <h1 className='title'>Let&apos;s Play Chess</h1>
                     <HeaderItem>
                         <PopUpMenu button={
                             <button>
                                 <Avatar name='Jonsnow283ac' img='' />
                             </button>
-                        }>  
+                        }>
                             <MenuItem>
                                 <p>Game History (Last 7 days)</p>
                             </MenuItem>
                             <MenuItem><Link to='/account'>Your Acount</Link></MenuItem>
                             <MenuItem><Link to='/account'>Achievements</Link></MenuItem>
                             <MenuItem><Link to='/account'>Settings</Link></MenuItem>
-                            
+
                         </PopUpMenu>
                     </HeaderItem>
                 </Header>
