@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 export const PlayerBadge = (props)=> {
 
-        const { name, img, rating } = this.props.player
+        const { name, img, rating } = props.player
         return (
             <div>
                 <p><span>{name}</span>{img} <span>({rating})</span></p>
