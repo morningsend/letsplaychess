@@ -92,6 +92,8 @@ export class Piece extends React.PureComponent {
         const {
             kind, colour, position
         } = piece
+
+        const className = this.pris
         const selectedClass = selected ? ' selected' : ''
         const transform = `translate(${size * (displayColumn - 1)} ${size * (displayRow - 1)})`
         return (

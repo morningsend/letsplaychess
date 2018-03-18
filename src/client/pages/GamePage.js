@@ -26,7 +26,9 @@ export class GamePage extends React.Component {
                     </HeaderItem>
                 </Header>
                 <Content className='game-page-content'>
-                    <ChessGame />
+                    <div className='game-wrapper'>
+                        <ChessGame />
+                    </div>
                     <InstantMessenger />
                 </Content>
             </Page>

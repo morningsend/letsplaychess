@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { ChessEngine, Move, MoveTypes, GameStateMachine, GameStatus, PlayerColours } from '../../chess'
-import { Board } from '../components/Board'
-import { PlayerBadge } from '../components/PlayerBadge'
+import { Board, PlayerBadge, ChessClock } from '../components'
 
 export class ChessGame extends React.Component {
     static propTypes = {
@@ -17,12 +16,12 @@ export class ChessGame extends React.Component {
 
         this.state = {
             playerWhite: {
-                name: 'jj',
+                name: 'jonsnow203',
                 rating: 1200,
             },
             playerBlack: {
-                name: 'bb',
-                rating: 1243,
+                name: 'daenerys<3',
+                rating: 1198,
             },
             game: GameStateMachine.newGame({ duration: 900 }),
             movesMade: 0,
@@ -49,8 +48,10 @@ export class ChessGame extends React.Component {
         const { thisPlayerColour } = this.props
         return (
             <div className='chess-game-container'>
-                <div>
+                <div className='chess-game-row'>
+                    <div className='spacer'></div>
                     <PlayerBadge player={this.state.playerBlack} />
+                    <ChessClock durationInSeconds={900} countingDown={false} />
                 </div>
                 <Board
                     moveEnabled={ this.state.game.gameStatus !== GameStatus.End }
@@ -58,9 +59,10 @@ export class ChessGame extends React.Component {
                     onMakeMove={this.handleMakeMove}
                     thisPlayerColour={this.props.thisPlayerColour}
                     />
-                <div>
+                <div className='chess-game-row'>
+                    <div className='spacer'></div>
                     <PlayerBadge player={this.state.playerWhite}/>
-
+                    <ChessClock durationInSeconds={900} countingDown={true} />
                 </div>
                 {this.state.movesMade}
             </div>

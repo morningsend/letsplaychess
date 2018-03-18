@@ -1,12 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import defaultProfileImg from '../assets/images/default_profile.png'
+
 export const PlayerBadge = (props)=> {
 
-        const { name, img, rating } = props.player
+        const { name, rating } = props.player
+        const img = props.player.img || defaultProfileImg
         return (
-            <div>
-                <p><span>{name}</span>{img} <span>({rating})</span></p>
+            <div className='player-badge-container'>
+                <div className='player-avatar-small'></div>
+                <div>
+                    <p className='player-name'>{name} ({rating})</p>
+                </div>
             </div>
         )
     }
