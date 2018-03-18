@@ -242,6 +242,7 @@ a.back-to-login{
     flex-direction: column;
     align-items: center;
     background-color: #252525;
+    overflow-y: scroll;
 }
 
 .menu-container {
@@ -317,9 +318,10 @@ $hoverSquareColour: #777;
             fill: $hoverSquareColour;
         }
     }
-
     .chess-piece {
-        transition: transform 0.1s ease-in;
+        &.moving {
+            transition: transform 0.1s ease-in;
+        }
     }
 }
 

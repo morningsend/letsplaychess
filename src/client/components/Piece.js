@@ -87,7 +87,7 @@ export class Piece extends React.PureComponent {
     }
     render() {
         const {
-            piece, size, selected, key, displayColumn, displayRow
+            piece, size, selected, key, displayColumn, displayRow,
         } = this.props
         const {
             kind, colour, position
