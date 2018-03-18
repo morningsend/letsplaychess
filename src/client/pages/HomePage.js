@@ -12,22 +12,22 @@ export class HomePage extends React.Component {
         return (
             <Page className='page home-page'>
                 <Content>
-                  <div className='sidebar'>
+                <div className='sidebar'>
                     <h1 className='page-title'>
-                      Let&apos;s Play Chess
+                        Let&apos;s Play Chess
                     </h1>
-                  <div>
-                    <LoginForm />
-                    <Link to='/register' className='register-here-link'>
-                      Don&apos;t have an account? Register here.
-                    </Link>
-                  </div>
-                  <div className='guest-button-container'>
-                      <Link to='/game' className='button button-primary'>
-                        Play As Guest
-                      </Link>
+                    <div>
+                        <LoginForm />
+                        <Link to='/register' className='register-here-link'>
+                          Don&apos;t have an account? Register here.
+                        </Link>
                     </div>
-                  </div>
+                    <div className='guest-button-container'>
+                        <Link to='/game' className='button button-primary'>
+                            Play As Guest
+                        </Link>
+                    </div>
+                </div>
                 </Content>
             </Page>
         )
