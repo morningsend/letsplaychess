@@ -6,15 +6,55 @@ html, body, #root, .app {
 body, p, h1 {
     margin: 0;
 }
+
+table, th, td {
+    width: 100%;
+    border-collapse: collapse;
+    padding: 14px;
+    color: rgb(200,200,200);
+    text-align: left;
+}
+
 tr:nth-child(even){
     background-color: #555555;
 }
 tr:nth-child(odd){
     background-color: #404040;
 }
+tr:nth-child(1){
+    background-color: #2c2c2c;
+}
 tr:hover {
     background-color: #2c2c2c;
 }
+
+th:nth-child(1){
+    width: 10%;
+}
+th, td:nth-child(2){
+    width: 10%;
+    text-align: center;
+}
+th, td:nth-child(3){
+    width: 45%;
+}
+
+th, td:nth-child(4){
+    width: 15%;
+}
+
+th, td:nth-child(5){
+    width: 10%;
+}
+
+td:nth-child(1){
+    width: 10%;
+    background-image: url(../images/queen_gold.svg);
+    background-size: height;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 $textColor: #676767;
 
 a {
@@ -24,8 +64,6 @@ a {
       text-decoration: underline;
     }
 }
-
-
 
 .button {
   width: 200px;
@@ -95,6 +133,7 @@ form.login-form {
 
 }
 
+/*
 .history-table {
     width: 100%;
     border-collapse: collapse;
@@ -103,7 +142,6 @@ form.login-form {
     text-align: left;
     &.table-header {
         background-color: #2c2c2c;
-        background-image: url();
     }
     &.table-outcome {
         width: 10%;
@@ -127,6 +165,7 @@ form.login-form {
         width: 10%;
     }
 }
+*/
 
 .game-history {
       flex-direction: column;
