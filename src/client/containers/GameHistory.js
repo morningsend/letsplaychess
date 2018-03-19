@@ -10,13 +10,13 @@ export class GameHistory extends React.Component {
         return(
             <div className='game-history'>
                 <table className='history-table'>
-                    <tr className='table-header'>
-                        <th>  </th>
-                        <th className='history-table table-result'> Result </th>
-                        <th className='history-table table-opponent'> Opponent </th>
-                        <th className='history-table table-date'> Date </th>
-                        <th className='history-table table-replay'>  </th>
-                    </tr>
+                    <th className='table-header'>
+                        <td className='history-table table-outcome'> </td>
+                        <td className='history-table table-result'> Result </td>
+                        <td className='history-table table-opponent'> Opponent </td>
+                        <td className='history-table table-date'> Date </td>
+                        <td className='history-table table-replay'>  </td>
+                    </th>
                     <tr className='history-table table-row'>
                         <td>  </td>
                         <td> 12 </td>
