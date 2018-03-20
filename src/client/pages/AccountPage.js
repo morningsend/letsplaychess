@@ -30,7 +30,7 @@ export class AccountPage extends React.Component {
                         </PopUpMenu>
                     </HeaderItem>
                 </Header>
-                <Content className='game-page-content'>
+                <Content className='account-page-content'>
                     <ProfileBar />
                     <GameHistory />
                 </Content>
