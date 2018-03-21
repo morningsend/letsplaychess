@@ -11,11 +11,11 @@ export class GameHistory extends React.Component {
             <div className='game-history'>
                 <table className='history-table'>
                     <th className='table-header'>
-                        <td className='history-table table-outcome'> </td>
-                        <td className='history-table table-result'> Result </td>
-                        <td className='history-table table-opponent'> Opponent </td>
-                        <td className='history-table table-date'> Date </td>
-                        <td className='history-table table-replay'>  </td>
+                        <td> </td>
+                        <td> Result </td>
+                        <td> Opponent </td>
+                        <td> Date </td>
+                        <td>  </td>
                     </th>
                     <tr className='history-table table-row'>
                         <td>  </td>
