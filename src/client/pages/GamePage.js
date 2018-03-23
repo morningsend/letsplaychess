@@ -1,12 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ChessGame, InstantMessenger } from '../containers'
-import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem } from '../components'
+import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem, Overlay, Modal, LoadingIcon } from '../components'
 
 export class GamePage extends React.Component {
     render() {
         return (
             <Page className='page game-page'>
+                <Overlay visible={false}>
+                    <Modal>
+                        <LoadingIcon />
+                        <p>Matching you with other players...</p>
+                    </Modal>
+                </Overlay>
                 <Header>
                     <h1 className='title'>Let&apos;s Play Chess</h1>
                     <HeaderItem>

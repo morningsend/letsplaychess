@@ -11,6 +11,9 @@ import { PostMessageForm } from './PostMessageForm'
 import { Avatar } from './Avatar'
 import { ChessClock } from './ChessClock'
 import { Overlay } from './Overlay'
+import { LoadingIcon } from './LoadingIcon'
+import { Modal } from './Modal'
+
 export {
     Avatar,
     Piece,
@@ -27,4 +30,6 @@ export {
     MessageList,
     ChessClock,
     Overlay,
+    LoadingIcon,
+    Modal,
 }
