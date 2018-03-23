@@ -7,21 +7,24 @@ export class Overlay extends React.PureComponent{
         backgroundOpacity: PropTypes.number,
         children: PropTypes.element,
         className: PropTypes.string,
+        visible: PropTypes.bool,
     }
 
     static defaultProps = {
-        backgroundOpacity: 0.3,
+        backgroundOpacity: 0.4,
         children: null,
-        className: ''
+        className: '',
+        visible: false,
     }
     constructor(props) {
         super(props)
     }
 
     render() {
-        const { children, backgroundOpacity, className } = this.props
+        const { children, backgroundOpacity, className, visible } = this.props
         const style = {
             backgroundColor: 'rgba(0,0,0,' + backgroundOpacity + ')',
+            display: visible ? 'absolute' : 'none',
         }
         return (
             <div className={'overlay-container ' + className} style={style}>
@@ -30,3 +33,5 @@ export class Overlay extends React.PureComponent{
         )
     }
 }
+
+export default Overlay

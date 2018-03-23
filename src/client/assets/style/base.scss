@@ -314,7 +314,7 @@ a.back-to-login{
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-
+    position: relative;
     .page-content {
         width: 100%;
         min-height: 100%;
@@ -591,4 +591,76 @@ $hoverSquareColour: #777;
             font-weight: bold;
         }
     }
+}
+
+.overlay-container {
+    position: absolute;
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-container {
+    background-color: #252525;
+    min-width: 240px;
+    max-width: 400px;
+    box-shadow: 1px 4px 4px rgba(0,0,0,0.3);
+    color: #a1a1a1;
+    padding: 40px;
+}
+
+@keyframes movingPiece {
+    0% {
+
+        transform: translate(0,0);
+    }
+    5% {
+        transform: translate(50%, 0%);
+    }
+
+    25% {
+        
+        transform: translate(50%, 0%);
+    }
+    30% {
+        transform: translate(50%, 50%);
+    }
+
+    50% {
+        
+        transform: translate(50%, 50%);
+    }
+    55% {
+        transform: translate(0%, 50%);
+    }
+
+    75% {
+        
+        transform: translate(0%, 50%);
+    }
+    80% {
+        transform: translate(0%, 0%);
+    }
+    100% {
+        
+        transform: translate(0%,0%);
+    }
+}
+
+.loading-icon {
+    .black {
+        fill: #464646;
+    }
+    .white {
+        fill: white;
+    }
+    .loading-icon-piece {
+        animation: movingPiece 4s ease-in infinite;
+        fill: blue;
+    }
+    margin: 0px auto 16px auto;
+    display: block;
 }
