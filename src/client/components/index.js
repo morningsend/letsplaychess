@@ -10,7 +10,7 @@ import { MessageList } from './MessageList'
 import { PostMessageForm } from './PostMessageForm'
 import { Avatar } from './Avatar'
 import { ChessClock } from './ChessClock'
-
+import { Overlay } from './Overlay'
 export {
     Avatar,
     Piece,
@@ -26,4 +26,5 @@ export {
     PostMessageForm,
     MessageList,
     ChessClock,
+    Overlay,
 }

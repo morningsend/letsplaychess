@@ -1,5 +1,29 @@
 # Web Technologies - Coursework 1 & 2
 
+## Up and Running
+
+Steps for getting started with development and building for release
+
+Checkout the repository from github:
+    
+    git clone https://github.com/zl14917/letsplaychess
+    cd letsplaychess
+
+
+Install javascript packages
+
+    npm install
+
+Start the development server
+
+    npm run start-client
+
+Or, alternatively build a release bundle
+
+    npm run build-client
+
+All front end assets (JavaScript, images, fonts, CSS) will be packaged up and saved in `build` folder which can be deployed onto a server.
+
 ## Coursework 1
 
 Goals:
