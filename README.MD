@@ -66,3 +66,18 @@ Roles:
 * Web page design: mockup, wireframe, colour scheme, user-experience
 * front-end: implementing the look and feel, 
 * back-end: handle realtime connections, manage database.
+
+
+## Server Architecture
+
+The server needs to be responsive to players, for this purpose, we are using javascript library https://socket.io/ to provide realtime communication between players. A latency is important in good chess gaming experience.
+
+For API, we use ExpressJS because it simplifies work needed in implementing concerns such authentication, parsing, static files, etc.
+
+* Socket.IO
+* ExpressJS
+
+### Resources
+
+* https://socket.io/
+* https://expressjs.com/
