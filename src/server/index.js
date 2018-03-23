@@ -1,3 +1,4 @@
+
 const express = require('express')
 const path = require('path')
 /*
@@ -10,7 +11,9 @@ const path = require('path')
 */
 
 const server = express()
+const http = require('http').Server(server)
 const port = 3000
+const io = require('socket.io')(http)
 
 server.use(express.static(path.resolve(__dirname, '../../build')))
 server.get('/', (request, response) => {

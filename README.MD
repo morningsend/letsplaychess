@@ -1,6 +1,6 @@
 # Web Technologies - Coursework 1 & 2
 
-## Up and Running - Front
+## Up and Running - Front end
 
 Steps for getting started with development and building for release
 
@@ -25,10 +25,17 @@ Or, alternatively build a release bundle
 All front end assets (JavaScript, images, fonts, CSS) will be packaged up and saved in `build` folder which can be deployed onto a server.
 
 ## Up and Running - Backend
+First compile the front end with the following commands:
+
+    npm run build-client
 
 The server backend does not need compiling, we use the following command to start it:
 
+
     npm run start-server
+
+The server is serving webpages on `localhost:3000`. You should see the game running by opening the link in a browser.
+
 
 ## Coursework 1
 
