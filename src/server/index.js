@@ -16,7 +16,12 @@ const port = 3000
 const io = require('socket.io')(http)
 const { ChatServer } = require('./realtime/ChatServer')
 
-const userRoute = require('./routes/user')
+const {
+    UserApi,
+    GameApi,
+    ReplayApi,
+    AuthenApi
+} = require('./apis')
 
 app.use(express.static(path.resolve(__dirname, '../../build')))
 
@@ -34,7 +39,10 @@ app.get('/', (request, response) => {
     response.send('hello world')
 })
 
-app.use('/api' + userRoute.url, userRoute.router)
+app.use('/api' + UserApi.url, UserApi.router)
+app.use('/api' + GameApi.url, GameApi.router)
+app.use('/api' + AuthenApi.url, AuthenApi.router)
+app.use('/api' + ReplayApi.url, ReplayApi.router)
 
 io.listen(http, {port: 3000})
 const chatServer = new ChatServer(io)

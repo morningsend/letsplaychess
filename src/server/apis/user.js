@@ -3,6 +3,13 @@ const express = require('express')
 const url = '/users'
 const router = express.Router()
 
+router.get('/', (request, response) => {
+    const data = {
+        message: 'hello world'
+    }
+    response.json(data)
+})
+
 router.get('/:userId', (request, response) => {
     const data = {
         userId: request.params.userId,
