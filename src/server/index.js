@@ -16,6 +16,8 @@ const port = 3000
 const io = require('socket.io')(http)
 const { ChatServer } = require('./realtime/ChatServer')
 
+const userRoute = require('./routes/user')
+
 app.use(express.static(path.resolve(__dirname, '../../build')))
 
 app.use(function(req, res, next) {
@@ -32,8 +34,11 @@ app.get('/', (request, response) => {
     response.send('hello world')
 })
 
+app.use('/api' + userRoute.url, userRoute.router)
+
 io.listen(http, {port: 3000})
 const chatServer = new ChatServer(io)
 
 app.listen(port)
+
 console.log(`server listening on port ${port}`)
