@@ -146,7 +146,7 @@ export class Board extends React.Component {
         }
         const { boardWidth, boardHeight } = this.props.board
         const pieces = this.props.thisPlayerColour == PlayerColours.White
-                            ? this.renderPiecesWhiteView() 
+                            ? this.renderPiecesWhiteView()
                             : this.renderPiecesBlackView()
         return (
             <div className={this.props.playerColourPOV}>
