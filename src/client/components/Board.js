@@ -33,7 +33,6 @@ export class Board extends React.Component {
         this.handleSquareClick = this.handleSquareClick.bind(this)
         this.renderBoard = this.renderBoard.bind(this)
         this.renderPieces = this.renderPiecesWhiteView.bind(this)
-        this.boardGraphics = this.renderBoard()
     }
 
     handleSquareClick(column, row) {
@@ -51,25 +50,38 @@ export class Board extends React.Component {
             this.setState({ selectedPiece: null })
         } else {
             const piece = this.props.board.pieceAt(column, row)
-            this.setState({ selectedPiece: piece })
+            if(piece) {
+                this.setState({ selectedPiece: piece })
+                console.log('selected'  + JSON.stringify(piece.position))
+            }
         }
     }
     renderBoard() {
         console.log('rendering board')
+        
         const board = []
         const { boardWidth, boardHeight } = this.props.board
         const offset = this.props.thisPlayerColour == PlayerColours.White ? 0 : 1;
+        const { selectedPiece } = this.state
+        if(selectedPiece) {
+            console.log('selected square is ' , selectedPiece.position)
+        }
         for(let i = 0; i < boardHeight; i++) {
             const row = this.props.thisPlayerColour == PlayerColours.White ? boardHeight - i : i + 1
             for(let j = 0; j < boardWidth; j++) {
-                const colour = ( i + j + offset) % 2 == 0 ? 'square white' : 'square black'
+                
                 const column = this.props.thisPlayerColour == PlayerColours.White ? j + 1 : boardWidth - j
+                const selectedClassName = selectedPiece && selectedPiece.position.row == row && selectedPiece.position.column == column
+                                            ? 'selected' 
+                                            : ''
+                console.log(selectedClassName)
+                const colour = ( i + j + offset) % 2 == 0 ? 'square white' : 'square black'
                 board.push(
                     <rect
                         key={i*boardHeight+j}
                         width={this.squareSize}
                         height={this.squareSize}
-                        className={colour}
+                        className={colour + ' ' + selectedClassName}
                         x={j * this.squareSize}
                         y={i * this.squareSize}
                         onClick={this.handleSquareClick.bind(this, column, row)}
@@ -77,8 +89,10 @@ export class Board extends React.Component {
                 )
             }
         }
-
-        return <g key='chess-board-group' className='chess-board-tiles'>{board}</g>
+        const hasSelectedPieceClassname = this.state.selectedPiece ? 'selected' : ''
+        return <g key='chess-board-group' className={'chess-board-tiles' + ' ' + hasSelectedPieceClassname}>
+                    {board}
+                </g>
     }
     /**
      * Renders the board from white player's point of view,
@@ -108,7 +122,7 @@ export class Board extends React.Component {
                                     displayColumn={blackPieces[i].position.column}
                                     />)
         }
-        return <g key='pieces-group'>{piecesGraphics}</g>
+        return <g key='pieces-group' className='pieces-group'>{piecesGraphics}</g>
     }
     /**
      * Renders the board from black player's point of view,
@@ -138,12 +152,13 @@ export class Board extends React.Component {
                                     displayColumn={boardWidth - blackPieces[i].position.column + 1}
                                     />)
         }
-        return <g key='pieces-group'>{piecesGraphics}</g>
+        return <g key='pieces-group' className='pieces-group'>{piecesGraphics}</g>
     }
     render() {
         if (!this.props.board) {
             return this.renderEmptyBoard()
         }
+        
         const { boardWidth, boardHeight } = this.props.board
         const pieces = this.props.thisPlayerColour == PlayerColours.White
                             ? this.renderPiecesWhiteView()
@@ -154,7 +169,7 @@ export class Board extends React.Component {
                     className='chess-board'
                     width={boardWidth * this.squareSize}
                     height={boardHeight * this.squareSize}>
-                    {this.boardGraphics}
+                    {this.renderBoard()}
                     {pieces}
                 </svg>
             </div>

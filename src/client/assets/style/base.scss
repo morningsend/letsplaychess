@@ -529,28 +529,6 @@ a.back-to-login{
     }
 }
 
-$blackSquareColour: #595959;
-$whiteSquareColour: #e1e1e1;
-$hoverSquareColour: #777;
-.chess-board {
-    .chess-board-tiles {
-        .square.black {
-            fill: $blackSquareColour;
-        }
-        .square.white {
-            fill: $whiteSquareColour;
-        }
-        .square:hover {
-            fill: $hoverSquareColour;
-        }
-    }
-    .chess-piece {
-        &.moving {
-            transition: transform 0.1s ease-in;
-        }
-    }
-}
-
 .messenger-container {
     display: flex;
     flex-direction: column;
@@ -673,3 +651,5 @@ $hoverSquareColour: #777;
     margin: 0px auto 16px auto;
     display: block;
 }
+
+@import './board.scss'
