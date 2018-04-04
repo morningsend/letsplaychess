@@ -17,7 +17,6 @@ router.get('/:userId', (request, response) => {
         joined: '2018-03-23',
         lastActive: '5 days ago'
     }
-
     response.json(data)
 })
 

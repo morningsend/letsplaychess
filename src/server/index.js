@@ -1,5 +1,6 @@
 
 const express = require('express')
+const bodyParser = require('body-parser')
 const path = require('path')
 /*
     import React from 'react'
@@ -24,7 +25,7 @@ const {
 } = require('./apis')
 
 app.use(express.static(path.resolve(__dirname, '../../build')))
-
+app.use(bodyParser.json());
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
