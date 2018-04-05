@@ -1,14 +1,23 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 
-export class Message extends React.Component {
+export class Message extends React.PureComponent {
+    static PropTypes = {
+        owner: PropTypes.string,
+        text: PropTypes.string,
+        time: PropTypes.Date
+    }
     render() {
         let now = new Date( this.props.timestamp );
         let hhmmss = now.toISOString().substr(11, 8);
+        const selfClassname = this.props.self ? ' self': ''
         return (
-            <div className="message">
-                <span className="message-time">{hhmmss}</span>
+            <div className={"message" + selfClassname}>
                 <strong className="message-owner">{this.props.owner}</strong>
-                <span className="message-text">{this.props.text}</span>
+                <p className='speech-bubble'>
+                    {this.props.text}
+                </p>
+                <span className="message-time">{hhmmss}</span>
             </div>
         );
     }
