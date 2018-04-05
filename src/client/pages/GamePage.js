@@ -36,7 +36,7 @@ export class GamePage extends React.Component {
                     <div className='game-wrapper'>
                         <ChessGame />
                     </div>
-                    <TabView barItems={['Messages', 'Notation']}>
+                    <TabView className='tabview' barItems={['Messages', 'Notation']}>
                         <InstantMessenger />
                         <ChessMovesViewer />
                     </TabView>

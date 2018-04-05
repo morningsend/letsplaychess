@@ -15,8 +15,17 @@ class TabItem extends React.PureComponent{
     static propTypes = {
         index: PropTypes.number,
         children: PropTypes.element,
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        active: PropTypes.bool,
     }
+
+    static defaultProps = {
+        index: -1,
+        children: 'bar button',
+        onClick: () => {},
+        active: false,
+    }
+
     constructor(props) {
         super(props)
         this.handleClick = this.handleClick.bind(this)
@@ -27,17 +36,17 @@ class TabItem extends React.PureComponent{
         }
     }
     render() {
+        const { children, active } = this.props
+        const className = 'tab-bar-button' + (active ? ' active' : '')
         return (
-            <button onClick={this.handleClick}>
+            <button onClick={this.handleClick} className={className}>
                 {this.props.children || 'helloworld'}
             </button>
         )
     }
 }
-const Tabs = (props) => {
-    console.log(props)
-    return props.tabs[props.active]
-}
+const Tabs = (props) => <div className='tabs'>{props.tabs[props.active]}</div>
+    
 
 export const Tab = (props) => (this.props.children)
 export class TabView extends React.Component {
@@ -57,13 +66,13 @@ export class TabView extends React.Component {
         })
     }
     render() {
-        console.log(this.props.children)
+        const className = this.props.className || ''
         return (
-            <div className='tab-container'>
+            <div className={'tabview-container ' + className}>
                 <TabBar>
                     {
                         this.props.barItems.map(
-                            (item, index) => <TabItem key={index} index={index} onClick={this.onTabItemClick}>{item}</TabItem>
+                            (item, index) => <TabItem active={index==this.state.activeTabIndex} key={index} index={index} onClick={this.onTabItemClick}>{item}</TabItem>
                         )
                     }
                 </TabBar>

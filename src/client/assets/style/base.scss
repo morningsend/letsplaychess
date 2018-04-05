@@ -8,8 +8,13 @@ body, p, h1 {
 }
 
 $textColor: #676767;
+$lightTextColour: #898989;
+$lightBackgroundColour: #ddd;
+$darkTextColour: #333;
 $textColorWin: rgb(0,150,0);
 $textColorLose: rgb(150,0,0);
+$tabBarColour : #464646;
+$backgroundColour: #252525;
 
 $winIcon: url(../images/queen_gold.svg);
 $drawIcon: url(../images/knight_bronze.svg);
@@ -306,7 +311,7 @@ a.back-to-login{
 }
 
 .page {
-    background-color: #b0b0b0;
+    background-color: $lightBackgroundColour;
     width: 100%;
     min-height: 100%;
     margin: 0;
@@ -396,8 +401,10 @@ a.back-to-login{
     .game-wrapper {
         flex-grow: 1;
         flex-shrink: 0;
-        overflow-y: scroll;
         background-color: #252525;
+    }
+    .tabview {
+        flex-grow: 0;
     }
 }
 
@@ -486,6 +493,7 @@ a.back-to-login{
         }
     }
     .menu {
+        z-index: 1;
         padding: 0px;
         position: absolute;
         right: 0;
@@ -692,4 +700,12 @@ a.back-to-login{
     display: block;
 }
 
-@import './board.scss'
+.chess-moves-viewer-container {
+    min-width: 240px;
+    max-width: 320px;
+    width: 320px;
+    overflow: scroll;
+    min-height: 100%;
+}
+@import './board.scss';
+@import './tabview.scss';

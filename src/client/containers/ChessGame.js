@@ -64,7 +64,7 @@ export class ChessGame extends React.Component {
                     <PlayerBadge player={this.state.playerWhite}/>
                     <ChessClock durationInSeconds={900} countingDown={true} />
                 </div>
-                {this.state.movesMade}
+                <span style={{visibility: 'hidden'}}>{this.state.movesMade}</span>
             </div>
         )
     }

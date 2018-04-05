@@ -7,6 +7,10 @@ export class ChessMovesViewer extends React.Component {
     }
 
     render() {
-        return <h1>game moves</h1>
+        return(
+            <div className='chess-moves-viewer-container'>
+                <h1>game moves</h1>
+            </div>
+        )
     }
 }

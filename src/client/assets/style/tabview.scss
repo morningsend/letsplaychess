@@ -1,0 +1,38 @@
+.tabview-container {
+    display: flex;
+    flex-direction: column;
+
+    .tab-bar {
+        background-color: $tabBarColour;
+        height: 40px;
+        flex-grow: 0;
+        flex-shrink: 0;
+        box-shadow: 1px 4px 2px rgba(120,120,120, 0.3);
+        .tab-bar-button {
+            font-weight: bolder;
+            font-size: 14px;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            padding: 0 24px;
+            height: inherit;
+            color: $lightTextColour;
+            position: relative;
+            &.active {
+                background-color: $lightBackgroundColour;
+                &:after {
+                    content: "";
+                    height: 2px;
+                    width: 70%;
+                    background-color: $tabBarColour;
+                    position: absolute;
+                    bottom: 0px;
+                    left: 15%;
+                }
+            }
+        }
+    }
+    .tabs {
+        flex:1;
+    }
+}
