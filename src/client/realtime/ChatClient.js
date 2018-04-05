@@ -44,12 +44,17 @@ export class ChatClient {
         this.socket = null,
         this.newMessageHandlers = []
         this.batchReceiveHandlers = []
+        this.messageBuffer = []
     }
     connect() {
         if(!this.socket) {
             try {
-                socket = io.connect(config.chaturl+ '/')
-                this.setupSocket(socket)
+                const options = {
+                    transports: ['websocket'],
+                    reconnectionAttempts: 'Infinity',
+                }
+                this.socket = io.connect(config.chaturl, options)
+                this.setupSocket(this.socket)
             } catch(error) {
                 console.error(error)
             }
@@ -86,17 +91,29 @@ export class ChatClient {
         }
     }
     setupSocket(socket) {
-        socket.on()
+        socket.on('hello', (data) => {
+            console.log(data)
+        })
+        socket.on(ChatSignalTypes.NEW_MESSAGE, (data) => {
+            this._notifyNewMessage(data)
+        })
     }
     send(message, callback) {
+        if(!message) {
+            return
+        }
         try {
-            io.emit(createChatMessage(
-                    this.userId,
-                    this.gameId,
-                    this.message
+            if(this.socket.connected) {
+                this.socket.emit(ChatSignalTypes.SEND_MESSAGE, createSendMessageSignal(
+                        this.userId,
+                        this.gameId,
+                        message
+                    ),
+                    callback
                 )
-            )
-            callback()
+            } else {
+                this.messageBuffer.push(message)
+            }
         } catch(error) {
             console.error(error)
         }

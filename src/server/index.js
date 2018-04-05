@@ -14,7 +14,7 @@ const path = require('path')
 const app = express()
 const http = require('http').Server(app)
 const port = 3000
-const io = require('socket.io')(http)
+const io = require('socket.io')
 const { ChatServer } = require('./realtime/ChatServer')
 
 const {
@@ -26,17 +26,14 @@ const {
 
 app.use(express.static(path.resolve(__dirname, '../../build')))
 app.use(bodyParser.json());
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-});
+
+
 
 app.get('/', (request, response) => {
     /*const html = renderToString(<StaticRouter location={request.url} context={{}}>
             {renderRoutes(Routes)}
                                 </StaticRouter>)
-    */                
+    */
     response.send('hello world')
 })
 
@@ -45,9 +42,13 @@ app.use('/api' + GameApi.url, GameApi.router)
 app.use('/api' + AuthenApi.url, AuthenApi.router)
 app.use('/api' + ReplayApi.url, ReplayApi.router)
 
-io.listen(http, {port: 3000})
-const chatServer = new ChatServer(io)
+const ioServer = io.listen(http, {
+    origins: 'http://localhost:*',
+    transports: ['websocket']
+})
 
-app.listen(port)
+const chatServer = new ChatServer(ioServer)
+
+http.listen(port)
 
 console.log(`server listening on port ${port}`)

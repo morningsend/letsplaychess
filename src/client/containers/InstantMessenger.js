@@ -34,16 +34,20 @@ export class InstantMessenger extends React.Component {
             chatClient: null,
         }
         this.sendMessage = this.sendMessage.bind(this)
+        this.handleNewMessage = this.handleNewMessage.bind(this)
     }
 
     componentDidMount() {
         const client  = new ChatClient("30423", "uaieura", "102312")
+        client.onNewMessage(this.handleNewMessage)
         this.setState({
             chatClient: client
         })
         client.connect()
     }
-
+    handleNewMessage(data) {
+        console.log(data)
+    }
     shouldComponentUpdate(nextProps, nextState) {
         if(this.props.gameId === nextProps.gameId) {
             return false
@@ -67,8 +71,12 @@ export class InstantMessenger extends React.Component {
             messages: [...this.state.messages,newMessage],
             text: '',
         })
+        this.sendMessageToServer(text)
     }
-
+    sendMessageToServer(message) {
+        if(this.state.chatClient)
+            this.state.chatClient.send(message)
+    }
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.animateScrollToBottom(500)
     }
