@@ -16,7 +16,7 @@ export class MoveHistory extends React.PureComponent {
                     this.moves.map(move => {
                         <p>{ move.toString() }</p>
                     })
-                }   
+                }
             </div>
         )
     }

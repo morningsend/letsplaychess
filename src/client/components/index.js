@@ -13,7 +13,7 @@ import { ChessClock } from './ChessClock'
 import { Overlay } from './Overlay'
 import { LoadingIcon } from './LoadingIcon'
 import { Modal } from './Modal'
-
+import { Tab, TabView } from './TabView'
 export {
     Avatar,
     Piece,
@@ -32,4 +32,6 @@ export {
     Overlay,
     LoadingIcon,
     Modal,
+    Tab,
+    TabView,
 }

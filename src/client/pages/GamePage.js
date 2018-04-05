@@ -2,7 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { ChessGame, InstantMessenger } from '../containers'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem, Overlay, Modal, LoadingIcon } from '../components'
-
+import { Tab, TabView } from '../components'
+import { ChessMovesViewer } from '../containers/ChessMovesViewer';
 export class GamePage extends React.Component {
     render() {
         return (
@@ -35,7 +36,10 @@ export class GamePage extends React.Component {
                     <div className='game-wrapper'>
                         <ChessGame />
                     </div>
-                    <InstantMessenger />
+                    <TabView barItems={['Messages', 'Notation']}>
+                        <InstantMessenger />
+                        <ChessMovesViewer />
+                    </TabView>
                 </Content>
             </Page>
         )

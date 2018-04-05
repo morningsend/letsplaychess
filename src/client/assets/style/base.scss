@@ -547,6 +547,44 @@ a.back-to-login{
         //flex: 1;
         //min-height: 20%;
         //max-height: 100%;
+        width: 100%;
+        padding: 0 16px;
+        box-sizing: border-box;
+        .message{
+            display: flex;
+            flex-direction: column;
+            width: 95%;
+        
+            &.self {
+                padding-left: 4%;
+
+                .message-time, .message-owner {
+                    text-align:  right;
+                }
+            }
+            
+            .message-owner {
+                
+            }
+
+            .message-time {
+                font-size: 12px;
+                visibility: hidden;
+            }
+
+            &:hover .message-time {
+                visibility: visible;
+            }
+            .message-text {
+                color: $textColor;
+            }
+        }
+        .speech-bubble {
+            background-color: #eee;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 1px 2px 5px rgba(80,80,80,0.34);
+        }
     }
 
     .post-message-form {
@@ -558,6 +596,8 @@ a.back-to-login{
         display: flex;
         min-height: 80px;
         font-size: 14px;
+        box-shadow: 1px -2px 1px rgba(88,88,88,0.2);
+        z-index: 9;
         & > * {
             border: none;
         }
