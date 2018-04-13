@@ -6,10 +6,10 @@ export const Avatar = (props) => {
     const avatarImgStyle = img ? { backgroundImage: `url(${img})`} : null
     const divClassName = `avatar ${className || ''}`
     return (
-        <div className={divClassName} {...rest}>
-            <div className='avatar-image' style={avatarImgStyle}></div>
+        <span className={divClassName} {...rest}>
+            <span className='avatar-image' style={avatarImgStyle}></span>
             <span>{name}</span>
-        </div>
+        </span>
     )
 }
 

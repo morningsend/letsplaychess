@@ -13,7 +13,7 @@ export class AccountPage extends React.Component {
         return (
             <Page className='page account-page'>
                 <Header>
-                    <h1 className='title'>Let&apos;s Play Chess</h1>
+                    <h2 className='title'>Let&apos;s Play Chess</h2>
                     <HeaderItem>
                         <PopUpMenu button={
                             <button>

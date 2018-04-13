@@ -15,7 +15,7 @@ export class GamePage extends React.Component {
                     </Modal>
                 </Overlay>
                 <Header>
-                    <h1 className='title'>Let&apos;s Play Chess</h1>
+                    <h2 className='title'>Let&apos;s Play Chess</h2>
                     <HeaderItem>
                         <PopUpMenu button={
                             <button>

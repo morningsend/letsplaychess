@@ -49,7 +49,7 @@ td:nth-child(1){
     width: 10%;
     text-align: center;
     padding: 0px;
-    background-size: height;
+    background-size: 40px 40px;
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -490,6 +490,9 @@ a.back-to-login{
         color: inherit;
         &:focus {
             outline: none;
+        }
+        &:hover {
+            background-color: rgba(0,0,0,0.23);
         }
     }
     .menu {
