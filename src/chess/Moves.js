@@ -53,8 +53,11 @@ export class Move {
     }
     toString() {
         if(!this._notation) {
-            const piece = ChessPieceNotation[this._piece.kind]
-            const move = ChessMoveNotation[this.moveType]
+            const piece = ChessPieceNotation[this._piece._kind]
+            console.log(this._piece)
+            console.log(this._piece._kind)
+            console.log(piece)
+            const move = ChessMoveNotation[this._moveType]
             const column = String.fromCharCode(96 + this._positionTo.column)
             const row = this._positionTo.row
             switch(this._moveType) {
@@ -75,8 +78,6 @@ export class Move {
                     this._notation = '<>'
                     break
             }
-
-            this._
         }
         return this._notation
     }

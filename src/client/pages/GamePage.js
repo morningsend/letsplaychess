@@ -1,9 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { ChessGame, InstantMessenger } from '../containers'
+import { ChessGame, SocketInstantMessenger } from '../containers'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem, Overlay, Modal, LoadingIcon } from '../components'
-import { Tab, TabView } from '../components'
-import { ChessMovesViewer } from '../containers/ChessMovesViewer';
+import { Tab, TabView, ChessMovesViewer } from '../components'
 import { SocketContextProvider } from '../realtime'
 
 export class GamePage extends React.Component {
@@ -58,7 +57,7 @@ export class GamePage extends React.Component {
                             <ChessGame onMoveListUpdate={this.onMoveListUpdate} />
                         </div>
                         <TabView className='tabview' barItems={['Messages', 'Notation']}>
-                            <InstantMessenger />
+                            <SocketInstantMessenger />
                             <ChessMovesViewer moves={this.state.moveList}/>
                         </TabView>
                     </Content>

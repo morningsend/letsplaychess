@@ -1,6 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 
 export class PostMessageForm extends React.Component {
+    static propTypes = {
+        enabled: PropTypes.bool
+    }
+    static defaultProps = {
+        enabled: false
+    }
     constructor( props, context ) {
         super( props, context );
         this.state = {
@@ -31,7 +38,7 @@ export class PostMessageForm extends React.Component {
     }
 
     render() {
-        const canSubmit = this.state.text
+        const canSubmit = this.state.text && this.props.enabled
         return (
             <form onSubmit={this.handleSubmit} className='post-message-form'>
                 <input

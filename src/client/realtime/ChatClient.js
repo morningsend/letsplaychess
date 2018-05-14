@@ -37,21 +37,16 @@ export function createLeaveRoomSignal(userId, roomId) {
 }
 
 export class ChatClient {
-    constructor(userId, username, gameId) {
+    constructor(socket, userId, username, gameId) {
         this.userId = userId
         this.username = username
         this.gameId = gameId
-        this.socket = null,
         this.newMessageHandlers = []
         this.batchReceiveHandlers = []
         this.messageBuffer = []
+        this.socket = socket
     }
-    connect() {
-
-    }
-    joinRoom() {
-        
-    }
+    
     onNewMessage(handler) {
         if(handler)
             this.newMessageHandlers.push(handler)

@@ -15,7 +15,7 @@ const app = express()
 const http = require('http').Server(app)
 const port = 3000
 const io = require('socket.io')
-const { ChatServer } = require('./realtime/ChatServer')
+const { ChatSocketServer } = require('./realtime/ChatSocketServer')
 
 const {
     UserApi,
@@ -47,7 +47,7 @@ const ioServer = io.listen(http, {
     transports: ['websocket']
 })
 
-const chatServer = new ChatServer(ioServer)
+const chatServer = new ChatSocketServer(ioServer)
 
 http.listen(port)
 

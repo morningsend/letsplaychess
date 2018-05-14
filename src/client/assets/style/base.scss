@@ -20,6 +20,9 @@ $winIcon: url(../images/queen_gold.svg);
 $drawIcon: url(../images/knight_bronze.svg);
 $loseIcon: url(../images/pawn_grey.svg);
 
+@import './board.scss';
+@import './tabview.scss';
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -405,6 +408,7 @@ a.back-to-login{
     }
     .tabview {
         flex-grow: 0;
+        width: 360px;
     }
 }
 
@@ -545,13 +549,23 @@ a.back-to-login{
     flex-direction: column;
     min-height: 100%;
     max-height: 100%;
-    width:360px;
-    min-width: 240px;
+    position: relative;
+
     .message-space {
         flex: 1;
         flex-shrink: 0;
         overflow-y: scroll;
         position: relative;
+        
+    }
+    .messenger-error {
+        position: absolute;
+        top: 0;
+        z-index:1;
+        background-color: red;
+        width: 100%;
+        text-align: center;
+        padding: 4px 0;
     }
     .message-container {
         position: absolute;
@@ -704,11 +718,6 @@ a.back-to-login{
 }
 
 .chess-moves-viewer-container {
-    min-width: 240px;
-    max-width: 320px;
-    width: 320px;
     overflow: scroll;
     min-height: 100%;
 }
-@import './board.scss';
-@import './tabview.scss';

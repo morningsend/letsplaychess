@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { MessageList} from '../components'
 import { PostMessageForm } from '../components'
-import { ChatClient } from '../realtime/ChatClient';
+import { ChatClient, SocketContextConsumer } from '../realtime';
 
 const mockMessages = [
     {
@@ -22,40 +22,42 @@ const mockMessages = [
 ]
 export class InstantMessenger extends React.Component {
     static propTypes = {
-        gameId: PropTypes.number,
+        gameId: PropTypes.string,
+        chatClient: PropTypes.object,
+        isConnected: PropTypes.bool,
     }
     static defaultProps = {
-        gameId: -1
+        gameId: -1,
+        chatClient: null,
+        isConnected: false,
     }
-    constructor(props, context) {
-        super(props, context)
+    constructor(props) {
+        super(props)
+        console.log(props)
         this.state = {
-            messages: mockMessages,
-            chatClient: null,
+            messages: []
         }
         this.sendMessage = this.sendMessage.bind(this)
         this.handleNewMessage = this.handleNewMessage.bind(this)
     }
 
     componentDidMount() {
-        const client  = new ChatClient("30423", "uaieura", "102312")
-        client.onNewMessage(this.handleNewMessage)
+        if(this.props.chatClient) 
+            this.props.chatClient.onNewMessage(this.handleNewMessage)
+    }
+    handleNewMessage(message) {
+        console.log(message)
         this.setState({
-            chatClient: client
+            messages: [...mockMessages, message]
         })
-        //client.connect()
     }
-    handleNewMessage(data) {
-        console.log(data)
-    }
-    shouldComponentUpdate(nextProps, nextState) {
-        if(this.props.gameId === nextProps.gameId) {
-            return false
+    componentWillUnmount() {
+        if(this.props.chatClient) {
+
         }
-        return true
     }
-    sendMessage(owner, text) {
-        console.log(owner , text)
+    sendMessage(userName, text) {
+        console.log(userName , text)
         let now = new Date();
         let hhmmss = now.getTime();
 
@@ -63,7 +65,7 @@ export class InstantMessenger extends React.Component {
             id: this.state.messages.length + 1,
             timestamp: hhmmss,
             text: text,
-            owner: owner,
+            owner: userName,
             self: true
         }
 
@@ -71,11 +73,11 @@ export class InstantMessenger extends React.Component {
             messages: [...this.state.messages,newMessage],
             text: '',
         })
-        this.sendMessageToServer(text)
+        this.sendMessageToServer(newMessage)
     }
     sendMessageToServer(message) {
-        if(this.state.chatClient)
-            this.state.chatClient.send(message)
+        if(this.props.chatClient)
+            this.props.chatClient.send(message)
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.animateScrollToBottom(500)
@@ -101,13 +103,23 @@ export class InstantMessenger extends React.Component {
     render() {
         return (
             <div className='messenger-container'>
+                {
+                    this.props.isConnected ? null : <div className='messenger-error'>Disconnected from server, reconnecting...</div>
+                }
                 <div className='message-space' ref={node => this.messageSpaceNode = node}>
                     <MessageList messages={this.state.messages} />
                 </div>
-                <PostMessageForm sendMessage={this.sendMessage}/>
+                <PostMessageForm sendMessage={this.sendMessage} enabled={this.props.isConnected}/>
             </div>
         )
     }
 }
 
-export default InstantMessenger
+export const SocketInstantMessenger = props => {
+    return <SocketContextConsumer>
+        {
+            socketState => <InstantMessenger {...props} {...socketState}/>
+        }
+    </SocketContextConsumer>
+}
+export default SocketInstantMessenger

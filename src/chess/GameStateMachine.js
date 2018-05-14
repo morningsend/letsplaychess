@@ -76,6 +76,7 @@ export class GameStateMachine {
         this.blackPlayerState = {}
         this.gameState.duration = options.duration
         this._chessEngine = new ChessEngine(options.initialBoard)
+        this._moves = []
     }
     get chessEngine() {
         return this._chessEngine
@@ -93,10 +94,13 @@ export class GameStateMachine {
         return this.gameState.turnToMove
     }
     getPlayerState(colour) {
-        if(colour == PlayerColours.White) {
-            return this.whitePlayerState
-        } else {
-            return this.blackPlayerState
+        switch(colour) {
+            case PlayerColours.White:
+                return this.whitePlayerState
+            case PlayerColours.Black:
+                return this.blackPlayerState
+            default:
+                return this.whitePlayerState
         }
     }
     /**
@@ -118,12 +122,12 @@ export class GameStateMachine {
         if(move.piece.colour !== this.gameState.turnToMove) {
             return false
         }
-        
+
         let playerState = this.getPlayerState(move.piece.colour)
         if(!this._chessEngine.makeMove(move, playerState)) {
             return false
         }
-
+        this._moves.push(move)
         const nextPlayerTurn = GameStateMachine.nextTurn(move.piece.colour)
         // invalid move does not do anythin. 
         this.gameState.turnToMove = nextPlayerTurn
@@ -163,6 +167,9 @@ export class GameStateMachine {
             default:
                 break;
         }
+    }
+    get moves() {
+        return this._moves
     }
     static newGame(gameOptions) {
         const options = {

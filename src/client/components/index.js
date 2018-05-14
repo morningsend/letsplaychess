@@ -14,6 +14,7 @@ import { Overlay } from './Overlay'
 import { LoadingIcon } from './LoadingIcon'
 import { Modal } from './Modal'
 import { Tab, TabView } from './TabView'
+import { ChessMovesViewer } from './ChessMovesViewer'
 export {
     Avatar,
     Piece,
@@ -34,4 +35,5 @@ export {
     Modal,
     Tab,
     TabView,
+    ChessMovesViewer,
 }

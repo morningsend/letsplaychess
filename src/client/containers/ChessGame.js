@@ -6,10 +6,12 @@ import { Board, PlayerBadge, ChessClock } from '../components'
 export class ChessGame extends React.Component {
     static propTypes = {
         thisPlayerColour: PropTypes.string,
+        onMoveListUpdate: PropTypes.func,
     }
 
     static defaultProps = {
         thisPlayerColour: PlayerColours.White,
+        onMoveListUpdate: () => {}
     }
     constructor(props) {
         super(props)
@@ -41,6 +43,7 @@ export class ChessGame extends React.Component {
             )
             if (this.state.game.onMove(move)) {
                 this.setState({ movesMade: this.state.movesMade + 1 })
+                this.props.onMoveListUpdate(this.state.game.moves)
             }
         }
     }

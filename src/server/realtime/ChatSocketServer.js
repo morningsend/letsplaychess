@@ -1,12 +1,7 @@
 import { ChatSignalTypes } from '../../client/realtime/ChatClient'
-export class Room {
-    constructor() {
 
-    }
-}
-export class ChatServer {
+export class ChatSocketServer {
     constructor(io){
-        this.rooms = []
         this.ioChatNameSpace = io.of('/socket')
         this._setup()
     }
@@ -16,15 +11,9 @@ export class ChatServer {
             console.log('someone connected')
             socket.emit('hello', {'message': 'You joined the room!'})
             socket.on(ChatSignalTypes.SEND_MESSAGE, (data, ack) => {
+                console.log(data)
                 socket.broadcast.emit(ChatSignalTypes.NEW_MESSAGE, data)
             })
         })
-    }
-    createRoom(roomId) {
-        
-    }
-    
-    removeRoom(roomId) {
-
     }
 }
