@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 export class Modal extends React.PureComponent {
 
     static propTypes = {
-        children: PropTypes.element,
+        children: PropTypes.any,
         className: PropTypes.string,
     }
 

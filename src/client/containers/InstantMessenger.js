@@ -43,7 +43,7 @@ export class InstantMessenger extends React.Component {
         this.setState({
             chatClient: client
         })
-        client.connect()
+        //client.connect()
     }
     handleNewMessage(data) {
         console.log(data)

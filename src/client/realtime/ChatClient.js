@@ -47,18 +47,7 @@ export class ChatClient {
         this.messageBuffer = []
     }
     connect() {
-        if(!this.socket) {
-            try {
-                const options = {
-                    transports: ['websocket'],
-                    reconnectionAttempts: 'Infinity',
-                }
-                this.socket = io.connect(config.chaturl, options)
-                this.setupSocket(this.socket)
-            } catch(error) {
-                console.error(error)
-            }
-        }
+
     }
     joinRoom() {
         

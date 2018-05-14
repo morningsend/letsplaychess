@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types'
 
 export class Message extends React.PureComponent {
-    static PropTypes = {
+    static propTypes = {
         owner: PropTypes.string,
         text: PropTypes.string,
-        time: PropTypes.Date
+        time: PropTypes.string
     }
     render() {
         let now = new Date( this.props.timestamp );

@@ -36,7 +36,7 @@ export class Board extends React.Component {
     }
 
     handleSquareClick(column, row) {
-        console.log(column, row)
+        //console.log(column, row)
         if(!this.props.moveEnabled) {
             this.setState({
                 selectedPiece: null
@@ -57,7 +57,6 @@ export class Board extends React.Component {
         }
     }
     renderBoard() {
-        console.log('rendering board')
         
         const board = []
         const { boardWidth, boardHeight } = this.props.board
@@ -74,7 +73,6 @@ export class Board extends React.Component {
                 const selectedClassName = selectedPiece && selectedPiece.position.row == row && selectedPiece.position.column == column
                                             ? 'selected' 
                                             : ''
-                console.log(selectedClassName)
                 const colour = ( i + j + offset) % 2 == 0 ? 'square white' : 'square black'
                 board.push(
                     <rect
@@ -105,7 +103,7 @@ export class Board extends React.Component {
         const { boardHeight, boardWidth } = this.props.board
         for(let i = 0; i < whitePieces.length; i++) {
             piecesGraphics.push(<Piece
-                                    key={whitePieces[i].id}
+                                    key={'white-' + i}
                                     piece={whitePieces[i]}
                                     size={this.squareSize}
                                     displayRow={boardHeight - whitePieces[i].position.row + 1}
@@ -115,7 +113,7 @@ export class Board extends React.Component {
 
         for(let i = 0; i < blackPieces.length; i++) {
             piecesGraphics.push(<Piece
-                                    key={blackPieces[i].id}
+                                    key={'black-' + i}
                                     piece={blackPieces[i]}
                                     size={this.squareSize}
                                     displayRow={boardHeight - blackPieces[i].position.row + 1}

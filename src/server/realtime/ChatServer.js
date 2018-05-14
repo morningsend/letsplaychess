@@ -7,7 +7,7 @@ export class Room {
 export class ChatServer {
     constructor(io){
         this.rooms = []
-        this.ioChatNameSpace = io.of('/chat')
+        this.ioChatNameSpace = io.of('/socket')
         this._setup()
     }
     

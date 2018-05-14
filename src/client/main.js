@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { renderRoutes } from 'react-router-config'
 import { AppContainer } from 'react-hot-loader'
 import { Routes } from './Routes'
-
 import './assets/style/site.scss'
 
 const render = (routes) => {

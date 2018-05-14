@@ -14,7 +14,7 @@ class TabBar extends React.PureComponent {
 class TabItem extends React.PureComponent{
     static propTypes = {
         index: PropTypes.number,
-        children: PropTypes.element,
+        children: PropTypes.any,
         onClick: PropTypes.func,
         active: PropTypes.bool,
     }
@@ -51,7 +51,7 @@ const Tabs = (props) => <div className='tabs'>{props.tabs[props.active]}</div>
 export const Tab = (props) => (this.props.children)
 export class TabView extends React.Component {
     static propTypes = {
-        barItems: PropTypes.arrayOf(PropTypes.element),
+        barItems: PropTypes.any,
     }
     constructor(props) {
         super(props)

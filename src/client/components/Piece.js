@@ -87,7 +87,7 @@ export class Piece extends React.PureComponent {
     }
     render() {
         const {
-            piece, size, selected, key, displayColumn, displayRow,
+            piece, size, selected, displayColumn, displayRow,
         } = this.props
         const {
             kind, colour, position
@@ -98,7 +98,6 @@ export class Piece extends React.PureComponent {
         const transform = `translate(${size * (displayColumn - 1)} ${size * (displayRow - 1)})`
         return (
             <use
-                key={key}
                 transform={transform} 
                 href={atlas + `#${colour}-${kind}`}
                 className='chess-piece'
