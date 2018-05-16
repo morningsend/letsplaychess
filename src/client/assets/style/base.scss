@@ -6,7 +6,9 @@ html, body, #root, .app {
 body, p, h1 {
     margin: 0;
 }
-
+body {
+    font-size: 16px;
+}
 $textColor: #676767;
 $lightTextColour: #898989;
 $lightBackgroundColour: #ddd;
@@ -98,6 +100,7 @@ a {
   outline: none;
   border: none;
   color: #d7d7d7;
+  font-size: inherit;
   &-primary {
     background-color: #0072bc;
   }
@@ -138,6 +141,7 @@ form.register-form {
         color: #eee;
         text-align: center;
         padding: 10px;
+        font-size: inherit;
     }
 
 }
@@ -156,6 +160,7 @@ form.login-form {
         color: #eee;
         text-align: center;
         padding: 10px;
+        font-size: inherit;
     }
 
 }

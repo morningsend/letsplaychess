@@ -26,15 +26,15 @@ export class SocketContextProvider extends Component {
     }
     constructor(props) {
         super(props)
+        this.socket = null
+        this.setupSocket = this.setupSocket.bind(this)
+        this.setupSocket()
         this.state = {
             userId: '',
             gameId: '',
             isConnected: false,
-            chatClient: null
+            chatClient: new ChatClient(this.socket),
         }
-        this.socket = null
-        this.setupSocket = this.setupSocket.bind(this)
-        this.setupSocket()
     }
     connect() {
         console.log("socket context: connecting to socket server")
@@ -55,7 +55,6 @@ export class SocketContextProvider extends Component {
                 self.setState({
                     'isConnected': true
                 })
-                this.chatClient = new ChatClient()
             })
             this.socket.on('disconnect', () => {
                 self.setState({

@@ -46,14 +46,13 @@ export class InstantMessenger extends React.Component {
             this.props.chatClient.onNewMessage(this.handleNewMessage)
     }
     handleNewMessage(message) {
-        console.log(message)
         this.setState({
-            messages: [...mockMessages, message]
+            messages: [...this.state.messages, message]
         })
     }
     componentWillUnmount() {
         if(this.props.chatClient) {
-
+            this.props.chatClient.removeNewMessage(this.handleNewMessage)
         }
     }
     sendMessage(userName, text) {
@@ -82,6 +81,7 @@ export class InstantMessenger extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.animateScrollToBottom(500)
     }
+
     animateScrollToBottom(durationMilliseconds) {
         const duration = Math.max(durationMilliseconds, 100)
         const current = this.messageSpaceNode.scrollTop
@@ -115,7 +115,7 @@ export class InstantMessenger extends React.Component {
     }
 }
 
-export const SocketInstantMessenger = props => {
+export const SocketInstantMessenger = (props) => {
     return <SocketContextConsumer>
         {
             socketState => <InstantMessenger {...props} {...socketState}/>

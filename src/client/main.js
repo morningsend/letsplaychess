@@ -3,15 +3,19 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import { renderRoutes } from 'react-router-config'
 import { AppContainer } from 'react-hot-loader'
+import { Provider } from 'react-redux'
 import { Routes } from './Routes'
+import store from './store'
 import './assets/style/site.scss'
 
 const render = (routes) => {
     ReactDOM.render(
         <AppContainer>
-            <BrowserRouter>
-                {renderRoutes(routes)}
-            </BrowserRouter>
+            <Provider store={store}>
+                <BrowserRouter>
+                    {renderRoutes(routes)}
+                </BrowserRouter>
+            </Provider>
         </AppContainer>,
         document.getElementById('root'),
     )

@@ -45,11 +45,18 @@ export class ChatClient {
         this.batchReceiveHandlers = []
         this.messageBuffer = []
         this.socket = socket
+        this.setupSocket(this.socket)
+        this._notifyNewMessage = this._notifyNewMessage.bind(this)
     }
     
     onNewMessage(handler) {
         if(handler)
             this.newMessageHandlers.push(handler)
+    }
+    removeNewMessage(handler) {
+        if(handler) {
+            this.newMessageHandlers = this.newMessageHandlers.filter(h => h !== handler)
+        }
     }
     onBatchReceiveMessage(handler) {
         if(handler) {
@@ -59,7 +66,7 @@ export class ChatClient {
     _notifyNewMessage(data) {
         for(let i = 0; i < this.newMessageHandlers.length; i++) {
             try{
-                this.newMessageHandlers[i](data)
+                this.newMessageHandlers[i](data.message)
             } catch(error){
                 console.log(error)
             }
@@ -79,10 +86,13 @@ export class ChatClient {
             console.log(data)
         })
         socket.on(ChatSignalTypes.NEW_MESSAGE, (data) => {
+            console.log('got new message')
             this._notifyNewMessage(data)
         })
     }
     send(message, callback) {
+        console.log('chat client sending messsage')
+        console.log(message)
         if(!message) {
             return
         }
@@ -96,6 +106,7 @@ export class ChatClient {
                     callback
                 )
             } else {
+                console.log('socket is not connected')
                 this.messageBuffer.push(message)
             }
         } catch(error) {
