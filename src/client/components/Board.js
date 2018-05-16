@@ -16,7 +16,7 @@ export class Board extends React.Component {
         board: null,
         onMakeMove: null,
         moveEnabled: true,
-        thisPlayerColour: PlayerColours.Black,
+        thisPlayerColour: PlayerColours.White,
     }
 
     static renderEmptyBoard() {

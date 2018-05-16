@@ -25,7 +25,9 @@ export function match(state = initialState, action) {
                 accessToken: action.accessToken,
                 colour: action.myPlayerColour,
                 errorMessage: '',
-                hasMatch: true,                
+                hasMatch: true,
+                matchId: action.match.matchId,
+                match: action.match,           
             }
             break
         case ActionTypes.MATCH_MAKING_TIMEOUT:

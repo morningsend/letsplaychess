@@ -100,6 +100,7 @@ export class Piece extends React.PureComponent {
             <use
                 transform={transform} 
                 href={atlas + `#${colour}-${kind}`}
+                xlinkHref={atlas + `#${colour}-${kind}`}
                 className='chess-piece'
             />
         )

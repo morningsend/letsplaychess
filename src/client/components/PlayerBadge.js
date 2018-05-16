@@ -31,4 +31,12 @@ PlayerBadge.defaultProps = {
     },
 }
 
+PlayerBadge.Placeholder = (props) => (
+<div className='player-badge-container placeholder'>
+    <div className='player-avatar-small'></div>
+    <div>
+        <p className='player-name'></p>
+    </div>
+</div>
+)
 export default PlayerBadge

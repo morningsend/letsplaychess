@@ -2,23 +2,24 @@ import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { ChessGame, SocketInstantMessenger } from '../containers'
+import { SocketChessGame, SocketInstantMessenger, ChessGame } from '../containers'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem, Overlay, Modal, LoadingIcon } from '../components'
 import { Tab, TabView, ChessMovesViewer } from '../components'
-import { SocketContextProvider } from '../realtime'
+import { SocketContextProvider, SocketContextConsumer } from '../realtime'
 import { findMatch, matchFound, matchMakingTimeout } from '../actions/match'
 
 class GamePage extends React.Component {
     static propTypes = {
         hasMatch: PropTypes.bool,
         opponentId: PropTypes.string,
-        gameId: PropTypes.string,
+        matchId: PropTypes.string,
         colour: PropTypes.string,
         findingMatch: PropTypes.bool,
         errorMessage: PropTypes.string,
         userId: PropTypes.string,
         username: PropTypes.string,
         avatarImage: PropTypes.string,
+        match: PropTypes.object,
     }
 
     constructor(props, context) {
@@ -93,7 +94,18 @@ class GamePage extends React.Component {
                     </Header>
                     <Content className='game-page-content'>
                         <div className='game-wrapper'>
-                            <ChessGame onMoveListUpdate={this.onMoveListUpdate} />
+                            {
+                                this.props.hasMatch ? 
+                                <SocketChessGame
+                                    onMoveListUpdate={this.onMoveListUpdate}
+                                    boardOrientation={this.myPlayerColour}
+                                    showPlaceholder={!this.hasMatch}
+                                    whitePlayer={{}}
+                                    blackPlayer={{}}
+                                    local={false}
+                                />
+                                : <ChessGame.Placeholder />
+                            }
                         </div>
                         <TabView className='tabview' barItems={['Messages', 'Notation']}>
                             <SocketInstantMessenger enabled={this.props.hasMatch} />
@@ -114,7 +126,7 @@ function mapStateToProps(state) {
     return {
         hasMatch: match.opponentId ? true : false,
         opponentId: match.opponentId,
-        gameId: match.gameId,
+        matchId: match.matchId,
         colour: match.myPlayerColour,
         findingMatch: match.findingMatch,
         accessToken: authen.accessToken,
@@ -131,8 +143,8 @@ function mapDispatchToProps(dispatch, ownProps) {
             dispatch(findMatch(ownProps.userId, ownProps.accessToken, new Date().getTime()))
             
         },
-        matchFound: (opponentId, matchId, joinToken, colour) => {
-            dispatch(matchFound(ownProps.userId, opponentId, matchId, joinToken, colour))
+        matchFound: (userId, opponentId, matchId, joinToken, match, colour) => {
+            dispatch(matchFound(userId, opponentId, matchId, joinToken, match, colour))
         },
         timeout: () => {
             dispatch(matchMakingTimeout())

@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { ChessEngine, Move, MoveTypes, GameStateMachine, GameStatus, PlayerColours } from '../../chess'
+import { ChessEngine, Move, MoveTypes, GameStateMachine, GameStatus, PlayerColours, ChessBoard } from '../../chess'
 import { Board, PlayerBadge, ChessClock } from '../components'
+import { SocketContextConsumer } from '../realtime';
 
 export class ChessGame extends React.Component {
     static propTypes = {
@@ -72,5 +73,30 @@ export class ChessGame extends React.Component {
         )
     }
 }
+export const ChessGamePlaceholder = (props) => (
+<div className='chess-game-container' {...props}>
+    <div className='chess-game-row'>
+        <div className='spacer'></div>
+        <PlayerBadge.Placeholder />
+    </div>
+    <Board
+        board={ChessBoard.initialBoard()}
+    />
+    <div className='chess-game-row'>
+        <div className='spacer'></div>
+        <PlayerBadge.Placeholder />
+    </div>
+</div>
+)
+
+ChessGame.Placeholder = ChessGamePlaceholder
+
+export const SocketChessGame = (props) => (
+    <SocketContextConsumer>
+    {
+        contextProps => <ChessGame {...props} {...contextProps}/>
+    }
+    </SocketContextConsumer>
+)
 
 export default ChessGame

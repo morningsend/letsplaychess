@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import io from 'socket.io-client'
 import { config } from '../config'
-import { ChatClient } from '.';
+import { ChatClient, GameClient } from '.';
 
 const SocketContext  = React.createContext('socket')
 export const SocketContextConsumer = SocketContext.Consumer
@@ -34,6 +34,7 @@ export class SocketContextProvider extends Component {
             gameId: '',
             isConnected: false,
             chatClient: new ChatClient(this.socket),
+            gameClient: new GameClient(this.socket),
         }
     }
     connect() {

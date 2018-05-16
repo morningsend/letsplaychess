@@ -21,7 +21,8 @@ export class RegisterForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    handleSubmit() {
+    handleSubmit(event) {
+        event.preventDefault()
         const { username, email, password } = this.state
         if(this.props.onRegister) {
             this.props.onRegister(username, email, password)

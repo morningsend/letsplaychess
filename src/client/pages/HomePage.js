@@ -26,6 +26,8 @@ class HomePage extends React.Component {
         if(this.props.isLoggedIn && this.props.history) {
             this.props.history.push('/account')
         }
+        // debug only
+        this.handleLogin('test001', '12345678')
     }
 
     componentWillUpdate(nextProps, nextState) {

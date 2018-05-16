@@ -658,6 +658,7 @@ a.back-to-login{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 99;
 }
 
 .modal-container {
@@ -718,6 +719,12 @@ a.back-to-login{
     .loading-icon-piece {
         animation: movingPiece 4s ease-in infinite;
         fill: blue;
+        width: 32px;
+        height: 32px;
+    }
+    .loading-icon-piece-inner {
+        transform-origin: center;
+        transform: translate(-8px, -8px) scale(.75, .75);
     }
     margin: 0px auto 16px auto;
     display: block;

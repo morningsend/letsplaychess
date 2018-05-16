@@ -28,7 +28,13 @@ export class LoadingIcon extends React.PureComponent {
                     <rect x={rectSize} y={0} width={rectSize} height={rectSize} className='white' />
                     <rect x={rectSize} y={rectSize} width={rectSize} height={rectSize} className='black' />
                 </g>
-                <use href={atlas + `#White-${piece}`} className='loading-icon-piece'/>
+                <g className='loading-icon-piece'>
+                    <use
+                        className='loading-icon-piece-inner'
+                        href={atlas + `#White-${piece}`}
+                        xlinkHref={atlas + `#White-${piece}`}
+                    />
+                </g>
             </svg>
         )
     }
