@@ -4,32 +4,18 @@ import { MessageList} from '../components'
 import { PostMessageForm } from '../components'
 import { ChatClient, SocketContextConsumer } from '../realtime';
 
-const mockMessages = [
-    {
-        id: 1,
-        timestamp: new Date().getTime(),
-        text: 'Hello, where are you from?',
-        owner: 'daenerys',
-        self: false
-    },
-    {
-        id: 2,
-        timestamp: new Date().getTime(),
-        text: 'I am from a country far far far away.',
-        owner: 'jonsnow',
-        self: true
-    }
-]
 export class InstantMessenger extends React.Component {
     static propTypes = {
         gameId: PropTypes.string,
         chatClient: PropTypes.object,
         isConnected: PropTypes.bool,
+        enabled: PropTypes.bool
     }
     static defaultProps = {
         gameId: -1,
         chatClient: null,
         isConnected: false,
+        enabled: false,
     }
     constructor(props) {
         super(props)
@@ -109,7 +95,7 @@ export class InstantMessenger extends React.Component {
                 <div className='message-space' ref={node => this.messageSpaceNode = node}>
                     <MessageList messages={this.state.messages} />
                 </div>
-                <PostMessageForm sendMessage={this.sendMessage} enabled={this.props.isConnected}/>
+                <PostMessageForm sendMessage={this.sendMessage} enabled={this.props.isConnected && this.props.enabled}/>
             </div>
         )
     }

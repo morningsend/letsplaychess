@@ -23,10 +23,23 @@ class HomePage extends React.Component {
         }
     }
     componentDidMount() {
-        if(this.props.isLoggedIn) {
-
+        if(this.props.isLoggedIn && this.props.history) {
+            this.props.history.push('/account')
         }
     }
+
+    componentWillUpdate(nextProps, nextState) {
+        if(nextProps.isLoggedIn) {
+            this.props.history.push('/account')
+        }
+    }
+    /*
+    <div className='guest-button-container'>
+        <Link to='/game' className='button button-primary'>
+            Play As Guest
+        </Link>
+    </div>
+    */
     render() {
         return (
             <Page className='page home-page'>
@@ -41,11 +54,7 @@ class HomePage extends React.Component {
                           Don&apos;t have an account? Register here.
                         </Link>
                     </div>
-                    <div className='guest-button-container'>
-                        <Link to='/game' className='button button-primary'>
-                            Play As Guest
-                        </Link>
-                    </div>
+
                 </div>
                 </Content>
             </Page>
@@ -60,8 +69,9 @@ function mapDispatchToProps(dispatch) {
             dispatch(userLogin(username, password))
             AuthenApi.login(username, password)
                 .then(result=>{
+                    console.log(result)
                     if(result.success) {
-                        dispatch(userLoginSucceeded(username, result.userId))
+                        dispatch(userLoginSucceeded(username, result.userId, result.token, result.expiresIn))
                     } else {
                         console.log(result)    
                         dispatch(userLoginFailed(username, result.messsage))    
@@ -77,7 +87,7 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps(state) {
     const authen = state.authen
     return {
-        isLoggedIn: authen.isLoggedIn,
+        isLoggedIn: authen.loggedIn,
         loginFailed: authen.failed,
         message: authen.message,
 

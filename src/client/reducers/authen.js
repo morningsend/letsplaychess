@@ -3,7 +3,7 @@ import { ActionTypes, userLogin, userLoginFailed, userLoginSucceeded } from '../
 const initialState = {
     accessToken: '',
     loggedIn: false,
-    expireTime: -1,
+    expiresIn: -1,
     failed: false,
     username: '',
     userId: '',
@@ -11,7 +11,7 @@ const initialState = {
 }
 
 export function authen(state = initialState, action) {
-    const newState = state
+    let newState = state
     switch(action.type) {
         case ActionTypes.USER_LOGIN:
             break
@@ -25,7 +25,7 @@ export function authen(state = initialState, action) {
             newState = {
                 ...state,
                 username: action.username,
-                accessToken: action.token,
+                accessToken: action.accessToken,
                 expiresIn: action.expiresIn,
                 userId: action.userId,
                 message: action.message,

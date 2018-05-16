@@ -29,7 +29,7 @@ export class ProfileBar extends React.Component {
                 </div>
                 <div className='guest-button-container'>
                     <Link to='/game' className='button button-primary'>
-                        Play As Guest
+                        Quick Game
                     </Link>
                 </div>
             </div>

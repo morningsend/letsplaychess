@@ -389,7 +389,7 @@ a.back-to-login{
         color: #c6c6c6;
         display: flex;
         align-items: center;
-
+        padding-right: 24px;
         .title {
             font-size: 24px;
             font-weight: normal;
@@ -667,6 +667,7 @@ a.back-to-login{
     box-shadow: 1px 4px 4px rgba(0,0,0,0.3);
     color: #a1a1a1;
     padding: 40px;
+    text-align: center;
 }
 
 @keyframes movingPiece {

@@ -1,17 +1,34 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { ChessGame, SocketInstantMessenger } from '../containers'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem, Overlay, Modal, LoadingIcon } from '../components'
 import { Tab, TabView, ChessMovesViewer } from '../components'
 import { SocketContextProvider } from '../realtime'
+import { findMatch, matchFound, matchMakingTimeout } from '../actions/match'
 
-export class GamePage extends React.Component {
+class GamePage extends React.Component {
+    static propTypes = {
+        hasMatch: PropTypes.bool,
+        opponentId: PropTypes.string,
+        gameId: PropTypes.string,
+        colour: PropTypes.string,
+        findingMatch: PropTypes.bool,
+        errorMessage: PropTypes.string,
+        userId: PropTypes.string,
+        username: PropTypes.string,
+        avatarImage: PropTypes.string,
+    }
+
     constructor(props, context) {
         super(props, context)
         this.onMoveListUpdate = this.onMoveListUpdate.bind(this)
         this.state = {
             moveList: []
         }
+
+        this.onFindOpponentButtonClick = this.onFindOpponentButtonClick.bind(this)
     }
     onMoveListUpdate(moveList) {
         this.setState({
@@ -19,21 +36,43 @@ export class GamePage extends React.Component {
         })
     }
     componentDidMount() {
-        
-    }
 
+    }
     componentWillUnmount() {
 
     }
+    componentWillUpdate(nextProps, nextState) {
+
+    }
+    onFindOpponentButtonClick() {
+        console.log('find opponent')
+        if(this.props.findMatch){
+            this.props.findMatch(this.props.userId, new Date().getTime())
+        }
+    }
     render() {
+        const { findingMatch, errorMessage } = this.props
         return (
             <SocketContextProvider>
                 <Page className='page game-page'>
-                    <Overlay visible={false}>
-                        <Modal>
-                            <LoadingIcon />
-                            <p>Matching you with other players...</p>
-                        </Modal>
+                    <Overlay visible={!this.props.hasMatch}>
+                        {
+                            findingMatch ? 
+                            <Modal>
+                                <LoadingIcon />
+                                <p>Matching you with other players...</p>
+                            </Modal>
+                            : null
+                        }
+                        {
+                            (!findingMatch) ?
+                            <Modal>
+                                <p>15 Minutes Blitz Game</p>
+                                <button className="button" onClick={this.onFindOpponentButtonClick}>Find Opponent</button>
+                                <p>{errorMessage || ''}</p>
+                            </Modal>
+                            : null
+                        }
                     </Overlay>
                     <Header>
                         <h2 className='title'>Let&apos;s Play Chess</h2>
@@ -57,7 +96,7 @@ export class GamePage extends React.Component {
                             <ChessGame onMoveListUpdate={this.onMoveListUpdate} />
                         </div>
                         <TabView className='tabview' barItems={['Messages', 'Notation']}>
-                            <SocketInstantMessenger />
+                            <SocketInstantMessenger enabled={this.props.hasMatch} />
                             <ChessMovesViewer moves={this.state.moveList}/>
                         </TabView>
                     </Content>
@@ -67,4 +106,39 @@ export class GamePage extends React.Component {
     }
 }
 
-export default GamePage
+function mapStateToProps(state) {
+    const match = state.match
+    const authen = state.authen
+    const user = state.user
+    console.log(authen)
+    return {
+        hasMatch: match.opponentId ? true : false,
+        opponentId: match.opponentId,
+        gameId: match.gameId,
+        colour: match.myPlayerColour,
+        findingMatch: match.findingMatch,
+        accessToken: authen.accessToken,
+        errorMessage: match.errorMessage,
+        userId: user.userId,
+        username: user.username,
+        avatarImage: user.profile.avatarUrl,
+    }
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+    return {
+        findMatch: () => {
+            dispatch(findMatch(ownProps.userId, ownProps.accessToken, new Date().getTime()))
+            
+        },
+        matchFound: (opponentId, matchId, joinToken, colour) => {
+            dispatch(matchFound(ownProps.userId, opponentId, matchId, joinToken, colour))
+        },
+        timeout: () => {
+            dispatch(matchMakingTimeout())
+        }
+    }
+}
+const GamePageWithRedux = connect(mapStateToProps, mapDispatchToProps)(GamePage)
+export { GamePageWithRedux as GamePage }
+export default GamePageWithRedux

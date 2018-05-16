@@ -1,9 +1,13 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { getUser, getUserFinished } from '../actions/user'
 import { ProfileBar, GameHistory } from '../containers'
+import { UserApi } from '../api'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem } from '../components'
 
-export class AccountPage extends React.Component {
+class AccountPage extends React.Component {
     static propTypes = {}
     constructor(props) {
         super(props)
@@ -40,4 +44,33 @@ export class AccountPage extends React.Component {
     }
 }
 
-export default AccountPage
+function mapStateToProps(state) {
+    const user = state.user
+    const authen = state.authen
+    return {
+        user,
+        userId: user.userId || authen.userId,
+        accessToken: authen.accessToken,
+    }
+}
+
+function mapDispatchToProps(dispatch, ownProps) {
+    return {
+        getUser: () => {
+            const { userId, accessToken } = ownProps
+            dispatch(getUser(ownProps.userId))
+            UserApi.getUser(userId, accessToken)
+                .then(user => {
+                    dispatch(getUserFinished(user))
+                })
+                .catch(error => {
+                    dispatch(getUserFailed(error))
+                })
+        }
+    }
+}
+
+const AccountPageWithRedux = connect(mapStateToProps, mapDispatchToProps)(AccountPage)
+
+export { AccountPageWithRedux as AccountPage}
+export default AccountPageWithRedux

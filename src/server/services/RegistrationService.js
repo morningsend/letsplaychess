@@ -10,6 +10,14 @@ export class UserExistsError extends Error {
 export class RegistrationService {
     constructor(userRepository) {
         this.userRepository = userRepository
+        this._seedTestUsers()
+    }
+
+    _seedTestUsers() {
+        this.register('test001', 'test001@example.com', '12345678')
+            .then(() => {
+                console.log("added testuser")
+            })
     }
     isUsernameAvailable(username) {
         return this.userRepository

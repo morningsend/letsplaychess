@@ -47,6 +47,7 @@ export class PostMessageForm extends React.Component {
                     value={this.state.text}
                     onChange={this.handleTypingText}
                     placeholder="Message"
+                    disabled={!this.props.enabled}
                     />
                 <button disabled={!canSubmit} type="submit" value="Send" className="submit-button">Send</button>
             </form>

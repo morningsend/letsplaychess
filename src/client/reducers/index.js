@@ -1,18 +1,12 @@
 import { combineReducers } from 'redux'
 import { authen } from './authen'
-export function profile(state, action) {
-    return {}
-}
-
-export function game(state, action) {
-    return {}
-}
-
+import { match } from './match'
+import { user}  from './user'
 
 export const rootReducer = combineReducers({
-    profile,
-    game,
     authen,
+    match,
+    user,
 })
 
 export default rootReducer

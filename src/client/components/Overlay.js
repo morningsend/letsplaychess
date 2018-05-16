@@ -5,7 +5,7 @@ export class Overlay extends React.PureComponent{
 
     static propTypes = {
         backgroundOpacity: PropTypes.number,
-        children: PropTypes.element,
+        children: PropTypes.any,
         className: PropTypes.string,
         visible: PropTypes.bool,
     }
