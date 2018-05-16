@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const morgan = require('morgan')
 const passport = require('passport')
+const cors = require('cors')
 const BearerStrategy = require('passport-http-bearer').Strategy
 const container = require('./container')
 /*
@@ -47,6 +48,7 @@ passport.use(new BearerStrategy((token, done) =>{
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(express.static(path.resolve(__dirname, '../../build')))
+app.use(cors())
 app.get('/', (request, response) => {
     /*const html = renderToString(<StaticRouter location={request.url} context={{}}>
             {renderRoutes(Routes)}

@@ -21,7 +21,7 @@ export class ChessMovesViewer extends React.Component {
         for(let i = 0; i < numberOfRows; i++) {
             rows.push(
                 <tr>
-                    <td>{i}</td>
+                    <td>{i + 1}</td>
                     <td>{ moves[2*i].toString() }</td>
                     <td>{ moves[2*i + 1].toString() }</td>
                 </tr>
@@ -30,7 +30,7 @@ export class ChessMovesViewer extends React.Component {
         if(remainder !== 0) {
             rows.push(
                 <tr>
-                    <td>{numberOfRows}</td>
+                    <td>{numberOfRows + 1}</td>
                     <td>{moves[2*numberOfRows].toString() }</td>
                     <td></td>
                 </tr>

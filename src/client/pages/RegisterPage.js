@@ -6,7 +6,6 @@ import { Page, Header, Content } from '../components'
 export class RegisterPage extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {}
     }
     render() {
         return (

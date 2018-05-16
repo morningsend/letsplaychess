@@ -25,8 +25,9 @@ router.post('/login', async (request, response) => {
             success: true,
             message: 'Successfully signed in.',
             username,
+            userId: tokenResult.userId,
             token: tokenResult.token,
-            expiresIn: tokenResult.expiresIn, 
+            expiresIn: tokenResult.expiresIn,
         })
     }catch(error) {
         console.log(error)

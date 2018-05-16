@@ -4,11 +4,10 @@ export const ActionTypes = {
     USER_LOGIN_SUCCEEDED: 'USER_LOGIN_SUCCEEDED',
 }
 
-export function userLogin(username, password) {
+export function userLogin(username) {
     return {
         type: ActionTypes.USER_LOGIN,
         username,
-        password,
     }
 }
 
@@ -21,10 +20,12 @@ export function userLoginFailed(username, userId, message) {
     }
 }
 
-export function userLoginSucceeded(username, userId) {
+export function userLoginSucceeded(username, userId, accessToken, expiresIn) {
     return {
         type: ActionTypes.USER_LOGIN_SUCCEEDED,
         username,
         userId,
+        accessToken,
+        expiresIn
     }
 }

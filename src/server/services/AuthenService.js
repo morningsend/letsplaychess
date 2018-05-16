@@ -34,7 +34,8 @@ export class AuthenService {
                     const token = this.jwt.sign({ userId: user._id }, 'somesecret', { expiresIn: expiresIn})
                     return {
                         token: token,
-                        expiresIn: expiresIn
+                        expiresIn: expiresIn,
+                        userId: foundUser._id,
                     }
                 } else {
                     throw new NotFoundError('Username and password combination is not found.')
@@ -60,7 +61,8 @@ export class AuthenService {
                             .sign({ userId: foundUser._id }, 'somesecret', { expiresIn: expiresIn})
                     return {
                         token: token,
-                        expiresIn: expiresIn
+                        expiresIn: expiresIn,
+                        userId: foundUser._id,
                     }
                 } else {
                     throw new NotFoundError('Username and password combination is not found.')
@@ -79,7 +81,8 @@ export class AuthenService {
                                 .sign({ userId: user._id }, 'somesecret', { expiresIn: expiresIn})
                 return {
                     token: token,
-                    expiresIn: expiresIn
+                    expiresIn: expiresIn,
+                    userId: user._id,
                 }
             })
     }

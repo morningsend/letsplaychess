@@ -1,11 +1,16 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { LoginForm } from '../containers'
 import { Page, Header, Content } from '../components'
-import { userLogin } from '../actions/authen'
+import { userLogin, userLoginSucceeded, userLoginFailed } from '../actions/authen'
+import { AuthenApi } from '../api'
 
-export class HomePage extends React.Component {
+class HomePage extends React.Component {
+    static propTypes = {
+        history: PropTypes.object
+    }
     constructor(props) {
         super(props)
         this.state = {}
@@ -15,6 +20,11 @@ export class HomePage extends React.Component {
         console.log(username, password)
         if(this.props.login) {
             this.props.login(username, password)
+        }
+    }
+    componentDidMount() {
+        if(this.props.isLoggedIn) {
+
         }
     }
     render() {
@@ -46,17 +56,34 @@ export class HomePage extends React.Component {
 function mapDispatchToProps(dispatch) {
     return {
         login: (username, password) => {
+            console.log('dispatch userLogin')
             dispatch(userLogin(username, password))
-
+            AuthenApi.login(username, password)
+                .then(result=>{
+                    if(result.success) {
+                        dispatch(userLoginSucceeded(username, result.userId))
+                    } else {
+                        console.log(result)    
+                        dispatch(userLoginFailed(username, result.messsage))    
+                    }
+                })
+                .catch((error) => {
+                    dispatch(userLoginFailed(username, error.messsage))
+                })
         }
     }
 }
 
 function mapStateToProps(state) {
+    const authen = state.authen
     return {
-        isLoggedIn: state.authen.isLoggedIn,
-        loginFailed: false,
-        loginFailedMessage: ''
+        isLoggedIn: authen.isLoggedIn,
+        loginFailed: authen.failed,
+        message: authen.message,
+
     }
 }
-export default HomePage
+
+const HomePageWithRedux = connect(mapStateToProps, mapDispatchToProps)(HomePage)
+export { HomePageWithRedux as HomePage }
+export default HomePageWithRedux
