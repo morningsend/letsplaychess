@@ -35,7 +35,7 @@ passport.use(new BearerStrategy((token, done) =>{
     authen.verifyToken(token)
         .then(result => {
             if(result)
-                done(null, null, { scope: 'all' })
+                done(null, result, { scope: 'all' })
             else {
                 done(new Error('did not work'))
             }

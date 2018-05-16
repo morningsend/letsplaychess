@@ -1,7 +1,7 @@
 import config from '../config'
 
 export class UserApi {
-    static endpoint = '/user'
+    static endpoint = '/users'
 
     static getUser(userId, accessToken) {
         if(!userId || !accessToken) {
@@ -14,7 +14,7 @@ export class UserApi {
             {
                 headers: {
                     Accept: 'application/json',
-                    Authorization: 'Bearer ' + accessToken
+                    Authorization: 'bearer ' + accessToken
                 }
             })
             .then(response => response.json())

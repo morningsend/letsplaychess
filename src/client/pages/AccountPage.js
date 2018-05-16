@@ -2,16 +2,25 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { getUser, getUserFinished } from '../actions/user'
+import { getUser, getUserFinished, getUserFailed } from '../actions/user'
 import { ProfileBar, GameHistory } from '../containers'
 import { UserApi } from '../api'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem } from '../components'
 
 class AccountPage extends React.Component {
-    static propTypes = {}
-    constructor(props) {
-        super(props)
-        this.state = {}
+    static propTypes = {
+        getUser: PropTypes.func,
+        user: PropTypes.object,
+    }
+    constructor(props, context) {
+        super(props, context)
+    }
+
+    componentDidMount() {
+        const {userId, accessToken, getUser } = this.props
+        if(getUser){
+            getUser(userId, accessToken)
+        }
     }
     render() {
         return (
@@ -56,9 +65,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, ownProps) {
     return {
-        getUser: () => {
-            const { userId, accessToken } = ownProps
-            dispatch(getUser(ownProps.userId))
+        getUser: (userId, accessToken) => {
+            dispatch(getUser(userId))
+            console.log('getUser')
+            console.log(ownProps)
             UserApi.getUser(userId, accessToken)
                 .then(user => {
                     dispatch(getUserFinished(user))
