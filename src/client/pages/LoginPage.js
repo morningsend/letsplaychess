@@ -1,21 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { Page } from '../components'
 
-export class LoginPage extends React.Component {
+export class LoginPage extends React.PureComponent {
     static propTypes = {
         history: PropTypes.object.isRequired,
     }
-    constructor(props, context) {
-        super(props, context)
-        this.state = {
-            loggedIn: false,
-        }
+    constructor(props) {
+        super(props)
         this.doLogin = this.doLogin.bind(this)
     }
     doLogin(e) {
+        console.log(e)
         e.preventDefault()
-        this.props.history.push('/account')
+        e.stopPropagation()
+        //this.props.history.push('/account')
     }
     render() {
         return (
@@ -31,5 +31,13 @@ export class LoginPage extends React.Component {
         )
     }
 }
+function mapStateToProps(state) {
+    return {
+        loggedIn: state.authen.loggedIn,
 
-export default LoginPage
+    }
+}
+function mapDispatchToProps(dispatch) {
+
+}
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage)
