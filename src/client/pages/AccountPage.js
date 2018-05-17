@@ -21,6 +21,7 @@ class AccountPage extends React.Component {
         if(getUser){
             getUser(userId, accessToken)
         }
+        this.props.history.push('/game')
     }
     render() {
         return (

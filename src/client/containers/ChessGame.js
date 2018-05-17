@@ -11,8 +11,22 @@ export class ChessGame extends React.Component {
         thisPlayerColour: PropTypes.string,
         playerBlack: PropTypes.object,
         playerWhite: PropTypes.object,
+        gameClient: PropTypes.object,
+        matchId: PropTypes.string,
+        matchJoinToken: PropTypes.string,
+        userId: PropTypes.string,
+    }
+    componentDidMount() {
+        if(!this.props.gameClient) {
+            return
+        }
+        this.props.gameClient.reset(this.props.match)
+
     }
 
+    componentWillUnmount() {
+
+    }
     static defaultProps = {
         onMoveListUpdate: () => {}
     }
@@ -30,9 +44,51 @@ export class ChessGame extends React.Component {
             },
             game: GameStateMachine.newGame({ duration: 900 }),
             movesMade: 0,
+            gameRunning: false,
         }
         this.handleMakeMove = this.handleMakeMove.bind(this)
+        this.handlePlayersReady = this.handlePlayersReady.bind(this)
+        this.handleOpponentResign = this.handleOpponentResign.bind(this)
+        this.handleOpponentMove = this.handleOpponentMove.bind(this)
     }
+
+    handlePlayersReady() {
+        this.setState({
+            gameRunning: true,
+        })
+    }
+
+    handleOpponentResign() {
+
+    }
+
+    handleOpponentMove() {
+
+    }
+
+    componentDidMount() {
+        if(!this.props.gameClient) {
+            return
+        }
+        this.props.gameClient.reset()
+        const { userId, matchId, matchJoinToken } = this.props
+
+        this.setupGameClient(this.props.gameClient)
+        
+        this.props.gameClient.joinGame(
+            userId,
+            matchId,
+            matchJoinToken
+        )
+    }
+    componentWillUnmount() {
+        gameClient.cleanUpCallbacks()
+    }
+    setupGameClient(gameClient) {
+        gameClient.onPlayersReady(this.handlePlayersReady)
+        gameCllient.onOpponentResign(this.handleOpponentResign)
+    }
+
     handleMakeMove(piece, columnTo, rowTo) {
         if (piece && columnTo && rowTo) {
             const move = new Move(
@@ -52,13 +108,13 @@ export class ChessGame extends React.Component {
     }
     render() {
         const { thisPlayerColour } = this.props
-        console.log(thisPlayerColour)
+        const nextTurnPlayerColour = this.state.game.nextTurn
         return (
             <div className='chess-game-container'>
                 <div className='chess-game-row'>
                     <div className='spacer'></div>
                     <PlayerBadge player={thisPlayerColour === PlayerColours.White ? this.state.playerBlack : this.state.playerWhite} />
-                    <ChessClock durationInSeconds={900} countingDown={false} />
+                    <ChessClock durationInSeconds={900} countingDown={nextTurnPlayerColour !== thisPlayerColour && this.state.gameRunning} />
                 </div>
                 <Board
                     moveEnabled={ this.state.game.gameStatus !== GameStatus.End }
@@ -69,7 +125,7 @@ export class ChessGame extends React.Component {
                 <div className='chess-game-row'>
                     <div className='spacer'></div>
                     <PlayerBadge player={thisPlayerColour === PlayerColours.White ? this.state.playerWhite : this.state.playerBlack} />
-                    <ChessClock durationInSeconds={900} countingDown={true} />
+                    <ChessClock durationInSeconds={900} countingDown={nextTurnPlayerColour === thisPlayerColour && this.state.gameRunning} />
                 </div>
                 <span style={{visibility: 'hidden'}}>{this.state.movesMade}</span>
             </div>

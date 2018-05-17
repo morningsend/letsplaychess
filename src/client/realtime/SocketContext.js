@@ -33,8 +33,8 @@ export class SocketContextProvider extends Component {
             userId: '',
             gameId: '',
             isConnected: false,
-            chatClient: new ChatClient(io(config.baseUrl + config.chatSocket.namespace, { transports: ['websocket'],path: config.path })),
-            gameClient: new GameClient(io(config.baseUrl + config.gameSocket.namespace, { transports: ['websocket'],path: config.path })),
+            chatClient: new ChatClient(io(config.baseUrl + config.chatSocket.namespace, { transports: ['websocket'],path: config.path, reconnectionAttempts: 'Infinity', })),
+            gameClient: new GameClient(io(config.baseUrl + config.gameSocket.namespace, { transports: ['websocket'],path: config.path, reconnectionAttempts: 'Infinity', })),
         }
     }
     connect() {

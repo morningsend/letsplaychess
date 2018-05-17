@@ -13,7 +13,6 @@ class GamePage extends React.Component {
     static propTypes = {
         hasMatch: PropTypes.bool,
         opponentId: PropTypes.string,
-        matchId: PropTypes.string,
         colour: PropTypes.string,
         findingMatch: PropTypes.bool,
         errorMessage: PropTypes.string,
@@ -21,6 +20,8 @@ class GamePage extends React.Component {
         username: PropTypes.string,
         avatarImage: PropTypes.string,
         match: PropTypes.object,
+        matchId: PropTypes.string,
+        joinToken: PropTypes.string,
         accessToken: PropTypes.string,
     }
 
@@ -107,6 +108,8 @@ class GamePage extends React.Component {
                                     blackPlayer={{}}
                                     local={false}
                                     thisPlayerColour={this.props.myPlayerColour}
+                                    matchId={this.props.matchId}
+                                    matchJoinToken={this.props.joinToken}
                                 />
                                 : <ChessGame.Placeholder />
                             }
@@ -131,6 +134,7 @@ function mapStateToProps(state) {
         hasMatch: match.opponentId ? true : false,
         opponentId: match.opponentId,
         matchId: match.matchId,
+        joinToken: match.joinToken,
         myPlayerColour: match.myPlayerColour,
         findingMatch: match.findingMatch,
         accessToken: authen.accessToken,

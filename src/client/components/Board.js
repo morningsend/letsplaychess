@@ -14,7 +14,7 @@ export class Board extends React.Component {
     static defaultProps = {
         playerColourPOV: PlayerColours.White,
         board: null,
-        onMakeMove: null,
+        onMakeMove: () => {},
         moveEnabled: true,
         thisPlayerColour: PlayerColours.White,
     }
@@ -50,14 +50,13 @@ export class Board extends React.Component {
             this.setState({ selectedPiece: null })
         } else {
             const piece = this.props.board.pieceAt(column, row)
-            if(piece) {
+            if(piece && piece.colour === this.props.thisPlayerColour) {
                 this.setState({ selectedPiece: piece })
                 console.log('selected'  + JSON.stringify(piece.position))
             }
         }
     }
     renderBoard() {
-        
         const board = []
         const { boardWidth, boardHeight } = this.props.board
         const offset = this.props.thisPlayerColour == PlayerColours.White ? 0 : 1;
