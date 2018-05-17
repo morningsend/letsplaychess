@@ -33,8 +33,8 @@ export class SocketContextProvider extends Component {
             userId: '',
             gameId: '',
             isConnected: false,
-            chatClient: new ChatClient(this.socket),
-            gameClient: new GameClient(this.socket),
+            chatClient: new ChatClient(io(config.baseUrl + config.chatSocket.namespace, { transports: ['websocket'],path: config.path })),
+            gameClient: new GameClient(io(config.baseUrl + config.gameSocket.namespace, { transports: ['websocket'],path: config.path })),
         }
     }
     connect() {
@@ -49,9 +49,10 @@ export class SocketContextProvider extends Component {
             const options = {
                 transports: ['websocket'],
                 reconnectionAttempts: 'Infinity',
-                autoConnect: false
+                autoConnect: false,
+                path: config.path,
             }
-            this.socket = io.connect(config.socketUrl, options)
+            this.socket = io.connect(config.baseUrl, options)
             this.socket.on('connect', () => {
                 self.setState({
                     'isConnected': true

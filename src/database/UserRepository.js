@@ -106,7 +106,6 @@ export class UserRepository {
         return new Promise((resolve, reject) => {
             this.users.insert({
                 username: "Guest" + sessionId,
-
             })
         })
     }

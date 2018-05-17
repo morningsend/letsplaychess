@@ -8,10 +8,12 @@ export class ChessGame extends React.Component {
     static propTypes = {
         thisPlayerColour: PropTypes.string,
         onMoveListUpdate: PropTypes.func,
+        thisPlayerColour: PropTypes.string,
+        playerBlack: PropTypes.object,
+        playerWhite: PropTypes.object,
     }
 
     static defaultProps = {
-        thisPlayerColour: PlayerColours.White,
         onMoveListUpdate: () => {}
     }
     constructor(props) {
@@ -50,22 +52,23 @@ export class ChessGame extends React.Component {
     }
     render() {
         const { thisPlayerColour } = this.props
+        console.log(thisPlayerColour)
         return (
             <div className='chess-game-container'>
                 <div className='chess-game-row'>
                     <div className='spacer'></div>
-                    <PlayerBadge player={this.state.playerBlack} />
+                    <PlayerBadge player={thisPlayerColour === PlayerColours.White ? this.state.playerBlack : this.state.playerWhite} />
                     <ChessClock durationInSeconds={900} countingDown={false} />
                 </div>
                 <Board
                     moveEnabled={ this.state.game.gameStatus !== GameStatus.End }
                     board={this.state.game.chessEngine.board}
                     onMakeMove={this.handleMakeMove}
-                    thisPlayerColour={this.props.thisPlayerColour}
+                    thisPlayerColour={thisPlayerColour}
                     />
                 <div className='chess-game-row'>
                     <div className='spacer'></div>
-                    <PlayerBadge player={this.state.playerWhite}/>
+                    <PlayerBadge player={thisPlayerColour === PlayerColours.White ? this.state.playerWhite : this.state.playerBlack} />
                     <ChessClock durationInSeconds={900} countingDown={true} />
                 </div>
                 <span style={{visibility: 'hidden'}}>{this.state.movesMade}</span>

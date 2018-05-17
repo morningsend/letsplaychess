@@ -1,13 +1,16 @@
 import { ActionTypes } from '../actions/match'
 
-const initialState = {
+const INITIAL_STATE = {
     findingMatch: false,
     errorMessage: '',
     matchMakingTimeout: false,
-
+    colour: '',
+    opponentId: '',
+    matchId: '',
+    userId: '',
 }
 
-export function match(state = initialState, action) {
+export function match(state = INITIAL_STATE, action) {
     let newState = state
     console.log('match')
     switch(action.type) {
@@ -18,16 +21,18 @@ export function match(state = initialState, action) {
             }
             break
         case ActionTypes.MATCH_FOUND:
+            console.log(action)
             newState = {
                 ...state,
                 findingMatch: false,
-                opponentId: action.opponentId,
+                opponentId: action.userId === action.whitePlayerId ? action.blackPlayerId : action.userId,
                 accessToken: action.accessToken,
-                colour: action.myPlayerColour,
+                myPlayerColour: action.myPlayerColour,
                 errorMessage: '',
                 hasMatch: true,
                 matchId: action.match.matchId,
-                match: action.match,           
+                match: action.match,
+                userId: action.userId,       
             }
             break
         case ActionTypes.MATCH_MAKING_TIMEOUT:
@@ -35,8 +40,17 @@ export function match(state = initialState, action) {
                 ...state,
                 findingMatch: false,
                 opponentId: null,
-                
             }
+            break
+        case ActionTypes.MATCH_MAKING_REQUEST_ERROR:
+            newState = {
+                ...INITIAL_STATE,
+                errorMessage: action.errorMessage,
+                matchId: null,
+                userId: state.userId,
+            }
+            break
+        default:
             break
     }
     return newState

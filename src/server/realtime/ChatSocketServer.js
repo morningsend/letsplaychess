@@ -1,8 +1,9 @@
 import { ChatSignalTypes } from '../../client/realtime/ChatClient'
 
 export class ChatSocketServer {
-    constructor(io){
-        this.ioChatNameSpace = io.of('/socket')
+    constructor(io, userRepository){
+        this.ioChatNameSpace = io.of('/chat')
+        this.userRepository = userRepository
         this._setup()
     }
     
@@ -13,6 +14,9 @@ export class ChatSocketServer {
             socket.on(ChatSignalTypes.SEND_MESSAGE, (data, ack) => {
                 console.log(data)
                 socket.broadcast.emit(ChatSignalTypes.NEW_MESSAGE, data)
+            })
+            socket.on('disconnect', () => {
+                console.log('some one disconnected')
             })
         })
     }

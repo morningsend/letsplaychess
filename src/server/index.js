@@ -20,7 +20,7 @@ const app = express()
 const http = require('http').Server(app)
 const port = 3000
 const io = require('socket.io')
-const { ChatSocketServer } = require('./realtime/ChatSocketServer')
+const { ChatSocketServer, GameSocketServer } = require('./realtime')
 
 const {
     UserApi,
@@ -28,6 +28,7 @@ const {
     ReplayApi,
     AuthenApi,
     RegisterApi,
+    MatchApi,
 } = require('./apis')
 
 const authen = container.resolve('AuthenService')
@@ -59,16 +60,19 @@ app.get('/', (request, response) => {
 
 app.use('/api' + UserApi.url, passport.authenticate('bearer', { session: false }), UserApi.router)
 app.use('/api' + GameApi.url, passport.authenticate('bearer', { session: false }), GameApi.router)
+app.use('/api' + MatchApi.url, passport.authenticate('bearer', { session: false}), MatchApi.router)
 app.use('/api' + AuthenApi.url, AuthenApi.router)
 app.use('/api' + ReplayApi.url, passport.authenticate('bearer', { session: false }), ReplayApi.router)
 app.use('/api' + RegisterApi.url, RegisterApi.router)
 
 const ioServer = io.listen(http, {
     origins: 'http://localhost:*',
-    transports: ['websocket']
+    transports: ['websocket'],
+    path: '/realtime'
 })
 
-const chatServer = new ChatSocketServer(ioServer)
+const chatServer = new ChatSocketServer(ioServer, container.resolve('UserRepository'))
+const gameServer = new GameSocketServer(ioServer, container.resolve('MatchRepository'))
 
 http.listen(port)
 

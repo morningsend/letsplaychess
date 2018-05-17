@@ -82,6 +82,9 @@ export class ChatClient {
         }
     }
     setupSocket(socket) {
+        socket.on('connection', () => {
+            console.log('connected to chat socket')
+        })
         socket.on('hello', (data) => {
             console.log(data)
         })

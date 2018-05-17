@@ -3,6 +3,9 @@ export const GameSignalTypes = {
     PLAYER_JOIN_GAME: 'PLAYER_JOIN_GAME',
     PLAYRE_JOINED_GAME: 'PLAYER_JOINED_GAME',
 
+    JOIN_GAME_FAILED: 'JOIN_GAME_FAILED',
+    PLAYERS_READY: 'PLAYERS_READY',
+
     OPPONENT_JOINED: 'PLAYER_JOINED',
     
     OPPONENT_DISCONNECTED: 'PLAYER_DISCONNECTED',
@@ -21,19 +24,19 @@ export const GameSignalTypes = {
     PLAYER_OFFER_DRAW: 'PLAYER_OFFER_DRAW',
 
     PLAYER_ACCEPT_DRAW: 'PLAYER_ACCEPT_DRAW',
-    OPPONENT_ACCEPT_DRAW: 'OPPONENT_ACCEPT_DRAW',    
+    OPPONENT_ACCEPT_DRAW: 'OPPONENT_ACCEPT_DRAW',
 }
 
 export class GameClient {
 
     constructor(socket) {
         this.socket = socket
-        this.gameStateMachine = new GameStateMachine()
+        this._gameStateMachine = null
         this.match = {}
     }
 
     reset(match) {
-        this.gameStateMachine = new GameStateMachine()
+        this._gameStateMachine = GameStateMachine.newGame()
         this.match = match
     }
 
@@ -43,6 +46,10 @@ export class GameClient {
             matchId,
             joinToken,
         })
+    }
+
+    onPlayersReady(callback) {
+
     }
 
     onOpponentDisconnect(callback) {

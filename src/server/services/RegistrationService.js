@@ -14,9 +14,14 @@ export class RegistrationService {
     }
 
     _seedTestUsers() {
-        this.register('test001', 'test001@example.com', '12345678')
+        this.register('test001', 'test001@example.com', '1')
             .then(() => {
-                console.log("added testuser")
+                console.log("added test001")
+            })
+
+            this.register('test002', 'test002@example.com', '2')
+            .then(() => {
+                console.log("added test002")
             })
     }
     isUsernameAvailable(username) {
@@ -32,16 +37,19 @@ export class RegistrationService {
     }
     register(username, email, password) {
         if(username && email && password) {
-            if(!this._passwordRequirement(password)){
-                return Promise.reject(new UserExistsError(`Username ${username} is already taken.`))
-            } else {
-                return this._hashPassword(password).then(hash => {
-                    return this
-                        .userRepository
-                        .createUser(username, email, hash, false)
-                        .then({ success: true, message: 'User registered'})
+            return this.isUsernameAvailable(username)
+                .then(result => {
+                    if(!result)
+                        throw Promise.reject(new UserExistsError(`Username ${username} is already taken.`))
+                    else {
+                        return this._hashPassword(password).then(hash => {
+                            return this
+                                .userRepository
+                                .createUser(username, email, hash, false)
+                                .then({ success: true, message: 'User registered'})
+                        })
+                    }
                 })
-            }
         } else {
             return Promise.reject(new Error('username, email or password cannot be empty'))
         }

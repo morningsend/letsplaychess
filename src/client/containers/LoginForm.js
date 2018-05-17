@@ -38,7 +38,7 @@ export class LoginForm extends React.Component {
     }
 
     isFormValid(username, password) {
-        return username && password && (password.length > 4)
+        return username && password
     }
     render() {
         return (

@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom'
 import { SocketChessGame, SocketInstantMessenger, ChessGame } from '../containers'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem, Overlay, Modal, LoadingIcon } from '../components'
 import { Tab, TabView, ChessMovesViewer } from '../components'
+import { MatchApi } from '../api/MatchApi'
 import { SocketContextProvider, SocketContextConsumer } from '../realtime'
-import { findMatch, matchFound, matchMakingTimeout } from '../actions/match'
+import { findMatch, matchFound, matchMakingTimeout, findMatchRequestError } from '../actions/match'
 
 class GamePage extends React.Component {
     static propTypes = {
@@ -20,6 +21,7 @@ class GamePage extends React.Component {
         username: PropTypes.string,
         avatarImage: PropTypes.string,
         match: PropTypes.object,
+        accessToken: PropTypes.string,
     }
 
     constructor(props, context) {
@@ -48,11 +50,12 @@ class GamePage extends React.Component {
     onFindOpponentButtonClick() {
         console.log('find opponent')
         if(this.props.findMatch){
-            this.props.findMatch(this.props.userId, new Date().getTime())
+            this.props.findMatch(this.props.userId, this.props.accessToken)
         }
     }
     render() {
         const { findingMatch, errorMessage } = this.props
+        console.log(this.props.myPlayerColour)
         return (
             <SocketContextProvider>
                 <Page className='page game-page'>
@@ -103,6 +106,7 @@ class GamePage extends React.Component {
                                     whitePlayer={{}}
                                     blackPlayer={{}}
                                     local={false}
+                                    thisPlayerColour={this.props.myPlayerColour}
                                 />
                                 : <ChessGame.Placeholder />
                             }
@@ -127,11 +131,11 @@ function mapStateToProps(state) {
         hasMatch: match.opponentId ? true : false,
         opponentId: match.opponentId,
         matchId: match.matchId,
-        colour: match.myPlayerColour,
+        myPlayerColour: match.myPlayerColour,
         findingMatch: match.findingMatch,
         accessToken: authen.accessToken,
         errorMessage: match.errorMessage,
-        userId: user.userId,
+        userId: authen.userId,
         username: user.username,
         avatarImage: user.profile.avatarUrl,
     }
@@ -139,12 +143,22 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, ownProps) {
     return {
-        findMatch: () => {
-            dispatch(findMatch(ownProps.userId, ownProps.accessToken, new Date().getTime()))
-            
+        findMatch: (userId, accessToken) => {
+            dispatch(findMatch(userId, new Date().getTime()))
+            MatchApi.findMatch(userId, accessToken)
+                .then(match => {
+                    if(match.success) 
+                        dispatch(matchFound(userId, match))
+                    else {
+                        dispatch(matchMakingTimeout())
+                    }
+                })
+                .catch(error => {
+                    dispatch(findMatchRequestError(error))
+                })
         },
         matchFound: (userId, opponentId, matchId, joinToken, match, colour) => {
-            dispatch(matchFound(userId, opponentId, matchId, joinToken, match, colour))
+            dispatch(matchFound(userId, opponentId, matchId, joinToken, colour))
         },
         timeout: () => {
             dispatch(matchMakingTimeout())
