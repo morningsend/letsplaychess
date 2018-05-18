@@ -20,8 +20,9 @@ export class ChessClock extends React.Component {
     }
 
     render() {
-        const minutes = Math.floor(this.state.secondsRemaining / 60)
-        const seconds = this.state.secondsRemaining % 60
+        const t = Math.floor(this.props.durationInSeconds || 0)
+        const minutes = Math.floor(t / 60)
+        const seconds = t % 60
         const activeClass = 'time ' + (this.props.countingDown ? 'active' : '')
         return (
             <div className='chess-clock-container'>

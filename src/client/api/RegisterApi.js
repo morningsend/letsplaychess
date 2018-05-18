@@ -32,4 +32,22 @@ export class RegisterApi {
                 }
             })
     }
+    static isUsernameAvailable(username) {
+        const url = config.apiUrl + RegisterApi.endpoint + '/check_username'
+        if(!username) {
+            return Promise.reject(new Error('username cannot be empty'))
+        }
+        return fetch(
+            url + '?username=' + username,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                },
+            }
+        )
+        .then(response => response.json())
+        .then(result => {
+            return result && result.available
+        })
+    }
 }

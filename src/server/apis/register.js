@@ -40,7 +40,30 @@ router.post('/', async (request, response) => {
         }
     }
 })
-
+router.get('/check_username', async (request, response) => {
+    const username = request.query.username
+    if(!username) {
+        response.status(400)
+            .send({
+                exist: false,
+                message: 'missing username parameter',
+            })
+    }
+    try{
+        const registrationService = container.resolve('RegistrationService')
+        const result = await registrationService.isUsernameAvailable(username)
+        response.json({
+            available: result,
+            message: 'username ' + username + (result ? ' is available' : ' is not available'),
+        })
+    } catch(error) {
+        console.log(error)
+        response.status(500).send({
+            success: false,
+            message: 'server error'
+        })
+    }
+})
 export {
     url,
     router

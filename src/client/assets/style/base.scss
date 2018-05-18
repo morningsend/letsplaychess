@@ -17,6 +17,7 @@ $textColorWin: rgb(0,150,0);
 $textColorLose: rgb(150,0,0);
 $tabBarColour : #464646;
 $backgroundColour: #252525;
+$primaryColour: #0072bc;
 
 $winIcon: url(../images/queen_gold.svg);
 $drawIcon: url(../images/knight_bronze.svg);
@@ -88,28 +89,36 @@ a {
       text-decoration: underline;
     }
 }
-
+$buttonColour: #555;
+$buttonDisabledColour: #333;
+$buttonDisabledTextColour: #555;
+$buttonHoverColour: #666;
 .button {
-  width: 200px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  margin: 20px auto 0px auto;
-  display: block;
-  background-color: #555;
-  outline: none;
-  border: none;
-  color: #d7d7d7;
-  font-size: inherit;
-  &-primary {
-    background-color: #0072bc;
-  }
-  &:hover {
-      text-decoration: none;
-  }
-  &.register-button{
-    margin: 60px auto 0px auto;
-  }
+    width: 200px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin: 20px auto 0px auto;
+    display: block;
+    background-color: $buttonColour;
+    outline: none;
+    border: none;
+    color: #d7d7d7;
+    font-size: inherit;
+    &-primary {
+        background-color: #0072bc;
+    }
+    &:hover {
+        text-decoration: none;
+        background-color: $buttonHoverColour;
+    }
+    &.register-button{
+        margin: 60px auto 0px auto;
+    }
+    &:disabled {
+        background-color: $buttonDisabledColour;
+        color: $buttonDisabledTextColour;
+    }
 }
 
 button.piece{
@@ -128,9 +137,13 @@ button.piece{
 }
 
 form.register-form {
-  flex-direction: column;
-  align-items: center;
-
+    flex-direction: column;
+    align-items: center;
+    .message {
+        text-align: center;
+        font-size: 105%;
+        color:#0072bc;
+    }
     input {
         width: 100%;
         margin: 10px 0px;

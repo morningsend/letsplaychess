@@ -60,7 +60,6 @@ export class Board extends React.Component {
     renderBoard() {
         const board = []
         const { boardWidth, boardHeight } = this.props.board
-        const offset = this.props.thisPlayerColour == PlayerColours.White ? 0 : 1;
         const { selectedPiece } = this.state
         if(selectedPiece) {
             console.log('selected square is ' , selectedPiece.position)
@@ -73,7 +72,7 @@ export class Board extends React.Component {
                 const selectedClassName = selectedPiece && selectedPiece.position.row == row && selectedPiece.position.column == column
                                             ? 'selected' 
                                             : ''
-                const colour = ( i + j + offset) % 2 == 0 ? 'square white' : 'square black'
+                const colour = ( i + j) % 2 == 0 ? 'square white' : 'square black'
                 board.push(
                     <rect
                         key={i*boardHeight+j}

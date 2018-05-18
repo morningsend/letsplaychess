@@ -103,8 +103,14 @@ class GamePage extends React.Component {
                                 <SocketChessGame
                                     onMoveListUpdate={this.onMoveListUpdate}
                                     showPlaceholder={!this.hasMatch}
-                                    whitePlayer={{}}
-                                    blackPlayer={{}}
+                                    whitePlayer={{
+                                        name: 'jonsnow203',
+                                        rating: 1200
+                                    }}
+                                    blackPlayer={{
+                                        name: 'daenerys<3',
+                                        rating: 1198,
+                                    }}
                                     thisPlayerColour={this.props.myPlayerColour}
                                     matchId={this.props.matchId}
                                     matchJoinToken={this.props.joinToken}

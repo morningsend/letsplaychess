@@ -28,11 +28,7 @@ export class RegistrationService {
         return this.userRepository
                 .findUserByUserName(username)
                 .then(user => {
-                    return user == null
-                })
-                .catch(error => {
-                    console.error(error)
-                    return false
+                    return user ? false : true
                 })
     }
     register(username, email, password) {
