@@ -45,6 +45,7 @@ export class ChessGame extends React.Component {
             game: GameStateMachine.newGame({ duration: 900 }),
             movesMade: 0,
             gameRunning: false,
+            lastMove: null,
         }
         this.handleMakeMove = this.handleMakeMove.bind(this)
         this.handlePlayersReady = this.handlePlayersReady.bind(this)
@@ -59,18 +60,40 @@ export class ChessGame extends React.Component {
     }
 
     handleOpponentResign() {
-
+        console.log('opponent resigned')
     }
 
-    handleOpponentMove() {
-
+    handleOpponentMove(from, to) {
+        const { column, row } = from
+        const piece = this.state.game.chessEngine.board.pieceAt(column, row)
+        if (piece && to.column && to.row) {
+            const move = new Move(
+                piece,
+                MoveTypes.Normal,
+                to,
+                null
+            )
+            if (this.state.game.onMove(move)) {
+                this.setState({
+                    movesMade: this.state.movesMade + 1,
+                    lastMove: {
+                        from,
+                        to,
+                    }
+                })
+                this.props.onMoveListUpdate(this.state.game.moves)
+            }
+        }
     }
 
     componentDidMount() {
+        
         if(!this.props.gameClient) {
+            console.log('game client is null')
             return
         }
         this.props.gameClient.reset()
+        console.log('chessgame' ,this.props)
         const { userId, matchId, matchJoinToken } = this.props
 
         this.setupGameClient(this.props.gameClient)
@@ -82,15 +105,23 @@ export class ChessGame extends React.Component {
         )
     }
     componentWillUnmount() {
-        gameClient.cleanUpCallbacks()
+        if(!this.props.gameClient) {
+            return
+        }
+        this.props.gameClient.cleanUpCallbacks()
     }
     setupGameClient(gameClient) {
         gameClient.onPlayersReady(this.handlePlayersReady)
-        gameCllient.onOpponentResign(this.handleOpponentResign)
+        gameClient.onOpponentResign(this.handleOpponentResign)
+        gameClient.onOpponentMakeMove(this.handleOpponentMove)
+        gameClient.onOpponentResign(this.handleOpponentResign)
     }
 
     handleMakeMove(piece, columnTo, rowTo) {
         if (piece && columnTo && rowTo) {
+            let from = { ...piece.position }
+            let to = { column: columnTo, row: rowTo }
+
             const move = new Move(
                 piece,
                 MoveTypes.Normal,
@@ -101,9 +132,17 @@ export class ChessGame extends React.Component {
                 null
             )
             if (this.state.game.onMove(move)) {
-                this.setState({ movesMade: this.state.movesMade + 1 })
+                this.setState({
+                    movesMade: this.state.movesMade + 1,
+                    lastMove: {
+                        from,
+                        to,
+                    }
+                })
                 this.props.onMoveListUpdate(this.state.game.moves)
             }
+            this.props.gameClient &&
+                this.props.gameClient.makeMove(from, to)
         }
     }
     render() {
@@ -121,6 +160,7 @@ export class ChessGame extends React.Component {
                     board={this.state.game.chessEngine.board}
                     onMakeMove={this.handleMakeMove}
                     thisPlayerColour={thisPlayerColour}
+                    highlightedMove={this.state.lastMove}
                     />
                 <div className='chess-game-row'>
                     <div className='spacer'></div>

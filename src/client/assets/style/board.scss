@@ -3,6 +3,7 @@ $blackSquareColour: #595959;
 $whiteSquareColour: #e1e1e1;
 $hoverSquareColour: #777;
 $selectedSquareColour: #26364e;
+$highlightedSquareColour: #387072;
 .chess-board {
     .chess-board-tiles {
         .square.black {
@@ -20,6 +21,10 @@ $selectedSquareColour: #26364e;
         &.selected .square:hover {
             fill: $selectedSquareColour;
         }
+    }
+    .highlighted-suqares {
+        fill: $highlightedSquareColour;
+        pointer-events: none;
     }
     .pieces-group {
         pointer-events: none;

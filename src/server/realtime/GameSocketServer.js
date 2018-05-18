@@ -29,7 +29,8 @@ export class GameSocketServer {
             GameSignalTypes.PLAYER_JOIN_GAME,
             (data, ack) => {
                 const { matchId, userId, joinToken } = data
-                self.matchRepository.findById(matchId)
+                console.log(data)
+                self.matchRepository.findMatchById(matchId)
                     .then(match => {
                         /*
                         if(match.joinToken === joinToken && (
@@ -41,7 +42,7 @@ export class GameSocketServer {
                             socket.userId = userId
                             socket.emit(GameSignalTypes.PLAYER_JOINED_GAME)
                             socket.join(matchId)
-
+                            console.log('player ' + userId + ' joins match ' + matchId)
                             if(!self.currenMatches[matchId]) {
                                 self.currenMatches[matchId] = {
                                     playersJoined: new Set()
@@ -69,6 +70,7 @@ export class GameSocketServer {
         socket.on(
             GameSignalTypes.PLAYER_MAKE_MOVE,
             (data) => {
+                console.log(data)
                 if(!socket.matchId) {
                     return
                 }

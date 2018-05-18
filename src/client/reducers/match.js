@@ -21,18 +21,17 @@ export function match(state = INITIAL_STATE, action) {
             }
             break
         case ActionTypes.MATCH_FOUND:
-            console.log(action)
             newState = {
                 ...state,
                 findingMatch: false,
-                opponentId: action.userId === action.whitePlayerId ? action.blackPlayerId : action.userId,
-                accessToken: action.accessToken,
+                opponentId: action.userId === action.match.whitePlayerId ? action.match.blackPlayerId : action.userId,
                 myPlayerColour: action.myPlayerColour,
                 errorMessage: '',
                 hasMatch: true,
                 matchId: action.match.matchId,
                 match: action.match,
-                userId: action.userId,       
+                userId: action.userId,
+                joinToken: action.match.joinToken,    
             }
             break
         case ActionTypes.MATCH_MAKING_TIMEOUT:

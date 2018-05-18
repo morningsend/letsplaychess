@@ -1,9 +1,9 @@
-import { GameStateMachine} from '../../chess'
+import { GameStateMachine, GameStatus} from '../../chess'
 export const GameSignalTypes = {
     PLAYER_JOIN_GAME: 'PLAYER_JOIN_GAME',
     PLAYER_JOINED_GAME: 'PLAYER_JOINED_GAME',
     JOIN_GAME_FAILED: 'JOIN_GAME_FAILED',
-    
+
     PLAYERS_READY: 'PLAYERS_READY',
 
     OPPONENT_JOINED: 'PLAYER_JOINED',
@@ -30,6 +30,7 @@ export const GameSignalTypes = {
 export class GameClient {
 
     constructor(socket) {
+        console.log('creating game client')
         this.socket = socket
         this._gameStateMachine = null
 
@@ -37,8 +38,47 @@ export class GameClient {
         this._matchJoinToken = null
         this._opponentId = null
         this._userId = null
-        this.onPlayersReadyCallback = () => {}
+        
         this.joinedGame = false
+
+        this.setupSocket = this.setupSocket.bind(this)
+
+        this.setupSocket(socket)
+
+        this.onPlayersReadyCallback = null
+        this.onOpponentMakeMoveCallback = null
+        this.onOpponentResignCallback = null
+        this.onOpponentAckMoveCallback = null
+        this.onOpponentAckMoveCallback = null
+    }
+
+    setupSocket(socket) {
+        const self = this
+        socket.on(GameSignalTypes.PLAYERS_READY, () => {
+            console.log('aall players ready, begin game')
+            self.onPlayersReadyCallback && self.onPlayersReadyCallback()
+        })
+        socket.on(GameSignalTypes.OPPONENT_MAKE_MOVE, (data) => {
+            console.log('opponent made move:', data)
+            self.onOpponentMakeMoveCallback && self.onOpponentMakeMoveCallback(data.from, data.to)
+        })
+
+        socket.on(GameSignalTypes.OPPONENT_RESIGN, () => {
+            self.onOpponentResignCallback &&
+            self.onOpponentResignCallback()
+        })
+        socket.on(GameSignalTypes.OPPONENT_ACK_MOVE, () => {
+            self.onOpponentAckMoveCallback &&
+            self.onOpponentAckMoveCallback()
+        })
+        socket.on(GameSignalTypes.OPPONENT_OFFER_DRAW, () => {
+            self.onOpponentOfferDrawCallback &&
+            self.onOpponentOfferDrawCallback()            
+        })
+        socket.on(GameSignalTypes.OPPONENT_ACCEPT_DRAW, () => {
+            self.onOpponentAcceptDrawCallback &&
+            self.onOpponentAcceptDrawCallback()
+        })
     }
 
     reset(matchId, joinToken, opponentId) {
@@ -47,15 +87,15 @@ export class GameClient {
         this._matchId = null
         this._matchJoinToken = null
         this._opponentId = null
-        ths._userId = null
+        this._userId = null
     }
 
-    joinGame(matchId, joinToken, userId, opponentId) {
+    joinGame(userId, matchId, joinToken) {
         this._userId = userId
         this._matchId = matchId
-        this._opponentId = opponentId
         this._matchJoinToken = joinToken
-        
+        this.joinedGame = true
+        console.log('joining game')
         this.socket.emit(GameSignalTypes.PLAYER_JOIN_GAME, {
             userId,
             matchId,
@@ -71,9 +111,16 @@ export class GameClient {
         this.onOpponentDisconnectCallback = callback
     }
     onOpponentOfferDraw(callback) {
-
+        this.onOpponentOfferDrawCallback = callback
     }
-    onOfferDraw() {
+    onOpponentResign(callback) {
+        this.onOpponentResignCallback = callback
+    }
+    onOpponentMakeMove(callback) {
+        this.onOpponentMakeMoveCallback = callback
+    }
+
+    offerDraw() {
         this.socket.emit(
             GameSignalTypes.PLAYER_OFFER_DRAW,
             {
@@ -89,6 +136,27 @@ export class GameClient {
             }
         )
     }
+    resign() {
+        this.socket.emit(
+            GameSignalTypes.PLAYER_RESIGN,
+            {
+                userId: this._userId,
+            },
+        )
+    }
+
+    makeMove(from, to) {
+        
+        if(this.joinedGame && 
+            this._gameStateMachine &&
+            this._gameStateMachine.gameStatus !== GameStatus.End) {
+                console.log('game client sending move')
+                this.socket.emit(GameSignalTypes.PLAYER_MAKE_MOVE, {
+                    from,
+                    to,
+                })
+        }
+    }
     onResign() {
         this.socket.emit(
             GameSignalTypes.PLAYER_RESIGN,
@@ -98,12 +166,9 @@ export class GameClient {
         )
     }
 
-    resign() {
-        this.socket.emit(
-            GameSignalTypes.PLAYER_RESIGN,
-            {
-                userId: this._userId,
-            },
-        )
+
+
+    cleanUpCallbacks() {
+
     }
 }

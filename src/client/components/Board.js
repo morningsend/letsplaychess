@@ -10,6 +10,7 @@ export class Board extends React.Component {
         onMakeMove: PropTypes.func,
         moveEnabled: PropTypes.bool,
         thisPlayerColour: PropTypes.string,
+        highlightedMove: PropTypes.object,
     }
     static defaultProps = {
         playerColourPOV: PlayerColours.White,
@@ -32,7 +33,7 @@ export class Board extends React.Component {
         this.squareSize = 64
         this.handleSquareClick = this.handleSquareClick.bind(this)
         this.renderBoard = this.renderBoard.bind(this)
-        this.renderPieces = this.renderPiecesWhiteView.bind(this)
+        this.renderHighlightedMove = this.renderHighlightedMove.bind(this)
     }
 
     handleSquareClick(column, row) {
@@ -151,6 +152,47 @@ export class Board extends React.Component {
         }
         return <g key='pieces-group' className='pieces-group'>{piecesGraphics}</g>
     }
+    renderHighlightedMove() {
+        const { boardWidth, boardHeight } = this.props.board
+        const move = this.props.highlightedMove
+        if(!move || !move.from || !move.to) {
+            return 
+        }
+        let { from, to } = {
+            from: { ...move.from },
+            to: { ...move.to }
+        }
+
+        if(this.props.thisPlayerColour === PlayerColours.White) {
+            from.row = boardHeight - from.row + 1
+            to.row = boardHeight - to.row + 1
+
+        }
+        else {
+            from.column = boardWidth - from.column + 1
+            to.column = boardWidth - to.column + 1
+        }
+        return (
+            <g className='highlighted-suqares'>
+                <rect
+                    key='from'
+                    width={this.squareSize}
+                    height={this.squareSize}
+                    className='square'
+                    x={(from.column - 1) * this.squareSize}
+                    y={(from.row - 1) * this.squareSize}
+                />
+                <rect
+                    key='to'
+                    width={this.squareSize}
+                    height={this.squareSize}
+                    className='square'
+                    x={(to.column - 1) * this.squareSize}
+                    y={(to.row - 1) * this.squareSize}
+                />
+            </g>
+        )
+    }
     render() {
         if (!this.props.board) {
             return this.renderEmptyBoard()
@@ -167,6 +209,7 @@ export class Board extends React.Component {
                     width={boardWidth * this.squareSize}
                     height={boardHeight * this.squareSize}>
                     {this.renderBoard()}
+                    {this.renderHighlightedMove()}
                     {pieces}
                 </svg>
             </div>

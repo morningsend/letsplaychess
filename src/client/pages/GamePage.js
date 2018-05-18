@@ -102,14 +102,13 @@ class GamePage extends React.Component {
                                 this.props.hasMatch ? 
                                 <SocketChessGame
                                     onMoveListUpdate={this.onMoveListUpdate}
-                                    boardOrientation={this.myPlayerColour}
                                     showPlaceholder={!this.hasMatch}
                                     whitePlayer={{}}
                                     blackPlayer={{}}
-                                    local={false}
                                     thisPlayerColour={this.props.myPlayerColour}
                                     matchId={this.props.matchId}
                                     matchJoinToken={this.props.joinToken}
+                                    userId={this.props.userId}
                                 />
                                 : <ChessGame.Placeholder />
                             }
@@ -129,6 +128,7 @@ function mapStateToProps(state) {
     const match = state.match
     const authen = state.authen
     const user = state.user
+    console.log(match)
     console.log(authen)
     return {
         hasMatch: match.opponentId ? true : false,

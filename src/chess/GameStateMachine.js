@@ -174,8 +174,8 @@ export class GameStateMachine {
     static newGame(gameOptions) {
         const options = {
             /* duration of game in seconds */
-            duration: gameOptions.duration || 60 * 15,
-            initialBoard: gameOptions.board || ChessBoard.initialBoard()
+            duration: (gameOptions && gameOptions.duration) || 60 * 15,
+            initialBoard: (gameOptions && gameOptions.board) || ChessBoard.initialBoard()
         }
         return new GameStateMachine(
             {
