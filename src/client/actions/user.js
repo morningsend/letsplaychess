@@ -12,11 +12,12 @@ export function getUser(userId) {
 }
 
 export function getUserFinished(user) {
+    console.log('getuserFinished')
+    console.log(user)
     return {
         type: ActionTypes.GET_USER_FINISHED,
         userId: user.id,
         user,
-        profile: user.profile,
     }
 }
 

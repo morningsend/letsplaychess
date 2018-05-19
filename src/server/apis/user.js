@@ -1,4 +1,7 @@
+import { NotFoundError } from '../common/Errors';
+
 const express = require('express')
+const container = require('../container')
 
 const url = '/users'
 const router = express.Router()
@@ -10,14 +13,40 @@ router.get('/', (request, response) => {
     response.json(data)
 })
 
-router.get('/:userId', (request, response) => {
-    const data = {
-        userId: request.params.userId,
-        ranking: 1200,
-        joined: '2018-03-23',
-        lastActive: '5 days ago'
+router.get('/:userId', async (request, response) => {
+    const userId = request.params.userId
+    if(!userId) {
+        response.status(400)
+            .json({
+                error: 'must provide user id.'
+            })
+        return
     }
-    response.json(data)
+    try{
+        const userRepository = container.resolve('UserRepository')
+        const user = await userRepository.findUserById(userId)
+        response.json({
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            isGuest: user.isGuest,
+            profile: user.profile || {},
+            summary: user.summary || {},
+            ranking: user.ranking,
+        })
+    } catch(error) {
+        if(error instanceof NotFoundError) {
+            response.status(404)
+                .json({
+                    error: 'user is not found.'
+                })
+        } else {
+            response.status(500)
+                .json({
+                    error: error.message,
+                })
+        }
+    }
 })
 
 export {

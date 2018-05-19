@@ -1,33 +1,65 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import ProfileImageUrl from '../assets/images/jon_snow.jpg'
 
 export class ProfileBar extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {}
+
+    static propTypes = {
+        user: PropTypes.user,
+        onSelectMenu: PropTypes.func,
+        menuItems: PropTypes.array,
+        selectedIndex: PropTypes.number,
     }
 
+    static defaultTypes = {
+        user: {},
+        onSelectMenu: () => {},
+        menuItems: ['Past Games', 'Settings'],
+        selectedIndex: 0,
+    }
+    constructor(props) {
+        super(props)
+        this.state = {
+            currentSelected: 0,
+        }
+        this.handleMenuClick = this.handleMenuClick.bind(this)
+    }
+
+    handleMenuClick(index) {
+        this.props.onSelectMenu
+            && this.props.onSelectMenu(index)
+    }
     render() {
+        const { user, menuItems } = this.props
+        console.log(this.props)
         return (
             <div className='profile-bar'>
-
                 <div>
                     <div className='profile-picture' style={{backgroundImage: `url(${ProfileImageUrl}`}} />
-                    <h1 className='profile-name'> jonsnow101 </h1>
-                    <div className='profile-score'> (1200) </div>
+                    <h1 className='profile-name'> {user.username} </h1>
+                    <div className='profile-score'> ({user.ranking}) </div>
                     <div className='stats'>
-                        <span className='stats-item win-stats'> 17 Won </span>
-                        <span className='stats-item draw-stats'> 2 Draw </span>
-                        <span className='stats-item loss-stats'> 7 Losses </span>
+                        <span className='stats-item win-stats'>{user.summary.win} Won</span>
+                        <span className='stats-item draw-stats'>{user.summary.draw} Draw</span>
+                        <span className='stats-item loss-stats'>{user.summary.loss} Losses</span>
                     </div>
                     <div className='profile-menu'>
-                        <div className='profile-menu-item past-games active'> Past Games </div>
-                        <div className='profile-menu-item settings'> Settings </div>
+                        {
+                            menuItems.map((item, index) => (
+                                <div
+                                    key={item}
+                                    className={'profile-menu-item' + (this.props.selectedIndex == index ? ' active' : '')}
+                                    onClick={this.handleMenuClick.bind(this,index)}
+                                >
+                                    {item}
+                                </div>
+                            ))
+                        }
                     </div>
                 </div>
-                <div className='guest-button-container'>
+                <div className='quick-game-button-container'>
                     <Link to='/game' className='button button-primary'>
                         Quick Game
                     </Link>

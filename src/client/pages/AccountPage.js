@@ -14,16 +14,38 @@ class AccountPage extends React.Component {
     }
     constructor(props, context) {
         super(props, context)
+        console.log(props.user)
+
+        this.state = {
+            selectedSidebarItem: 0,
+        }
+        this.childPageTitles = [
+            'Games Replay',
+            'Settings',
+        ]
+
+        this.handleSelectItem = this.handleSelectItem.bind(this)
     }
 
     componentDidMount() {
         const {userId, accessToken, getUser } = this.props
-        if(getUser){
+        if(!userId && getUser){
             getUser(userId, accessToken)
         }
-        this.props.history.push('/game')
+        //this.props.history.push('/game')
+    }
+    handleSelectItem(index) {
+        this.setState({
+            selectedSidebarItem: index,
+        })
     }
     render() {
+        const { user } = this.props
+        console.log(user)
+        const childPages = [
+            <GameHistory matches={user.matches || []} />,
+            <div>Settings</div>
+        ]
         return (
             <Page className='page account-page'>
                 <Header>
@@ -31,7 +53,7 @@ class AccountPage extends React.Component {
                     <HeaderItem>
                         <PopUpMenu button={
                             <button>
-                                <Avatar name='Jonsnow283ac' img='' />
+                                <Avatar name={user.username} img='' ranking={user.ranking}/>
                             </button>
                         }>
                             <MenuItem>
@@ -45,8 +67,13 @@ class AccountPage extends React.Component {
                     </HeaderItem>
                 </Header>
                 <Content className='account-page-content'>
-                    <ProfileBar />
-                    <GameHistory />
+                    <ProfileBar
+                        user={user}
+                        menuItems={this.childPageTitles}
+                        selectedIndex={this.state.selectedSidebarItem}
+                        onSelectMenu={this.handleSelectItem}
+                    />
+                    { childPages[this.state.selectedSidebarItem] }
                 </Content>
 
             </Page>
@@ -58,7 +85,7 @@ function mapStateToProps(state) {
     const user = state.user
     const authen = state.authen
     return {
-        user,
+        user: user.user,
         userId: user.userId || authen.userId,
         accessToken: authen.accessToken,
     }

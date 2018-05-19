@@ -2,11 +2,16 @@ import { ActionTypes } from '../actions/user'
 
 export const INITIAL_STATE = {
     userId: '',
-    profile: {},
-    matches: {
-        start: 0,
-        offset: 0,
-        data: []
+    user: {
+        userId: '',
+        username: '',
+        profile: '',
+        summary: {
+            win: 0,
+            loss: 0,
+            draw: 0,
+        },
+
     },
     inProgress: false
 }
@@ -26,18 +31,16 @@ export function user(state = INITIAL_STATE, action) {
                 ...state,
                 inProgress: false,
                 userId: action.user.id,
-                profile: action.user.profile,
-                matches: action.user.matches
+                user: action.user,
             }
             break
         case ActionTypes.GET_USER_FAILED:
             newState = {
                 ...INITIAL_STATE,
-                
             }
             break
         default:
             break
     }
-    return state
+    return newState
 }

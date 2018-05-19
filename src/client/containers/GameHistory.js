@@ -1,7 +1,6 @@
 import React from 'react'
-
-
-
+import PropTypes from 'prop-types'
+/*
 const GameHistoryData = [
     {
         outcome: 1,
@@ -39,15 +38,18 @@ const GameHistoryData = [
         gameid: 646464,
     },
 ]
-
+*/
 
 export class GameHistory extends React.Component {
+    static propTypes = {
+        matches: PropTypes.array,
+        onMatchReplayClick: PropTypes.func,
+    }
     constructor(props) {
         super(props)
-        this.state = {}
     }
-
     render() {
+        const matches = this.props.matches || GameHistoryData
         return(
             <div className='game-history'>
                 <table className='history-table'>
@@ -60,28 +62,38 @@ export class GameHistory extends React.Component {
                             <th className='table-replay'>  </th>
                         </tr>
                         {
-                            GameHistoryData.map ( (data, index) => {
-                                let classNameOutcome="win";
-                                let classNameResult="success";
+                            !matches || matches.length < 1
+                            ? <tr className='table-row'>
+                                <td colSpan={5}>Empty.</td>
+                            </tr>
+                            :
+                                matches.map ( (data, index) => {
+                                    let classNameOutcome="win";
+                                    let classNameResult="success";
 
-                                if (data.outcome == 0) { classNameOutcome="draw" }
-                                else if(data.outcome < 0) { classNameOutcome="lose" }
+                                    if (data.outcome == 0) { classNameOutcome="draw" }
+                                    else if(data.outcome < 0) { classNameOutcome="lose" }
 
-                                if (data.result == 0) { classNameResult="even" }
-                                else if(data.result < 0) { classNameResult="fail" }
-                                return (
+                                    if (data.result == 0) { classNameResult="even" }
+                                    else if(data.result < 0) { classNameResult="fail" }
+                                    return (
 
-                                    <tr key={index} className='table-row'>
-                                        <td className={'table-outcome ' + classNameOutcome}> </td>
-                                        <td className={'table-result ' + classNameResult}> {data.result>0? "+":""}{data.result} </td>
-                                        <td className='table-opponent'> {data.opponent} </td>
-                                        <td className='table-date'> {data.date} </td>
-                                        <td className='table-replay'>
-                                            <button className='button replay-button'>Replay</button>
-                                        </td>
-                                    </tr>
-                                )
-                            })
+                                        <tr key={index} className='table-row'>
+                                            <td className={'table-outcome ' + classNameOutcome}> </td>
+                                            <td className={'table-result ' + classNameResult}> {data.result>0? "+":""}{data.result} </td>
+                                            <td className='table-opponent'> {data.opponent} </td>
+                                            <td className='table-date'> {data.date} </td>
+                                            <td className='table-replay'>
+                                                <button
+                                                    className='button replay-button'
+                                                    onClick={this.props.onMatchReplayClick}
+                                                >
+                                                    Replay
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )
+                                })
                         }
                     </tbody>
                 </table>

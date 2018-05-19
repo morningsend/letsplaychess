@@ -14,10 +14,15 @@ export function authen(state = initialState, action) {
     let newState = state
     switch(action.type) {
         case ActionTypes.USER_LOGIN:
+            newState = {
+                username: action.username,
+            }
             break
         case ActionTypes.USER_LOGIN_FAILED:
             newState = {
                 ...initialState,
+                username: action.username,
+                message: action.message,
                 failed: true,
             }
             break

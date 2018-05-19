@@ -65,6 +65,18 @@ app.use('/api' + AuthenApi.url, AuthenApi.router)
 app.use('/api' + ReplayApi.url, passport.authenticate('bearer', { session: false }), ReplayApi.router)
 app.use('/api' + RegisterApi.url, RegisterApi.router)
 
+
+app.get('/register', (request, response) => {
+    response.redirect('/?next=' + encodeURIComponent('/register'))
+})
+
+app.get('/account', (request, response) => {
+    response.redirect('/?next=' + encodeURIComponent('/account'))
+})
+
+app.get('/game', (request, response) => {
+    response.redirect('/?next=' + encodeURIComponent('/game'))
+})
 const ioServer = io.listen(http, {
     origins: 'http://localhost:*',
     transports: ['websocket'],

@@ -3,6 +3,8 @@ import { HomePage } from './HomePage'
 import { LoginPage } from './LoginPage'
 import { GamePage } from './GamePage'
 import { RegisterPage } from './RegisterPage'
+import { ReplayPage } from './ReplayPage'
+import { NotFoundPage } from './NotFoundPage'
 
 export {
     AccountPage,
@@ -10,4 +12,6 @@ export {
     LoginPage,
     GamePage,
     RegisterPage,
+    NotFoundPage,
+    ReplayPage,
 }

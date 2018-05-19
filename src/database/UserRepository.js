@@ -28,7 +28,21 @@ const Datastore = require('nedb')
  *      }
  * }
  */
-
+const DEFAULT_USER  = {
+    username: 'default_user',
+    email: 'default_user@example.com',
+    ranking: 1200,
+    summary: {
+        gamesPlayed: 0,
+        win: 0,
+        loss: 0,
+        draw: 0,
+    },
+    profile: {
+        avatarUrl: '/ere/84902384.jpg',
+        avatar: 'jonsnow'
+    },
+}
 export class UserRepository {
     constructor() {
         // for testing purposes
@@ -42,7 +56,6 @@ export class UserRepository {
             fieldName: 'email',
             unique: true,
         })
-        
     }
 
     findUserById(userId) {
@@ -89,6 +102,7 @@ export class UserRepository {
     createUser(username, email, passwordHash, isGuest) {
         return new Promise((resolve, reject) => {
             this.users.insert({
+                ...DEFAULT_USER,
                 username,
                 email,
                 passwordHash,
