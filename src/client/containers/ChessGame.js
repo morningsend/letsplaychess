@@ -43,14 +43,19 @@ export class ChessGame extends React.Component {
         this.handleOpponentResign = this.handleOpponentResign.bind(this)
         this.handleOpponentMove = this.handleOpponentMove.bind(this)
         this.handleOpponentOfferDraw = this.handleOpponentOfferDraw.bind(this)
+        
         this.whitePlayerClockTicker = null
         this.blackPlayerClockTicker = null
         this.toggleClocks = this.toggleClocks.bind(this)
+
         this.startWhiteClock = this.startWhiteClock.bind(this)
         this.whiteClockTick = this.whiteClockTick.bind(this)
-        this.blackClockTick = this.blackClockTick.bind(this)
+        this.stopWhiteClock = this.stopWhiteClock.bind(this)
+
         this.startBlackClock = this.startBlackClock.bind(this)
         this.stopBlackClock = this.stopBlackClock.bind(this)
+        this.blackClockTick = this.blackClockTick.bind(this)
+
         this.clockTickInterval = 500
 
 
@@ -69,8 +74,8 @@ export class ChessGame extends React.Component {
         })
     }
     startWhiteClock() {
-        
-        this.whitePlayerClockTicker = setInterval(this.whiteClockTick, this.clockTickInterval)
+        if(!this.whitePlayerClockTicker)
+            this.whitePlayerClockTicker = setInterval(this.whiteClockTick, this.clockTickInterval)
     }
     stopWhiteClock() {
         if(this.whitePlayerClockTicker) {
@@ -79,7 +84,9 @@ export class ChessGame extends React.Component {
         }
     }
     startBlackClock() {
-        this.blackPlayerClockTicker = setInterval(this.blackClockTick, this.clockTickInterval)
+        if(!this.blackPlayerClockTicker)
+            this.blackPlayerClockTicker = setInterval(this.blackClockTick, this.clockTickInterval)
+
     }
     stopBlackClock() {
         if(this.blackPlayerClockTicker){
@@ -89,10 +96,10 @@ export class ChessGame extends React.Component {
     }
     toggleClocks() {
         const nextTurnPlayerColour = this.state.game.nextTurn
-        if(nextTurnPlayerColour == PlayerColours.White) {
-            this.startWhiteClock()
+        if(nextTurnPlayerColour === PlayerColours.White) {
             this.stopBlackClock()
-        } else {
+            this.startWhiteClock()
+        }else if(nextTurnPlayerColour === PlayerColours.Black) {
             this.stopWhiteClock()
             this.startBlackClock()
         }
