@@ -37,7 +37,7 @@ export class ProfileBar extends React.Component {
         return (
             <div className='profile-bar'>
                 <div>
-                    <div className='profile-picture' style={{backgroundImage: `url(${ProfileImageUrl}`}} />
+                    <div className='profile-picture'/>
                     <h1 className='profile-name'> {user.username} </h1>
                     <div className='profile-score'> ({user.ranking}) </div>
                     <div className='stats'>

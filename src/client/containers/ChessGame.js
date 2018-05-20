@@ -15,6 +15,7 @@ export class ChessGame extends React.Component {
         matchId: PropTypes.string,
         matchJoinToken: PropTypes.string,
         userId: PropTypes.string,
+        onMatchEnd: PropTypes.string,
     }
     componentDidMount() {
         if(!this.props.gameClient) {
@@ -57,7 +58,6 @@ export class ChessGame extends React.Component {
         this.blackClockTick = this.blackClockTick.bind(this)
 
         this.clockTickInterval = 500
-
 
         this.handleAcceptDrawClick = this.handleAcceptDrawClick.bind(this)
         this.handleOfferDrawClick = this.handleOfferDrawClick.bind(this)
@@ -119,6 +119,8 @@ export class ChessGame extends React.Component {
         console.log('opponent resigned')
         this.stopBlackClock()
         this.stopWhiteClock()
+        this.props.onMatchEnd &&
+            this.props.onMatchEnd()
     }
 
     handleOpponentMove(from, to) {
@@ -226,6 +228,8 @@ export class ChessGame extends React.Component {
         this.props.gameClient.resign()
         this.stopBlackClock()
         this.stopWhiteClock()
+        this.props.onMatchEnd &&
+            this.props.onMatchEnd()
     }
     render() {
         const { thisPlayerColour } = this.props

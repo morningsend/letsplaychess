@@ -34,6 +34,8 @@ export class SocketContextProvider extends Component {
             chatClient: new ChatClient(io(config.baseUrl + config.chatSocket.namespace, { transports: ['websocket'],path: config.path, reconnectionAttempts: 'Infinity', })),
             gameClient: new GameClient(io(config.baseUrl + config.gameSocket.namespace, { transports: ['websocket'],path: config.path, reconnectionAttempts: 'Infinity', })),
         }
+        this.connect = this.connect.bind(this)
+        this.disconnect = this.disconnect.bind(this)
     }
     connect() {
         console.log("socket context: connecting to socket server")
@@ -63,6 +65,11 @@ export class SocketContextProvider extends Component {
             })
         } catch(error) {
             console.error(error)
+        }
+    }
+    componentDidUpdate(prevProps, preState) {
+        if(!this.state.isConnected) {
+
         }
     }
     disconnect() {

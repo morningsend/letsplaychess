@@ -45,8 +45,15 @@ export class GameHistory extends React.Component {
         matches: PropTypes.array,
         onMatchReplayClick: PropTypes.func,
     }
+    static defaultProps = {
+        onMatchReplayClick: () => {},
+    }
     constructor(props) {
         super(props)
+    }
+    handleReplayClick(matchId) {
+        this.props.onMatchReplayClick &&
+            this.props.onMatchReplayClick(matchId)
     }
     render() {
         const matches = this.props.matches || GameHistoryData
@@ -86,7 +93,7 @@ export class GameHistory extends React.Component {
                                             <td className='table-replay'>
                                                 <button
                                                     className='button replay-button'
-                                                    onClick={this.props.onMatchReplayClick}
+                                                    onClick={this.handleReplayClick.bind(this, 'matchidxxxxx')}
                                                 >
                                                     Replay
                                                 </button>

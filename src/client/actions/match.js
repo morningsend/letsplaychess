@@ -5,6 +5,7 @@ export const ActionTypes = {
     MATCH_FOUND: 'MATCH_FOUND',
     MATCH_MAKING_TIMEOUT: 'MATCH_MAKING_TIMEOUT',
     MATCH_MAKING_REQUEST_ERROR: 'MATCH_MAKING_REQUEST_ERROR',
+    MATCH_ENDED: 'MATCH_ENDED',
 }
 
 export function findMatch(userId, timestamp) {
@@ -35,5 +36,12 @@ export function findMatchRequestError(error) {
     return {
         type: ActionTypes.MATCH_MAKING_REQUEST_ERROR,
         errorMessage: error.message || 'error happenend while finding a match.'
+    }
+}
+
+export function matchEnded(outcome) {
+    return {
+        type: ActionTypes.MATCH_ENDED,
+        outcome,
     }
 }

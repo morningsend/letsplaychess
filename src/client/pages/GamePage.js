@@ -7,7 +7,13 @@ import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem, Overlay
 import { Tab, TabView, ChessMovesViewer } from '../components'
 import { MatchApi } from '../api/MatchApi'
 import { SocketContextProvider, SocketContextConsumer } from '../realtime'
-import { findMatch, matchFound, matchMakingTimeout, findMatchRequestError } from '../actions/match'
+import {
+    findMatch,
+    matchFound,
+    matchMakingTimeout,
+    findMatchRequestError,
+    matchEnded,
+} from '../actions/match'
 
 class GamePage extends React.Component {
     static propTypes = {
@@ -55,7 +61,7 @@ class GamePage extends React.Component {
         }
     }
     render() {
-        const { findingMatch, errorMessage } = this.props
+        const { findingMatch, errorMessage, user, onMatchEnd } = this.props
         console.log(this.props.myPlayerColour)
         return (
             <SocketContextProvider>
@@ -84,12 +90,13 @@ class GamePage extends React.Component {
                         <HeaderItem>
                             <PopUpMenu button={
                                 <button>
-                                    <Avatar name='Jonsnow283ac' img='' />
+                                    <Avatar
+                                        name={user.username}
+                                        img={require('../assets/images/avatars/male.png')}
+                                        ranking={user.ranking}
+                                    />
                                 </button>
                             }>
-                                <MenuItem>
-                                    <p>Game History (Last 7 days)</p>
-                                </MenuItem>
                                 <MenuItem><Link to='/account'>Your Acount</Link></MenuItem>
                                 <MenuItem><Link to='/account'>Achievements</Link></MenuItem>
                                 <MenuItem><Link to='/account'>Settings</Link></MenuItem>
@@ -115,6 +122,7 @@ class GamePage extends React.Component {
                                     matchId={this.props.matchId}
                                     matchJoinToken={this.props.joinToken}
                                     userId={this.props.userId}
+                                    onMatchEnd={onMatchEnd}
                                 />
                                 : <ChessGame.Placeholder />
                             }
@@ -147,7 +155,8 @@ function mapStateToProps(state) {
         errorMessage: match.errorMessage,
         userId: authen.userId,
         username: user.username,
-        avatarImage: user.profile.avatarUrl,
+        avatarImage: '',//user.profile.avatarUrl,
+        user: user.user || {}
     }
 }
 
@@ -172,6 +181,9 @@ function mapDispatchToProps(dispatch, ownProps) {
         },
         timeout: () => {
             dispatch(matchMakingTimeout())
+        },
+        onMatchEnd: () => {
+            dispatch(matchEnded())
         }
     }
 }

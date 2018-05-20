@@ -193,6 +193,11 @@ form.login-form {
         flex-direction: column;
         .profile {
             flex-grow: 1;
+            .profile-picture {
+                background-color: gray;
+                background-size: cover;
+                background-image: url('../images/avatars/male.png');
+            }
         }
         .quick-game-button-container {
             width: 100%;
@@ -263,20 +268,20 @@ form.login-form {
       height: 150px;
 
       border-radius: 50%;
-
-      background-image: url(../images/default_profile.png);
       background-size: cover;
       background-color: #a1a1a1;
+      background-image: url(../images/avatars/male.png);
+      margin: 24px auto 8px auto;
   }
 
   .profile-name{
       padding: 12px 0px 0px 0px;
-      font-size: 13px;
+      font-size: 20px;
       text-align: center;
       color: #a1a1a1;
   }
   .profile-score{
-      font-size: 13px;
+      font-size: 20px;
       font-weight: bold;
       text-align: center;
       color: $textColor;
@@ -285,7 +290,7 @@ form.login-form {
   .stats {
       color: $textColor;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 16px;
       padding: 12px 0px 0px 0px;
       text-align: center;
 
@@ -502,6 +507,7 @@ a.back-to-login{
         width: 40px;
         background-color: gray;
         border-radius: 50%;
+        background-size: cover;
     }
     .player-name {
         padding-left: 16px;
@@ -558,6 +564,8 @@ a.back-to-login{
     align-items: center;
     .avatar-image{
         background-color: #ee3366;
+        background-size: contain;
+        background-image: url('../images/avatars/male.png');
         border-radius: 50%;
         height: 48px;
         width: 48px;

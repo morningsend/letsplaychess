@@ -41,6 +41,11 @@ export function match(state = INITIAL_STATE, action) {
                 opponentId: null,
             }
             break
+        case ActionTypes.MATCH_ENDED:
+            newState = {
+                ...state,
+                
+            }
         case ActionTypes.MATCH_MAKING_REQUEST_ERROR:
             newState = {
                 ...INITIAL_STATE,
