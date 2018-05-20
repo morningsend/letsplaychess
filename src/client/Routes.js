@@ -1,5 +1,5 @@
 import { App } from './App'
-import { HomePage, GamePage, AccountPage, RegisterPage, NotFoundPage, ReplayPage, UserPage } from './pages'
+import { HomePage, GamePage, AccountPage, RegisterPage, NotFoundPage, ReplayPage, UserPage, LogoutPage } from './pages'
 
 export const Routes = [
     {
@@ -30,6 +30,10 @@ export const Routes = [
                 path: '/replay/:matchId',
                 component: ReplayPage,
             },
+            {
+                path: '/logout',
+                component: LogoutPage,
+            }
         ],
     },
 ]

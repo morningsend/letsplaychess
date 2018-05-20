@@ -5,6 +5,7 @@ import { GamePage } from './GamePage'
 import { RegisterPage } from './RegisterPage'
 import { ReplayPage } from './ReplayPage'
 import { NotFoundPage } from './NotFoundPage'
+import { LogoutPage } from './LogoutPage'
 
 export {
     AccountPage,
@@ -14,4 +15,5 @@ export {
     RegisterPage,
     NotFoundPage,
     ReplayPage,
+    LogoutPage,
 }

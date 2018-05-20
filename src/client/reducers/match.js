@@ -12,7 +12,6 @@ const INITIAL_STATE = {
 
 export function match(state = INITIAL_STATE, action) {
     let newState = state
-    console.log('match')
     switch(action.type) {
         case ActionTypes.MATCH_MAKING_START:
             newState = {

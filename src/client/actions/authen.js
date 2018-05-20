@@ -2,6 +2,7 @@ export const ActionTypes = {
     USER_LOGIN: 'USER_LOGIN',
     USER_LOGIN_FAILED: 'USER_LOGIN_FAILED',
     USER_LOGIN_SUCCEEDED: 'USER_LOGIN_SUCCEEDED',
+    USER_LOGOUT: 'USER_LOGOUT',
 }
 
 export function userLogin(username) {
@@ -11,11 +12,10 @@ export function userLogin(username) {
     }
 }
 
-export function userLoginFailed(username, userId, message) {
+export function userLoginFailed(username, message) {
     return {
         type: ActionTypes.USER_LOGIN_FAILED,
         username,
-        userId,
         message,
     }
 }
@@ -27,5 +27,11 @@ export function userLoginSucceeded(username, userId, accessToken, expiresIn) {
         userId,
         accessToken,
         expiresIn
+    }
+}
+
+export function userLogout() {
+    return {
+        type: ActionTypes.USER_LOGOUT,
     }
 }

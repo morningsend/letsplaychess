@@ -1,5 +1,7 @@
 @import "./breakpoints.scss";
 
-@media (min-width: $mobileScreen) and (max-width: $smallScreen) {
-
+@mixin mobileScreen {
+    @media (max-width: #{$mediumScreen - 1px}) {
+        @content;
+    }
 }

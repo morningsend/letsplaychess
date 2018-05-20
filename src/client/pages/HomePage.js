@@ -60,6 +60,7 @@ class HomePage extends React.Component {
     </div>
     */
     render() {
+        console.log(this.props)
         return (
             <Page className='page home-page'>
                 <Content>
@@ -69,6 +70,11 @@ class HomePage extends React.Component {
                     </h1>
                     <div>
                         <LoginForm onLogin={this.handleLogin} enabled={true} />
+                        {
+                            this.props.loginFailed
+                            ? <p className='error'>{this.props.message}</p>
+                            : null
+                        }
                         <Link to='/register' className='register-here-link'>
                           Don&apos;t have an account? Register here.
                         </Link>
@@ -96,22 +102,20 @@ function mapDispatchToProps(dispatch) {
                     
                 })
                 .then((result)=> {
-                    if(result) {
-                        return UserApi
-                                .getUser(result.userId, result.token)
-                                .then(user => {
-                                    console.log(user)
-                                    dispatch(getUserFinished(user))
-                                    dispatch(userLoginSucceeded(username, result.userId, result.token, result.expiresIn))
-                                })
-                                .catch(error => {
-                                    console.log(error)
-                                    dispatch(userLoginFailed(username, error.messsage))
-                                })
-                    }
+                    return UserApi
+                        .getUser(result.userId, result.token)
+                        .then(user => {
+                            dispatch(getUserFinished(user))
+                            dispatch(userLoginSucceeded(username, result.userId, result.token, result.expiresIn))
+                        })
+                        .catch(error => {
+                            console.log(error)
+                            dispatch(userLoginFailed(username, error.messsage))
+                        })
                 })
                 .catch((error) => {
-                    dispatch(userLoginFailed(username, error.messsage))
+                    console.log(error)
+                    dispatch(userLoginFailed(username, error.message))
                 })
         },
         alreadLoggedIn: (username, userId, accessToken, expiresIn) => {

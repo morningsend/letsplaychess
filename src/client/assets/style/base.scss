@@ -1,3 +1,8 @@
+@import "./breakpoints.scss";
+@import "./wideScreen.scss";
+@import "./mediumScreen.scss";
+@import "./mobileScreen.scss";
+
 html, body, #root, .app {
     height: 100%;
     width: 100%;
@@ -180,31 +185,9 @@ form.login-form {
 
 .account-page-content {
     display: flex;
-    flex-direction: row;
     min-height: 100%;
     .game-history {
         flex-grow: 1;
-    }
-    .profile-bar {
-        flex-shrink: 0;
-        flex-grow: 1;
-        min-height: 100%;
-        display: flex;
-        flex-direction: column;
-        .profile {
-            flex-grow: 1;
-            .profile-picture {
-                background-color: gray;
-                background-size: cover;
-                background-image: url('../images/avatars/male.png');
-            }
-        }
-        .quick-game-button-container {
-            width: 100%;
-            flex-grow: 0;
-            flex-shrink: 0;
-            padding-bottom: 24px;
-        }
     }
 }
 .game-history {
@@ -327,7 +310,29 @@ form.login-form {
 
 }
 
+@include wideScreen {
+    .account-page-content {
+        flex-direction: row;
+    }
+    .profile-bar {
+        flex-grow: 1;
 
+    }
+}
+
+@include mobileScreen {
+    .account-page-content {
+        flex-direction: column;
+        justify-content: stretch;
+    }
+    .profile-bar {
+        max-height: inherit;
+        flex-grow: 0;
+        width: 100%;
+        align-self: stretch;
+        max-width: 100%;
+    }
+}
 
 a.register-here-link {
   display: block;
@@ -377,8 +382,8 @@ a.back-to-login{
         .login-form {
             align-self: center;
         }
-        & .page-content {
-            justify-content: flex-end;
+        .error {
+            color: #992211;
         }
         .sidebar {
           background-color: rgba(0.24,0.24,0.24, 0.9);
@@ -431,18 +436,76 @@ a.back-to-login{
     }
 }
 
+@include mediumScreen{
+    .page {
+        .page-content {
+            justify-content: flex-end;
+        }
+    }
+}
+@include wideScreen {
+    .page {
+        .page-content {
+            justify-content: flex-end;
+        }
+    }
+}
+@include mobileScreen {
+    .page {
+
+        .page-content {
+            justify-content: center;
+        }
+        &.home-page {
+
+        }
+
+        &.logout-page {
+
+        }
+    }
+}
 
 .game-page-content {
     display: flex;
-    flex-direction: row;
+    
     .game-wrapper {
         flex-grow: 1;
         flex-shrink: 0;
         background-color: #252525;
     }
-    .tabview {
-        flex-grow: 0;
+    .tabview-container {
         width: 360px;
+    }
+}
+@include wideScreen {
+    .game-page-content {
+        flex-direction: row;
+
+        .tabview-container {
+            flex-grow: 1;
+            width: 360px;
+        }
+    }
+}
+@include mediumScreen {
+    .game-page-content {
+        flex-direction: row;
+
+        .tabview-container {
+            width: 320px;
+        }
+    }
+}
+@include mobileScreen {
+    .game-page-content {
+        flex-direction: column;
+
+        .tabview-container {
+            flex-grow: 1;
+            width: 100%;
+            height: 240px;
+        }
     }
 }
 

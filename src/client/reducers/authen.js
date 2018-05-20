@@ -1,4 +1,5 @@
 import { ActionTypes, userLogin, userLoginFailed, userLoginSucceeded } from '../actions/authen'
+import { INITIAL_STATE } from './user';
 
 const initialState = {
     accessToken: '',
@@ -38,6 +39,10 @@ export function authen(state = initialState, action) {
                 failed: false,
             }
             break
+        case ActionTypes.USER_LOGOUT:
+            newState = {
+                ...INITIAL_STATE,
+            }
         default:
             break
     }

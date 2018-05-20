@@ -44,7 +44,7 @@ export class ChessGame extends React.Component {
         this.handleOpponentResign = this.handleOpponentResign.bind(this)
         this.handleOpponentMove = this.handleOpponentMove.bind(this)
         this.handleOpponentOfferDraw = this.handleOpponentOfferDraw.bind(this)
-        
+        this.handleOpponentAcceptDraw = this.handleOpponentAcceptDraw.bind(this)
         this.whitePlayerClockTicker = null
         this.blackPlayerClockTicker = null
         this.toggleClocks = this.toggleClocks.bind(this)
@@ -64,14 +64,28 @@ export class ChessGame extends React.Component {
         this.handleResignClick = this.handleResignClick.bind(this)
     }
     whiteClockTick(){
-        this.setState({
-            whiteTimeRemainingSeconds: this.state.whiteTimeRemainingSeconds - this.clockTickInterval / 1000
-        })
+        if(this.state.whiteTimeRemainingSeconds > 0) {
+            this.setState({
+                whiteTimeRemainingSeconds: this.state.whiteTimeRemainingSeconds - this.clockTickInterval / 1000
+            })
+        } else {
+            this.setState({
+                whiteTimeRemainingSeconds: 0,
+            })
+            this.stopWhiteClock()
+        }
     }
     blackClockTick() {
-        this.setState({
-            blackTimeRemainingSeconds: this.state.blackTimeRemainingSeconds - this.clockTickInterval / 1000
-        })
+        if(this.state.blackTimeRemainingSeconds > 0) {
+            this.setState({
+                blackTimeRemainingSeconds: this.state.blackTimeRemainingSeconds - this.clockTickInterval / 1000
+            })
+        }else {
+            this.setState({
+                blackTimeRemainingSeconds: 0,
+            })
+            this.stopBlackClock()
+        }
     }
     startWhiteClock() {
         if(!this.whitePlayerClockTicker)
@@ -119,10 +133,22 @@ export class ChessGame extends React.Component {
         console.log('opponent resigned')
         this.stopBlackClock()
         this.stopWhiteClock()
+        this.setState({
+            gameRunning: false,
+        })
         this.props.onMatchEnd &&
             this.props.onMatchEnd()
     }
-
+    handleOpponentAcceptDraw() {
+        console.log('opponent accepted draw')
+        if(this.state.offeredDraw) {
+            this.stopBlackClock()
+            this.stopWhiteClock()
+            this.setState({
+                gameRunning: false,
+            })
+        }
+    }
     handleOpponentMove(from, to) {
         const { column, row } = from
         const piece = this.state.game.chessEngine.board.pieceAt(column, row)
@@ -133,17 +159,27 @@ export class ChessGame extends React.Component {
                 to,
                 null
             )
+            let gameRunning = this.state.gameRunning && !this.state.game.hasGameEnded
             if (this.state.game.onMove(move)) {
                 this.setState({
                     movesMade: this.state.movesMade + 1,
                     lastMove: {
                         from,
                         to,
-                    }
+                    },
+                    gameRunning,
                 })
                 this.props.onMoveListUpdate(this.state.game.moves)
             }
-            this.toggleClocks()
+            if(gameRunning) {
+                this.toggleClocks()
+                
+            } else {
+                this.stopBlackClock()
+                this.stopWhiteClock()
+                this.props.onMatchEnd
+                    && this.props.onMatchEnd()
+            }
         }
     }
 
@@ -197,6 +233,7 @@ export class ChessGame extends React.Component {
                 },
                 null
             )
+            let gameRunning = this.state.gameRunning && !this.state.game.hasGameEnded
             if (this.state.game.onMove(move)) {
                 this.setState({
                     movesMade: this.state.movesMade + 1,
@@ -209,7 +246,15 @@ export class ChessGame extends React.Component {
             }
             this.props.gameClient &&
                 this.props.gameClient.makeMove(from, to)
-            this.toggleClocks()
+            if(gameRunning) {
+                this.toggleClocks()
+                
+            } else {
+                this.stopBlackClock()
+                this.stopWhiteClock()
+                this.props.onMatchEnd
+                    && this.props.onMatchEnd()
+            }
         }
     }
 
@@ -222,12 +267,24 @@ export class ChessGame extends React.Component {
         }
     }
     handleAcceptDrawClick() {
+        if(this.state.opponentOfferedDraw && this.props.gameClient) {
+            this.props.gameClient.acceptDraw()
 
+            this.setState({
+                gameRunning: false,
+            })
+
+            this.props.onMatchEnd
+                && this.props.onMatchEnd()
+        }
     }
     handleResignClick() {
         this.props.gameClient.resign()
         this.stopBlackClock()
         this.stopWhiteClock()
+        this.setState({
+            gameRunning: false,
+        })
         this.props.onMatchEnd &&
             this.props.onMatchEnd()
     }

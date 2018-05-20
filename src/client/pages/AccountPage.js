@@ -88,7 +88,7 @@ class AccountPage extends React.Component {
                             <MenuItem><Link to='/account'>Your Acount</Link></MenuItem>
                             <MenuItem><Link to='/account'>Achievements</Link></MenuItem>
                             <MenuItem><Link to='/account'>Settings</Link></MenuItem>
-
+                            <MenuItem><Link to='/logout'>Log Out</Link></MenuItem>
                         </PopUpMenu>
                     </HeaderItem>
                 </Header>

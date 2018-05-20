@@ -7,7 +7,7 @@ import ProfileImageUrl from '../assets/images/jon_snow.jpg'
 export class ProfileBar extends React.Component {
 
     static propTypes = {
-        user: PropTypes.user,
+        user: PropTypes.object,
         onSelectMenu: PropTypes.func,
         menuItems: PropTypes.array,
         selectedIndex: PropTypes.number,

@@ -1,5 +1,6 @@
 @import "./breakpoints.scss";
-
-@media(min-width: $mediumScreen) and (max-width: $wideScreen) {
-
+@mixin mediumScreen {
+    @media(min-width: $mediumScreen) and (max-width: #{$wideScreen - 1px}) {
+        @content;
+    }
 }
