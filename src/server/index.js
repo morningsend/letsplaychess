@@ -1,4 +1,4 @@
-
+const fs = require('fs')
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
@@ -7,6 +7,7 @@ const passport = require('passport')
 const cors = require('cors')
 const BearerStrategy = require('passport-http-bearer').Strategy
 const container = require('./container')
+
 /*
     import React from 'react'
     import morgan from 'morgan'
@@ -16,8 +17,23 @@ const container = require('./container')
     import { Routes } from '../client/Routes'
 */
 const app = express()
+console.log(process.argv)
+let useHttps = false
+if(process.argv.length >= 3 && process.argv[2] ==='--use-https') {
+    console.log('server running in https mode')
+    useHttps = true
+}
 
-const http = require('http').Server(app)
+let server = null
+
+if(useHttps) {
+    server = require('https').createServer({
+        key: fs.readFileSync(__dirname + '/localhost.key'),
+        cert: fs.readFileSync(__dirname + '/localhost.crt'),
+    }, app)
+} else {
+    server = require('http').Server(app)
+}
 const port = 3000
 const io = require('socket.io')
 const { ChatSocketServer, GameSocketServer } = require('./realtime')
@@ -77,7 +93,7 @@ app.get('/account', (request, response) => {
 app.get('/game', (request, response) => {
     response.redirect('/?next=' + encodeURIComponent('/game'))
 })
-const ioServer = io.listen(http, {
+const ioServer = io.listen(server, {
     origins: 'http://localhost:*',
     transports: ['websocket'],
     path: '/realtime'
@@ -86,6 +102,6 @@ const ioServer = io.listen(http, {
 const chatServer = new ChatSocketServer(ioServer, container.resolve('UserRepository'))
 const gameServer = new GameSocketServer(ioServer, container.resolve('MatchRepository'))
 
-http.listen(port)
+server.listen(port)
 
 console.log(`server listening on port ${port}`)
