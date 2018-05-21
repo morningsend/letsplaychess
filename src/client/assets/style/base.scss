@@ -381,6 +381,13 @@ a.back-to-login{
         background-color: #464646;
         .login-form {
             align-self: center;
+            .login-knight {
+                display: inline-block;
+                vertical-align: middle;
+                width: 30px;
+                height: 80%;
+                margin-right: 8px;
+            }
         }
         .error {
             color: #992211;
@@ -397,6 +404,7 @@ a.back-to-login{
             background-size: contain;
             width: 100%;
             padding-bottom: 100%;
+            background-position: center;
             background-repeat: no-repeat;
             font-size: 68px;
           }

@@ -46,7 +46,10 @@ export class LoginForm extends React.Component {
                 <input placeholder='Username or email' value={this.state.username} onChange={this.onUsernameTyping}/>
                 <input placeholder='password' type='password' value={this.state.password} onChange={this.onPasswordTyping}/>
                 <button className='button login-button' disabled={!this.state.formValid}>
+                <img className='login-knight' src={require('./../assets/svg/knight_login.svg')} />
+                <span>
                     Login
+                </span>
                 </button>
             </form>
         )
