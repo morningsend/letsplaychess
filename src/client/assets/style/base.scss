@@ -374,7 +374,7 @@ a.back-to-login{
 
         color: #d2d2d2;
 
-        background-image: url(./../images/chessboard.jpg);
+        background-image: url(./../images/chessboard_new.jpg);
         background-position: center;
         background-size: cover;
 
@@ -392,9 +392,12 @@ a.back-to-login{
           padding: 0px 32px;
           display: flex;
           flex-direction: column;
-          .page-title {
-            color: #d9d9d9;
-            margin: 20px 0px;
+          .page-logo {
+            background-image: url(./../images/logo.png);
+            background-size: contain;
+            width: 100%;
+            padding-bottom: 100%;
+            background-repeat: no-repeat;
             font-size: 68px;
           }
           .guest-button-container {

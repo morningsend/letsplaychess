@@ -65,9 +65,9 @@ class HomePage extends React.Component {
             <Page className='page home-page'>
                 <Content>
                 <div className='sidebar'>
-                    <h1 className='page-title'>
-                        Let&apos;s Play Chess
-                    </h1>
+                    <div className='page-logo'>
+                        
+                    </div>
                     <div>
                         <LoginForm onLogin={this.handleLogin} enabled={true} />
                         {
