@@ -54,11 +54,13 @@ export class SocketContextProvider extends Component {
             }
             this.socket = io.connect(config.baseUrl, options)
             this.socket.on('connect', () => {
+                console.log('socket connected to server')
                 self.setState({
                     'isConnected': true
                 })
             })
             this.socket.on('disconnect', () => {
+                console.log('socket disconnected from server')
                 self.setState({
                     'isConnected': false
                 })

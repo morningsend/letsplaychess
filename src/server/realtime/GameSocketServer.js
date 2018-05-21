@@ -18,7 +18,10 @@ export class GameSocketServer {
         const self = this
 
         socket.on('connect', () => {
-
+            console.log('socket connected to game server')
+        })
+        socket.on('connection', () => {
+            console.log('socket connected to game server')
         })
         socket.on('disconnect', () =>{
             if(self.idleSockets) {
@@ -104,7 +107,7 @@ export class GameSocketServer {
                 if(!socket.matchId) {
                     return
                 }
-                
+
                 socket.broadcast.emit(GameSignalTypes.OPPONENT_ACCEPT_DRAW)
             }
         )

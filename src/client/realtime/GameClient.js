@@ -7,10 +7,10 @@ export const GameSignalTypes = {
     PLAYERS_READY: 'PLAYERS_READY',
 
     OPPONENT_JOINED: 'PLAYER_JOINED',
-    
+
     OPPONENT_DISCONNECTED: 'PLAYER_DISCONNECTED',
     OPPONENT_DISCONNECT_TIMEOUT: 'PLAYRE_DISCONNECT_TIMEOUT',
-    
+
     OPPONENT_MAKE_MOVE: 'PLAYER_MAKE_MOVE',
     PLAYER_MAKE_MOVE: 'PLAYER_MAKE_MOVE',
 
@@ -38,13 +38,9 @@ export class GameClient {
         this._matchJoinToken = null
         this._opponentId = null
         this._userId = null
-        
         this.joinedGame = false
-
         this.setupSocket = this.setupSocket.bind(this)
-
         this.setupSocket(socket)
-
         this.onPlayersReadyCallback = null
         this.onOpponentMakeMoveCallback = null
         this.onOpponentResignCallback = null
@@ -73,11 +69,21 @@ export class GameClient {
         })
         socket.on(GameSignalTypes.OPPONENT_OFFER_DRAW, () => {
             self.onOpponentOfferDrawCallback &&
-            self.onOpponentOfferDrawCallback()            
+            self.onOpponentOfferDrawCallback()
         })
         socket.on(GameSignalTypes.OPPONENT_ACCEPT_DRAW, () => {
             self.onOpponentAcceptDrawCallback &&
             self.onOpponentAcceptDrawCallback()
+        })
+
+        socket.on('connect', () => {
+            console.log('game client connected to server')
+        })
+        socket.on('connection', () => {
+            console.log('game client connected to server')
+        })
+        socket.on('disconnect', () => {
+            console.log('game client disconnected from server.')
         })
     }
 
@@ -146,8 +152,8 @@ export class GameClient {
     }
 
     makeMove(from, to) {
-        
-        if(this.joinedGame && 
+
+        if(this.joinedGame &&
             this._gameStateMachine &&
             this._gameStateMachine.gameStatus !== GameStatus.End) {
                 console.log('game client sending move')
@@ -165,8 +171,6 @@ export class GameClient {
             }
         )
     }
-
-
 
     cleanUpCallbacks() {
 

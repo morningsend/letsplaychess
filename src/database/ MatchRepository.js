@@ -30,7 +30,7 @@ export class MatchRepository {
     constructor() {
         this.matches = new Datastore()
     }
-    create(joinToken, whitePlayerId, blackPlayerId, createdAt) {
+    create(joinToken, whitePlayerId, blackPlayerId, createdAt, whitePlayer, blackPlayer) {
         const tokenExpiresAt = createdAt + MatchRepository.tokenExpiry * 1000
         const newMatch = {
             joinToken,
@@ -38,6 +38,9 @@ export class MatchRepository {
             blackPlayerId,
             createdAt,
             tokenExpiresAt,
+            whitePlayer,
+            blackPlayer,
+            outcome: MatchOutcome.undecided,
         }
         return new Promise((resolve, reject) => {
             this.matches.insert(newMatch, (error, match) => {

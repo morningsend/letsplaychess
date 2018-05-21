@@ -4,7 +4,7 @@ import { PlayerColours } from '../../chess'
  * Basically a deferred asynchronuous pattern.
  */
 export class MatchingMakingRequest {
-    constructor(userId, timestamp, timeoutSeconds) {
+    constructor(userId, timestamp, timeoutSeconds, user) {
         this.fulfilled = false
         this.timedOut = false
         this.requestData = {}
@@ -13,6 +13,7 @@ export class MatchingMakingRequest {
         this.timestamp = timestamp
         this.cancelled = false
         this.error = null
+        this.user = user
     }
     fullfil(match) {
         if(this.timedOut || this.cancelled) {
@@ -33,7 +34,7 @@ export class MatchingMakingRequest {
     cancel(error) {
         if(this.fulfilled || this.timedOut) {
             return
-        } 
+        }
         this.cancelled = true
         this.error = error
         this.promiseReject && this.promiseReject(error)
@@ -68,7 +69,7 @@ export class MatchingMakingRequest {
     }
 }
 export class MatchMakingService {
-    
+
 
     requestQueue = []
 
@@ -86,13 +87,18 @@ export class MatchMakingService {
                 } else {
                     timeout = timeout || 30
                     timeout = Math.min(60, Math.max(5, timeout))
-                    const request = new MatchingMakingRequest(userId, timestamp, timeout)
-                    let matchedRequest;
+                    const matchUser = {
+                        username: user.username,
+                        userId: user._id,
+                        ranking: user.ranking,
+                    }
+                    const request = new MatchingMakingRequest(userId, timestamp, timeout, matchUser)
+                    let matchedRequest
                     while(this.requestQueue.length > 0) {
                         matchedRequest = this.requestQueue.shift()
                         if(!matchedRequest.timedOut) {
                             matchedRequest.cancelTimer()
-                            break;
+                            break
                         }
                     }
                     if(!matchedRequest) {
@@ -101,7 +107,7 @@ export class MatchMakingService {
                         const joinToken = Math.random().toString(36).substring(7);
                         const createdAt = Date.now()
                         this.matchRepository
-                            .create(joinToken, matchedRequest.userId, request.userId, createdAt)
+                            .create(joinToken, matchedRequest.userId, request.userId, createdAt, matchedRequest.user, request.user)
                             .then(match => {
                                 request.fullfil(match)
                                 matchedRequest.fullfil(match)

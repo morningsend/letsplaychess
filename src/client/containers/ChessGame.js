@@ -152,7 +152,7 @@ export class ChessGame extends React.Component {
     }
     componentWillUpdate(nextProps, nextState) {
         if(!this.props.hasMatch && nextProps.hasMatch) {
-            
+
         }
     }
     handleOpponentMove(from, to) {
@@ -165,7 +165,7 @@ export class ChessGame extends React.Component {
                 to,
                 null
             )
-            
+
             if (this.state.game.onMove(move)) {
                 let gameRunning = this.state.gameRunning && !this.state.game.hasGameEnded
                 this.setState({
@@ -190,18 +190,20 @@ export class ChessGame extends React.Component {
     }
 
     componentDidMount() {
-        
+
         if(!this.props.gameClient) {
             console.log('game client is null')
             return
         }
         this.props.gameClient.reset()
         console.log('chessgame' ,this.props)
+
         const { userId, matchId, matchJoinToken } = this.props
 
         this.setupGameClient(this.props.gameClient)
-        
+
         if(this.props.gameClient && this.props.hasMatch) {
+            console.log('sending join game message')
             this.props.gameClient.joinGame(
                 userId,
                 matchId,
@@ -251,7 +253,7 @@ export class ChessGame extends React.Component {
                 },
                 null
             )
-            
+
             if (this.state.game.onMove(move)) {
                 // check if recent move was a check mate, end the game if so.
                 this.props.gameClient &&

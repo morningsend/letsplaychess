@@ -2,7 +2,7 @@ const Datastore = require('nedb')
 
 /**
  * User Schema
- * 
+ *
  * {
  *      _id: string
  *      username: string,
@@ -10,7 +10,7 @@ const Datastore = require('nedb')
  *      email: string,
  *      isGuest: boolean,
  *      playerProfile: {
- *          ranking: int, 
+ *          ranking: int,
  *          gamesPlayed: int,
  *          username: string,
  *          email: string,
@@ -22,7 +22,7 @@ const Datastore = require('nedb')
  *                  _id: string,
  *                  username: string,
  *                  email: string,
- *                  
+ *
  *              }
  *          }
  *      }
@@ -39,7 +39,7 @@ const DEFAULT_USER  = {
         draw: 0,
     },
     profile: {
-        avatarUrl: '/ere/84902384.jpg',
+        avatarUrl: '/asset/images/male.png',
         avatar: 'jonsnow'
     },
 }
@@ -108,7 +108,7 @@ export class UserRepository {
                 passwordHash,
                 isGuest,
             }, (error, user) => {
-                if(error){ 
+                if(error){
                     reject(error)
                 } else {
                     resolve(user)
