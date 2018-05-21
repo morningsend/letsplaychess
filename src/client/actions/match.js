@@ -6,8 +6,13 @@ export const ActionTypes = {
     MATCH_MAKING_TIMEOUT: 'MATCH_MAKING_TIMEOUT',
     MATCH_MAKING_REQUEST_ERROR: 'MATCH_MAKING_REQUEST_ERROR',
     MATCH_ENDED: 'MATCH_ENDED',
+    MATCH_NEW: 'MATCH_NEW',
 }
-
+export function newMatch() {
+    return {
+        type: ActionTypes.MATCH_NEW,
+    }
+}
 export function findMatch(userId, timestamp) {
     return {
         type: ActionTypes.MATCH_MAKING_START,

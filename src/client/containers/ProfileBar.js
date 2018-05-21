@@ -11,6 +11,7 @@ export class ProfileBar extends React.Component {
         onSelectMenu: PropTypes.func,
         menuItems: PropTypes.array,
         selectedIndex: PropTypes.number,
+        onNewGame: PropTypes.func,
     }
 
     static defaultTypes = {
@@ -60,9 +61,9 @@ export class ProfileBar extends React.Component {
                     </div>
                 </div>
                 <div className='quick-game-button-container'>
-                    <Link to='/game' className='button button-primary'>
+                    <button className='button button-primary' onClick={this.props.onNewGame}>
                         Quick Game
-                    </Link>
+                    </button>
                 </div>
             </div>
         )

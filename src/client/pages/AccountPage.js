@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { getUser, getUserFinished, getUserFailed } from '../actions/user'
+import { newMatch } from '../actions/match'
 import { ProfileBar, GameHistory } from '../containers'
 import { UserApi } from '../api'
 import { Avatar, Page, Content, Header, HeaderItem, PopUpMenu, MenuItem } from '../components'
@@ -27,6 +28,7 @@ class AccountPage extends React.Component {
 
         this.handleSelectItem = this.handleSelectItem.bind(this)
         this.handleReplayClick = this.handleReplayClick.bind(this)
+        this.handleNewGame = this.handleNewGame.bind(this)
     }
 
     componentDidMount() {
@@ -46,6 +48,12 @@ class AccountPage extends React.Component {
         if(matchId && this.props.history) {
             this.props.history.push('/replay/' + matchId)
         }
+    }
+    handleNewGame() {
+        this.props.newMatch()
+        this.props.history && 
+            this.props.history.push('/game')
+        
     }
     render() {
         const { user } = this.props
@@ -98,10 +106,10 @@ class AccountPage extends React.Component {
                         menuItems={this.childPageTitles}
                         selectedIndex={this.state.selectedSidebarItem}
                         onSelectMenu={this.handleSelectItem}
+                        onNewGame={this.handleNewGame}
                     />
                     { childPages[this.state.selectedSidebarItem] }
                 </Content>
-
             </Page>
         )
     }
@@ -130,6 +138,9 @@ function mapDispatchToProps(dispatch, ownProps) {
                 .catch(error => {
                     dispatch(getUserFailed(error))
                 })
+        },
+        newMatch: () => {
+            dispatch(newMatch())
         }
     }
 }

@@ -4,15 +4,21 @@ const INITIAL_STATE = {
     findingMatch: false,
     errorMessage: '',
     matchMakingTimeout: false,
-    colour: '',
     opponentId: '',
     matchId: '',
     userId: '',
+    joinToken: '',
+    myPlayerColour: '',
 }
 
 export function match(state = INITIAL_STATE, action) {
     let newState = state
     switch(action.type) {
+        case ActionTypes.MATCH_NEW:
+            newState = {
+                ...INITIAL_STATE,
+            }
+            break
         case ActionTypes.MATCH_MAKING_START:
             newState = {
                 ...state,
@@ -43,7 +49,7 @@ export function match(state = INITIAL_STATE, action) {
         case ActionTypes.MATCH_ENDED:
             newState = {
                 ...state,
-                
+                findingMatch: false,
             }
         case ActionTypes.MATCH_MAKING_REQUEST_ERROR:
             newState = {
@@ -51,6 +57,7 @@ export function match(state = INITIAL_STATE, action) {
                 errorMessage: action.errorMessage,
                 matchId: null,
                 userId: state.userId,
+                findingMatch: false,
             }
             break
         default:

@@ -7,7 +7,7 @@ const passport = require('passport')
 const cors = require('cors')
 const BearerStrategy = require('passport-http-bearer').Strategy
 const container = require('./container')
-
+const forceSSL = require('express-force-ssl');
 /*
     import React from 'react'
     import morgan from 'morgan'
@@ -24,17 +24,27 @@ if(process.argv.length >= 3 && process.argv[2] ==='--use-https') {
     useHttps = true
 }
 
-let server = null
-
+let secureServer = null
+let httpServer = null
 if(useHttps) {
-    server = require('https').createServer({
+    secureServer = require('https').createServer({
         key: fs.readFileSync(__dirname + '/localhost.key'),
         cert: fs.readFileSync(__dirname + '/localhost.crt'),
     }, app)
+    httpServer = require('http').createServer((request, response) => {
+        console.log(request.headers)
+        const host = request.headers.host.replace(/\d+$/, httpsPort)
+        response.writeHead(301, 
+            {
+                Location: 'https://' + host + request.url
+            }
+        )
+    })
 } else {
-    server = require('http').Server(app)
-}
+    httpServer = require('http').Server(app)
+}   
 const port = 3000
+const httpsPort = 3001
 const io = require('socket.io')
 const { ChatSocketServer, GameSocketServer } = require('./realtime')
 
@@ -61,16 +71,21 @@ passport.use(new BearerStrategy((token, done) =>{
             done(error)
         })
 }))
-
+app.use(cors())
 app.use(morgan('combined'))
 app.use(bodyParser.json())
+if(useHttps) {
+    app.use(forceSSL)
+    app.set('forceSSLOptions', {
+        enable301Redirects: true,
+        trustXFPHeader: false,
+        httpsPort: httpsPort,
+        sslRequiredMessage: `{ "success": false, "message": "SSL required."}`
+    })
+}
 app.use(express.static(path.resolve(__dirname, '../../build')))
-app.use(cors())
+
 app.get('/', (request, response) => {
-    /*const html = renderToString(<StaticRouter location={request.url} context={{}}>
-            {renderRoutes(Routes)}
-                                </StaticRouter>)
-    */
     response.send('hello world')
 })
 
@@ -93,15 +108,34 @@ app.get('/account', (request, response) => {
 app.get('/game', (request, response) => {
     response.redirect('/?next=' + encodeURIComponent('/game'))
 })
-const ioServer = io.listen(server, {
-    origins: 'http://localhost:*',
-    transports: ['websocket'],
-    path: '/realtime'
-})
+
+let ioServer = null
+if(useHttps) {
+    ioServer = io.listen(secureServer, {
+        origins: 'https://localhost:*',
+        transports: ['websocket'],
+        path: '/realtime'
+    })
+} else {
+    ioServer = io.listen(httpServer, {
+        origins: 'http://localhost:*',
+        transports: ['websocket'],
+        path: '/realtime'
+    })
+}
 
 const chatServer = new ChatSocketServer(ioServer, container.resolve('UserRepository'))
 const gameServer = new GameSocketServer(ioServer, container.resolve('MatchRepository'))
 
-server.listen(port)
+
+
+
+if(useHttps) {
+    secureServer.listen(httpsPort)
+}
+httpServer.listen(port)
 
 console.log(`server listening on port ${port}`)
+if(useHttps) {
+    console.log(`https server listening on port ${httpsPort}`)
+}

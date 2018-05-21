@@ -124,12 +124,13 @@ export class GameStateMachine {
         }
 
         let playerState = this.getPlayerState(move.piece.colour)
+        // invalid move does not do anythin. 
         if(!this._chessEngine.makeMove(move, playerState)) {
             return false
         }
+
         this._moves.push(move)
         const nextPlayerTurn = GameStateMachine.nextTurn(move.piece.colour)
-        // invalid move does not do anythin. 
         this.gameState.turnToMove = nextPlayerTurn
         this.gameState.status = GameStatus.OnGoing
 

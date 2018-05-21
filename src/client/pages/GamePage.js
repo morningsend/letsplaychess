@@ -13,6 +13,7 @@ import {
     matchMakingTimeout,
     findMatchRequestError,
     matchEnded,
+    newMatch,
 } from '../actions/match'
 
 class GamePage extends React.Component {
@@ -39,14 +40,12 @@ class GamePage extends React.Component {
         }
 
         this.onFindOpponentButtonClick = this.onFindOpponentButtonClick.bind(this)
+
     }
     onMoveListUpdate(moveList) {
         this.setState({
             moveList: moveList || []
         })
-    }
-    componentDidMount() {
-
     }
     componentWillUnmount() {
 
@@ -61,12 +60,11 @@ class GamePage extends React.Component {
         }
     }
     render() {
-        const { findingMatch, errorMessage, user, onMatchEnd } = this.props
-        console.log(this.props.myPlayerColour)
+        const { findingMatch, errorMessage, user, onMatchEnd, hasMatch } = this.props
         return (
             <SocketContextProvider>
                 <Page className='page game-page'>
-                    <Overlay visible={!this.props.hasMatch}>
+                    <Overlay visible={!hasMatch}>
                         {
                             findingMatch ? 
                             <Modal>
@@ -109,7 +107,6 @@ class GamePage extends React.Component {
                                 this.props.hasMatch ? 
                                 <SocketChessGame
                                     onMoveListUpdate={this.onMoveListUpdate}
-                                    showPlaceholder={!this.hasMatch}
                                     whitePlayer={{
                                         name: 'jonsnow203',
                                         rating: 1200
@@ -123,6 +120,7 @@ class GamePage extends React.Component {
                                     matchJoinToken={this.props.joinToken}
                                     userId={this.props.userId}
                                     onMatchEnd={onMatchEnd}
+                                    hasMatch={this.props.hasMatch}
                                 />
                                 : <ChessGame.Placeholder />
                             }
@@ -144,6 +142,7 @@ function mapStateToProps(state) {
     const user = state.user
     console.log(match)
     console.log(authen)
+    console.log('has match', match.opponentId ? true : false)
     return {
         hasMatch: match.opponentId ? true : false,
         opponentId: match.opponentId,
@@ -184,6 +183,9 @@ function mapDispatchToProps(dispatch, ownProps) {
         },
         onMatchEnd: () => {
             dispatch(matchEnded())
+        },
+        newMatch: () => {
+            dispatch(newMatch())
         }
     }
 }

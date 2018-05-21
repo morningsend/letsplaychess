@@ -16,6 +16,7 @@ export class ChessGame extends React.Component {
         matchJoinToken: PropTypes.string,
         userId: PropTypes.string,
         onMatchEnd: PropTypes.string,
+        hasMatch: PropTypes.bool,
     }
     componentDidMount() {
         if(!this.props.gameClient) {
@@ -149,6 +150,11 @@ export class ChessGame extends React.Component {
             })
         }
     }
+    componentWillUpdate(nextProps, nextState) {
+        if(!this.props.hasMatch && nextProps.hasMatch) {
+            
+        }
+    }
     handleOpponentMove(from, to) {
         const { column, row } = from
         const piece = this.state.game.chessEngine.board.pieceAt(column, row)
@@ -159,26 +165,26 @@ export class ChessGame extends React.Component {
                 to,
                 null
             )
-            let gameRunning = this.state.gameRunning && !this.state.game.hasGameEnded
+            
             if (this.state.game.onMove(move)) {
+                let gameRunning = this.state.gameRunning && !this.state.game.hasGameEnded
                 this.setState({
                     movesMade: this.state.movesMade + 1,
                     lastMove: {
                         from,
                         to,
+                        gameRunning,
                     },
-                    gameRunning,
                 })
                 this.props.onMoveListUpdate(this.state.game.moves)
-            }
-            if(gameRunning) {
-                this.toggleClocks()
-                
-            } else {
-                this.stopBlackClock()
-                this.stopWhiteClock()
-                this.props.onMatchEnd
-                    && this.props.onMatchEnd()
+                if(gameRunning) {
+                    this.toggleClocks()
+                } else {
+                    this.stopBlackClock()
+                    this.stopWhiteClock()
+                    this.props.onMatchEnd
+                        && this.props.onMatchEnd()
+                }
             }
         }
     }
@@ -195,11 +201,13 @@ export class ChessGame extends React.Component {
 
         this.setupGameClient(this.props.gameClient)
         
-        this.props.gameClient.joinGame(
-            userId,
-            matchId,
-            matchJoinToken
-        )
+        if(this.props.gameClient && this.props.hasMatch) {
+            this.props.gameClient.joinGame(
+                userId,
+                matchId,
+                matchJoinToken
+            )
+        }
         //this.whitePlayerClockInterval = setInterval()
         //this.blackPlayerClockInterval = setInterval()
     }
@@ -233,27 +241,29 @@ export class ChessGame extends React.Component {
                 },
                 null
             )
-            let gameRunning = this.state.gameRunning && !this.state.game.hasGameEnded
+            
             if (this.state.game.onMove(move)) {
+                // check if recent move was a check mate, end the game if so.
+                this.props.gameClient &&
+                    this.props.gameClient.makeMove(from, to)
+                let gameRunning = this.state.gameRunning && !this.state.game.hasGameEnded
                 this.setState({
                     movesMade: this.state.movesMade + 1,
                     lastMove: {
                         from,
                         to,
-                    }
+                        gameRunning,
+                    },
                 })
                 this.props.onMoveListUpdate(this.state.game.moves)
-            }
-            this.props.gameClient &&
-                this.props.gameClient.makeMove(from, to)
-            if(gameRunning) {
-                this.toggleClocks()
-                
-            } else {
-                this.stopBlackClock()
-                this.stopWhiteClock()
-                this.props.onMatchEnd
-                    && this.props.onMatchEnd()
+                if(gameRunning) {
+                    this.toggleClocks()
+                } else {
+                    this.stopBlackClock()
+                    this.stopWhiteClock()
+                    this.props.onMatchEnd
+                        && this.props.onMatchEnd()
+                }
             }
         }
     }

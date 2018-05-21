@@ -12,11 +12,11 @@ const logger = createLogger({
 
 export const store = createStore(
     rootReducer,
-    loadState(),
+    {},//loadState(),
     applyMiddleware(ReduxThunk)
 )
 
-
+/*
 store.subscribe(debounce(() => {
     const state = store.getState()
     saveState({
@@ -25,6 +25,6 @@ store.subscribe(debounce(() => {
     })
     },
     1000)
-)
+)*/
 
 export default store
