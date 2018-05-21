@@ -211,6 +211,16 @@ export class ChessGame extends React.Component {
         //this.whitePlayerClockInterval = setInterval()
         //this.blackPlayerClockInterval = setInterval()
     }
+    componentWillUpdate(nextProps, nextState) {
+        console.log('chess game will update')
+        if(!this.props.hasMatch && nextProps.hasMatch && nextProps.gameClient) {
+            nextProps.gameClient.joinGame(
+                nextProps.userId,
+                nextProps.matchId,
+                nextProps.matchJoinToken,
+            )
+        }
+    }
     componentWillUnmount() {
         if(!this.props.gameClient) {
             return

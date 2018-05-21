@@ -113,7 +113,7 @@ export class GameStateMachine {
      * @param {Move} move
      */
     onMove(move) {
-        if(this.hashGameEnded) {
+        if(this.hasGameEnded) {
             return false
         }
         if(!move || !move.piece) {

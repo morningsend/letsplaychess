@@ -165,9 +165,10 @@ function mapDispatchToProps(dispatch, ownProps) {
             dispatch(findMatch(userId, new Date().getTime()))
             MatchApi.findMatch(userId, accessToken)
                 .then(match => {
-                    if(match.success) 
+                    if(match.success) {
+                        console.log('Match API Found match:')
                         dispatch(matchFound(userId, match))
-                    else {
+                    }else {
                         dispatch(matchMakingTimeout())
                     }
                 })
